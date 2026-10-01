@@ -1,0 +1,56 @@
+@use '@/app/styles/variables' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  border-radius: $radius-pill;
+  white-space: nowrap;
+}
+
+.sm {
+  padding: 3px 10px;
+  font-size: 0.78rem;
+}
+
+.md {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+}
+
+.primary {
+  background-color: $color-primary-soft;
+  color: $color-primary;
+}
+
+.secondary {
+  background-color: #F1F5F9;
+  color: $color-text-body;
+}
+
+.success {
+  background-color: $color-green-light;
+  color: $color-green-text;
+}
+
+.warning {
+  background-color: $color-gold-light;
+  color: $color-gold-text;
+}
+
+.neutral {
+  background-color: #EDE8DF;
+  color: $color-text-main;
+}
+
+.outline {
+  background-color: transparent;
+  border: 1px solid $color-border;
+  color: $color-text-muted;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+}

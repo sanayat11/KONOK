@@ -1,0 +1,54 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.tabsContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: $color-white;
+  padding: 4px;
+  border-radius: $radius-pill;
+  border: 1px solid $color-sand-border;
+  box-shadow: $shadow-xs;
+
+  @include mobile {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 3px;
+  }
+}
+
+.tabItem {
+  padding: 8px 24px;
+  border-radius: $radius-pill;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $color-text-main;
+  transition: all $transition-fast;
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary;
+    background-color: rgba(15, 82, 186, 0.05);
+  }
+
+  &.active {
+    background-color: #2D3748; // Dark navy pill from design
+    color: $color-white;
+    box-shadow: $shadow-xs;
+
+    &:hover {
+      background-color: #1A202C;
+      color: $color-white;
+    }
+  }
+
+  @include mobile {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    flex: 1;
+    text-align: center;
+  }
+}

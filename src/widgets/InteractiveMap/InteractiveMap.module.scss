@@ -1,0 +1,227 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.mapWidget {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background-color: #E8F1EC;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-sand-border;
+  overflow: hidden;
+  box-shadow: $shadow-md;
+}
+
+.mapCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease-out;
+  transform-origin: center center;
+}
+
+.mapGraphic {
+  width: 100%;
+  height: 100%;
+}
+
+.svgMap {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// Cluster Pin Markers
+.mapPin {
+  @include button-reset;
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all $transition-normal;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  border: 2px solid #FFFFFF;
+
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.18);
+    z-index: 20;
+  }
+
+  &.selected {
+    transform: translate(-50%, -50%) scale(1.25);
+    z-index: 30;
+    box-shadow: 0 0 0 4px rgba(15, 82, 186, 0.35);
+  }
+}
+
+.gold {
+  background-color: #F59E0B;
+  color: #111;
+}
+
+.blue {
+  background-color: #0F52BA;
+  color: #fff;
+}
+
+.pinNumber {
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+// Popover Card
+.pointDetailCard {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  max-width: 420px;
+  width: calc(100% - 40px);
+  background-color: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-radius: $radius-lg;
+  padding: 16px 20px;
+  box-shadow: $shadow-xl;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  z-index: 40;
+  animation: slideUp 0.2s ease-out;
+
+  @include mobile {
+    bottom: 12px;
+    left: 12px;
+    width: calc(100% - 24px);
+    padding: 14px;
+  }
+}
+
+.pointHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.pointTag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: $color-primary;
+  letter-spacing: 0.04em;
+}
+
+.pointTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: $color-text-main;
+}
+
+.closeCardBtn {
+  @include button-reset;
+  color: $color-text-muted;
+  font-size: 1.1rem;
+  padding: 4px;
+  line-height: 1;
+
+  &:hover {
+    color: $color-text-main;
+  }
+}
+
+.pointDesc {
+  font-size: 0.88rem;
+  color: $color-text-body;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.pointActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.viewGuidesBtn {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: $color-primary;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: $radius-pill;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+}
+
+.viewPlacesBtn {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: $color-primary-soft;
+  color: $color-primary;
+  padding: 8px 14px;
+  border-radius: $radius-pill;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: darken(#EEF4FD, 5%);
+  }
+}
+
+// Map Controls
+.mapControls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 30;
+}
+
+.ctrlBtn {
+  @include button-reset;
+  width: 36px;
+  height: 36px;
+  background-color: #FFFFFF;
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-main;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-sand-border;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: #F8FAFC;
+    color: $color-primary;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

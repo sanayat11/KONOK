@@ -1,0 +1,100 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.card {
+  position: relative;
+  display: block;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  box-shadow: $shadow-sm;
+  transition: all $transition-normal;
+  text-decoration: none;
+  background-color: #E2E8F0;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+
+    .image {
+      transform: scale(1.08);
+    }
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gradientOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
+.favBtn {
+  @include button-reset;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-fast;
+  z-index: 2;
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  &.isFav {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+}
+
+.info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 16px;
+  z-index: 2;
+}
+
+.name {
+  color: $color-white;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  margin-bottom: 2px;
+}
+
+.category {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.pinIcon {
+  color: $color-secondary;
+}

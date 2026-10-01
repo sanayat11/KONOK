@@ -1,0 +1,56 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.card {
+  background-color: $color-white;
+  border: 1px solid $color-sand-border;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: all $transition-normal;
+}
+
+.padding-none {
+  padding: 0;
+}
+
+.padding-sm {
+  padding: 12px;
+}
+
+.padding-md {
+  padding: 20px;
+}
+
+.padding-lg {
+  padding: 28px;
+}
+
+.default {
+  box-shadow: $shadow-xs;
+}
+
+.elevated {
+  box-shadow: $shadow-md;
+}
+
+.flat {
+  background-color: #F8F7F2;
+  border-color: #ECE9DF;
+  box-shadow: none;
+}
+
+.ornament {
+  background-color: $color-white;
+  box-shadow: $shadow-sm;
+  position: relative;
+}
+
+.interactive {
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-lg;
+    border-color: rgba($color-primary, 0.3);
+  }
+}

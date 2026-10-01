@@ -1,0 +1,70 @@
+// Global Design Variables - KONOK Kyrgyzstan Platform
+
+// Colors
+$color-primary: #0F52BA;
+$color-primary-dark: #0A3C8A;
+$color-primary-light: #2A6FD6;
+$color-primary-soft: #EEF4FD;
+$color-primary-gradient: linear-gradient(135deg, #0F52BA 0%, #1E40AF 100%);
+
+$color-secondary: #3A86FF;
+$color-secondary-light: #EBF2FF;
+
+$color-sand-bg: #F8F6F1;
+$color-sand-light: #FAF9F6;
+$color-sand-card: #FFFFFF;
+$color-sand-border: #E8E5DD;
+
+$color-dark-blue: #092C5E;
+$color-footer-bg: #0A2E63;
+
+$color-text-main: #182233;
+$color-text-body: #334155;
+$color-text-muted: #64748B;
+$color-text-light: #94A3B8;
+
+$color-gold: #F59E0B;
+$color-gold-light: #FEF3C7;
+$color-gold-text: #B45309;
+
+$color-green: #10B981;
+$color-green-light: #D1FAE5;
+$color-green-text: #065F46;
+
+$color-red: #E11D48;
+$color-red-light: #FFE4E6;
+
+$color-white: #FFFFFF;
+$color-border: #E2E8F0;
+$color-border-light: #F1F5F9;
+
+// Typography
+$font-main: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-heading: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+
+// Shadows
+$shadow-xs: 0 1px 2px 0 rgba(15, 82, 186, 0.05);
+$shadow-sm: 0 2px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 6px 16px -2px rgba(15, 82, 186, 0.08), 0 3px 6px -3px rgba(15, 23, 42, 0.08);
+$shadow-lg: 0 12px 28px -4px rgba(15, 82, 186, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+$shadow-xl: 0 20px 35px -5px rgba(15, 82, 186, 0.16), 0 8px 16px -6px rgba(15, 23, 42, 0.08);
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-2xl: 24px;
+$radius-pill: 9999px;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.25s ease;
+$transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+// Breakpoints
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+$bp-2xl: 1440px;

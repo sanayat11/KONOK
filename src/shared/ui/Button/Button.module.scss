@@ -1,0 +1,129 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: $font-heading;
+  font-weight: 600;
+  border-radius: $radius-pill;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all $transition-normal;
+  user-select: none;
+  white-space: nowrap;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Sizes
+.sm {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+}
+
+.md {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+}
+
+.lg {
+  padding: 14px 28px;
+  font-size: 1.05rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+// Variants
+.primary {
+  background-color: $color-primary;
+  color: $color-white;
+  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.25);
+
+  &:hover {
+    background-color: $color-primary-dark;
+    box-shadow: 0 6px 16px rgba(15, 82, 186, 0.35);
+  }
+}
+
+.secondary {
+  background-color: $color-secondary-light;
+  color: $color-primary;
+
+  &:hover {
+    background-color: darken($color-secondary-light, 5%);
+  }
+}
+
+.outline {
+  background-color: transparent;
+  border-color: $color-primary;
+  color: $color-primary;
+
+  &:hover {
+    background-color: rgba(15, 82, 186, 0.06);
+  }
+}
+
+.ghost {
+  background-color: transparent;
+  color: $color-text-main;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: $color-primary;
+  }
+}
+
+.light {
+  background-color: $color-white;
+  color: $color-primary;
+  border-color: $color-border;
+  box-shadow: $shadow-xs;
+
+  &:hover {
+    border-color: $color-primary;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.dark {
+  background-color: $color-dark-blue;
+  color: $color-white;
+
+  &:hover {
+    background-color: lighten($color-dark-blue, 8%);
+  }
+}
+
+.iconLeft, .iconRight {
+  display: inline-flex;
+  align-items: center;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

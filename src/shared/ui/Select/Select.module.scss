@@ -1,0 +1,77 @@
+@use '@/app/styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $color-text-main;
+}
+
+.selectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: $color-white;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  transition: all $transition-fast;
+
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(15, 82, 186, 0.12);
+  }
+
+  &.hasError {
+    border-color: $color-red;
+  }
+}
+
+.select {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  font-size: 0.95rem;
+  color: $color-text-main;
+  background: transparent;
+  border: none;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+
+  &.withLeftIcon {
+    padding-left: 40px;
+  }
+}
+
+.iconLeft {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  color: $color-text-muted;
+  pointer-events: none;
+}
+
+.chevron {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  color: $color-text-muted;
+  pointer-events: none;
+}
+
+.errorMessage {
+  font-size: 0.8rem;
+  color: $color-red;
+  font-weight: 500;
+}
