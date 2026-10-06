@@ -1,158 +1,114 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Calendar, Users, Search } from 'lucide-react';
+import { CalendarDays, ChevronDown, MapPin, Search, Users } from 'lucide-react';
 import clsx from 'clsx';
 import styles from './HeroSearch.module.scss';
 
+type SearchTab = 'tours' | 'stays' | 'transport';
+
+const TABS: Array<{ id: SearchTab; label: string }> = [
+  { id: 'tours', label: '1.Планирование маршрута' },
+  { id: 'stays', label: '2. Поиск жилья' },
+  { id: 'transport', label: '3. Транспорт' },
+];
+
+const CITIES = ['Бишкек', 'Ош', 'Каракол', 'Нарын', 'Чолпон-Ата', 'Баткен'];
+const DESTINATIONS = ['Бишкек', 'Ысык-Көл', 'Сон-Көл', 'Таш-Рабат', 'Ала-Арча', 'Сары-Челек', 'Кёль-Суу'];
+const DATES = ['Выберите даты', '12 окт – 18 окт', '20 окт – 25 окт', '1 ноя – 5 ноя', 'Любые даты'];
+const GUESTS = ['1', '2', '3', '4', '5+'];
+
+interface FieldProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+  className?: string;
+}
+
+/** Figma field: white 60px box, icon, small grey label over the value, chevron. */
+const Field: React.FC<FieldProps> = ({ icon, label, value, options, onChange, className }) => (
+  <label className={clsx(styles.field, className)}>
+    <span className={styles.fieldIcon}>{icon}</span>
+    <span className={styles.fieldBody}>
+      <span className={styles.fieldLabel}>{label}</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className={styles.fieldSelect}>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </span>
+    <ChevronDown size={18} className={styles.fieldChevron} aria-hidden="true" />
+  </label>
+);
+
 export const HeroSearch: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'tours' | 'stays' | 'transport'>('tours');
+  const [activeTab, setActiveTab] = useState<SearchTab>('tours');
   const [fromLoc, setFromLoc] = useState('Бишкек');
-  const [toLoc, setToLoc] = useState('Ысык-Көл');
-  const [dates, setDates] = useState('24 сен – 28 сен');
-  const [guests, setGuests] = useState('2 гостя');
+  const [toLoc, setToLoc] = useState('Бишкек');
+  const [dates, setDates] = useState(DATES[0]);
+  const [guests, setGuests] = useState('2');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (activeTab === 'tours') {
-      navigate('/catalog/guides');
-    } else if (activeTab === 'stays') {
-      navigate('/catalog/places');
-    } else {
-      navigate('/catalog/cars');
-    }
+    if (activeTab === 'tours') navigate('/catalog/guides');
+    else if (activeTab === 'stays') navigate('/catalog/places');
+    else navigate('/catalog/cars');
   };
 
   return (
-    <div className={styles.heroSection}>
-      <div className={styles.heroBanner}>
-        <img
-          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=85"
-          alt="Кыргызстан — Юрты и Горы Тянь-Шаня"
-          className={styles.bannerImage}
-        />
-        <div className={styles.bannerOverlay} />
+    <section className={styles.heroSection}>
+      <img
+        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=85"
+        alt="Озеро Сон-Көл, юрты и горы Тянь-Шаня"
+        className={styles.bannerImage}
+      />
 
-        {/* Floating Search Bar Container */}
-        <div className={styles.searchContainer}>
-          <div className={styles.searchCard}>
-            {/* Category Switcher Tabs */}
-            <div className={styles.tabsRow}>
+      <div className={styles.searchContainer}>
+        <div className={styles.searchCard}>
+          <div className={styles.tabsRow} role="tablist" aria-label="Что ищем">
+            {TABS.map((tab) => (
               <button
+                key={tab.id}
                 type="button"
-                className={clsx(styles.tabBtn, activeTab === 'tours' && styles.tabActive)}
-                onClick={() => setActiveTab('tours')}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                className={clsx(styles.tabBtn, activeTab === tab.id && styles.tabActive)}
+                onClick={() => setActiveTab(tab.id)}
               >
-                1. Индивидуальные экскурсии
+                {tab.label}
               </button>
-              <button
-                type="button"
-                className={clsx(styles.tabBtn, activeTab === 'stays' && styles.tabActive)}
-                onClick={() => setActiveTab('stays')}
-              >
-                2. Поиск жилья
-              </button>
-              <button
-                type="button"
-                className={clsx(styles.tabBtn, activeTab === 'transport' && styles.tabActive)}
-                onClick={() => setActiveTab('transport')}
-              >
-                3. Транспорт
-              </button>
-            </div>
-
-            {/* Inputs Form */}
-            <form className={styles.searchForm} onSubmit={handleSearch}>
-              {/* Field 1: Откуда */}
-              <div className={styles.fieldItem}>
-                <span className={styles.fieldLabel}>Откуда?</span>
-                <div className={styles.fieldInputGroup}>
-                  <MapPin size={16} className={styles.fieldIcon} />
-                  <select
-                    value={fromLoc}
-                    onChange={(e) => setFromLoc(e.target.value)}
-                    className={styles.fieldSelect}
-                  >
-                    <option value="Бишкек">Бишкек</option>
-                    <option value="Ош">Ош</option>
-                    <option value="Каракол">Каракол</option>
-                    <option value="Нарын">Нарын</option>
-                    <option value="Чолпон-Ата">Чолпон-Ата</option>
-                    <option value="Баткен">Баткен</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.fieldDivider} />
-
-              {/* Field 2: Куда */}
-              <div className={styles.fieldItem}>
-                <span className={styles.fieldLabel}>Куда?</span>
-                <div className={styles.fieldInputGroup}>
-                  <MapPin size={16} className={styles.fieldIcon} />
-                  <select
-                    value={toLoc}
-                    onChange={(e) => setToLoc(e.target.value)}
-                    className={styles.fieldSelect}
-                  >
-                    <option value="Ысык-Көл">Ысык-Көл</option>
-                    <option value="Сон-Көл">Сон-Көл</option>
-                    <option value="Таш-Рабат">Таш-Рабат</option>
-                    <option value="Ала-Арча">Ала-Арча</option>
-                    <option value="Сары-Челек">Сары-Челек</option>
-                    <option value="Кёль-Суу">Кёль-Суу</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.fieldDivider} />
-
-              {/* Field 3: Дата */}
-              <div className={styles.fieldItem}>
-                <span className={styles.fieldLabel}>Дата</span>
-                <div className={styles.fieldInputGroup}>
-                  <Calendar size={16} className={styles.fieldIcon} />
-                  <select
-                    value={dates}
-                    onChange={(e) => setDates(e.target.value)}
-                    className={styles.fieldSelect}
-                  >
-                    <option value="24 сен – 28 сен">24 сен – 28 сен</option>
-                    <option value="1 окт – 5 окт">1 окт – 5 окт</option>
-                    <option value="10 окт – 15 окт">10 окт – 15 окт</option>
-                    <option value="Любые даты">Любые даты</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.fieldDivider} />
-
-              {/* Field 4: Гости */}
-              <div className={styles.fieldItem}>
-                <span className={styles.fieldLabel}>Гости</span>
-                <div className={styles.fieldInputGroup}>
-                  <Users size={16} className={styles.fieldIcon} />
-                  <select
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                    className={styles.fieldSelect}
-                  >
-                    <option value="1 гость">1 гость</option>
-                    <option value="2 гостя">2 гостя</option>
-                    <option value="3-4 гостя">3-4 гостя</option>
-                    <option value="5+ гостей">5+ гостей</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Search Submit Button */}
-              <button type="submit" className={styles.submitBtn} aria-label="Искать">
-                <Search size={20} />
-              </button>
-            </form>
+            ))}
           </div>
+
+          <form className={styles.searchForm} onSubmit={handleSearch}>
+            <Field icon={<MapPin size={26} />} label="Откуда?" value={fromLoc} options={CITIES} onChange={setFromLoc} />
+            <Field icon={<MapPin size={26} />} label="Куда?" value={toLoc} options={DESTINATIONS} onChange={setToLoc} />
+            <Field
+              icon={<CalendarDays size={26} />}
+              label="Дата"
+              value={dates}
+              options={DATES}
+              onChange={setDates}
+              className={styles.fieldWide}
+            />
+            <Field
+              icon={<Users size={26} />}
+              label="Гости"
+              value={guests}
+              options={GUESTS}
+              onChange={setGuests}
+              className={styles.fieldNarrow}
+            />
+            <button type="submit" className={styles.submitBtn} aria-label="Искать">
+              <Search size={28} />
+            </button>
+          </form>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

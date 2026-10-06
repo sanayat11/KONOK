@@ -1,0 +1,27 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.favorites {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sectionTitle {
+  font-size: 30px;
+  font-weight: 700;
+
+  @include mobile {
+    font-size: 22px;
+  }
+}
+
+.grid {
+  @include card-grid;
+}

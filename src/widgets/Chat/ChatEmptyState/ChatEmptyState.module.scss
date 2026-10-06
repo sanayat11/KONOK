@@ -1,0 +1,37 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.icon {
+  @include flex-center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  background-color: $color-primary-soft;
+  color: $color-primary;
+}
+
+.title {
+  font-size: 1.05rem;
+}
+
+.text {
+  max-width: 300px;
+  font-size: 0.88rem;
+  color: $color-text-muted;
+}
+
+.action {
+  margin-top: 14px;
+}

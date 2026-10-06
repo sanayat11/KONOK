@@ -1,0 +1,98 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.grid {
+  @include card-grid;
+}
+
+.calendarTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: capitalize;
+
+  svg {
+    color: $color-primary;
+  }
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 640px;
+}
+
+.weekday {
+  padding: 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-text-muted;
+  text-align: center;
+}
+
+.day {
+  aspect-ratio: 1;
+  border-radius: $radius-sm;
+  font-size: 16px;
+  @include flex-center;
+
+  &:not(:empty) {
+    background-color: $color-green-light;
+  }
+}
+
+.past:not(:empty) {
+  background-color: $color-border-light;
+  color: $color-text-light;
+}
+
+.today:not(:empty) {
+  background-color: $color-primary;
+  color: $color-white;
+  font-weight: 700;
+}
+
+.legend {
+  margin-top: 14px;
+  font-size: 15px;
+  color: $color-text-muted;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+
+  @media (max-width: ($bp-xl - 1px)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tileIcon {
+  color: $color-primary;
+}
+
+.tileValue {
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.tileLabel {
+  color: $color-text-muted;
+}

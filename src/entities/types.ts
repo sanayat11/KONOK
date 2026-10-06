@@ -21,6 +21,8 @@ export interface Guide {
   rating: number;
   reviewsCount: number;
   pricePerDay: number;
+  /** How many guests the resident can host at once. */
+  maxGuests?: number;
   avatarUrl: string;
   gallery: string[];
   roleTitle: string;
@@ -77,6 +79,7 @@ export interface Car {
   description: string;
   included: string[];
   owner: {
+    id: string;
     name: string;
     avatar: string;
     rating: number;
@@ -125,4 +128,7 @@ export interface UserProfile {
   memberSince: string;
   languages: Array<{ name: string; level: string }>;
   visitedRegions: Array<{ name: string; photoUrl: string }>;
+  country?: string;
+  birthDate?: string;
+  interests?: string[];
 }

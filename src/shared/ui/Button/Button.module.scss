@@ -63,7 +63,7 @@
   color: $color-primary;
 
   &:hover {
-    background-color: darken($color-secondary-light, 5%);
+    background-color: #D9E5F1;
   }
 }
 
@@ -104,7 +104,7 @@
   color: $color-white;
 
   &:hover {
-    background-color: lighten($color-dark-blue, 8%);
+    background-color: $color-primary-light;
   }
 }
 

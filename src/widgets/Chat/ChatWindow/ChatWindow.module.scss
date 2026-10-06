@@ -1,0 +1,213 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.window {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background-color: $color-sand-bg;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background-color: $color-white;
+  border-bottom: 1px solid $color-border-light;
+
+  @include mobile {
+    padding: 10px 12px;
+  }
+}
+
+.back {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  margin-left: -6px;
+  border-radius: 50%;
+  color: $color-text-main;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-primary-soft;
+    color: $color-primary;
+  }
+
+  // Both panes are visible from tablet up, so "back" is mobile-only.
+  @include custom-media($bp-md) {
+    display: none;
+  }
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: $color-border-light;
+}
+
+.headerText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  @include truncate;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.role {
+  font-size: 0.8rem;
+  color: $color-text-muted;
+}
+
+.listingBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background-color: $color-sand-light;
+  border-bottom: 1px solid $color-sand-border;
+
+  @include mobile {
+    padding: 8px 12px;
+  }
+}
+
+.listingImage {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  object-fit: cover;
+}
+
+.listingText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.listingType {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $color-text-light;
+}
+
+.listingTitle {
+  @include truncate;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $color-text-main;
+}
+
+.messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  overscroll-behavior: contain;
+
+  @include mobile {
+    padding: 16px 12px;
+  }
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dayLabel {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: -8px;
+  z-index: 1;
+
+  span {
+    padding: 4px 12px;
+    border-radius: $radius-pill;
+    background-color: rgba(255, 255, 255, 0.92);
+    border: 1px solid $color-sand-border;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $color-text-muted;
+  }
+}
+
+.group,
+.groupOwn {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.groupOwn {
+  justify-content: flex-end;
+}
+
+.groupAvatar {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.groupBubbles {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quickReplies {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.quickReply {
+  @include button-reset;
+  padding: 8px 14px;
+  border-radius: $radius-pill;
+  border: 1px solid $color-border;
+  background-color: $color-white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $color-text-body;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+    background-color: $color-primary-soft;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,31 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.back {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: $color-text-main;
+  font-size: 20px;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @include mobile {
+    font-size: 16px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}

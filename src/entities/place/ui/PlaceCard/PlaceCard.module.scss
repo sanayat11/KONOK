@@ -3,22 +3,28 @@
 
 .card {
   position: relative;
-  display: block;
-  border-radius: $radius-lg;
+  aspect-ratio: 550 / 400;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  box-shadow: $shadow-sm;
-  transition: all $transition-normal;
-  text-decoration: none;
-  background-color: #E2E8F0;
+  border-radius: $radius-lg;
+  background-color: $color-border-light;
+  transition: transform $transition-normal, box-shadow $transition-normal;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: $shadow-lg;
+  }
+}
 
-    .image {
-      transform: scale(1.08);
-    }
+.link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  color: $color-white;
+
+  &:focus-visible {
+    outline: 3px solid $color-primary;
+    outline-offset: -3px;
+    border-radius: $radius-lg;
   }
 }
 
@@ -27,74 +33,86 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
+
+  .card:hover & {
+    transform: scale(1.05);
+  }
 }
 
-.gradientOverlay {
+.overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.2) 50%,
-    rgba(0, 0, 0, 0.75) 100%
-  );
+  inset: 45% 0 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.45));
+}
+
+.info {
+  position: absolute;
+  left: 24px;
+  right: 19px;
+  bottom: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.name {
+  color: $color-white;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 30px;
+  }
+
+  @include mobile {
+    font-size: 24px;
+  }
+}
+
+// Figma: 40px outlined arrow circle.
+.arrow {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+  border: 2px solid $color-white;
+  border-radius: 50%;
+  @include flex-center;
+  transition: background-color $transition-fast, color $transition-fast;
+
+  .card:hover & {
+    background-color: $color-white;
+    color: $color-primary;
+  }
 }
 
 .favBtn {
   @include button-reset;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all $transition-fast;
-  z-index: 2;
+  top: 12px;
+  right: 18px;
+  z-index: 1;
+  color: $color-white;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  transition: transform $transition-fast;
 
   &:hover {
     transform: scale(1.1);
-    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-white;
+    border-radius: 4px;
   }
 
   &.isFav {
-    background-color: rgba(255, 255, 255, 0.95);
+    color: $color-red;
+
+    svg {
+      fill: $color-red;
+    }
   }
-}
-
-.info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 14px 16px;
-  z-index: 2;
-}
-
-.name {
-  color: $color-white;
-  font-size: 1.15rem;
-  font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  margin-bottom: 2px;
-}
-
-.category {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.pinIcon {
-  color: $color-secondary;
 }

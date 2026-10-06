@@ -1,0 +1,816 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Figma: hero photo behind a 1520px ornament panel starting at y=150.
+.page {
+  position: relative;
+  min-height: 100vh;
+  padding: 150px 0 60px;
+  background-color: $color-sand-light;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    padding-top: 120px;
+  }
+
+  @include mobile {
+    padding: 84px 0 32px;
+  }
+}
+
+.hero {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 803px;
+  object-fit: cover;
+  opacity: 0.75;
+  background-color: #8DB3D6;
+
+  @include mobile {
+    height: 420px;
+  }
+}
+
+.container {
+  @include container;
+  position: relative;
+}
+
+.panel {
+  max-width: 1520px;
+  margin: 0 auto;
+}
+
+.panelInner {
+  display: flex;
+  justify-content: center;
+  padding: 40px 24px;
+  min-height: 780px;
+
+  @include mobile {
+    padding: 20px 12px;
+    min-height: 0;
+  }
+}
+
+// ---------- role choice ----------
+.roles {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+
+  @include mobile {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.roleCard {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  min-height: 600px;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+  box-shadow: $shadow-sm;
+
+  @include mobile {
+    width: 100%;
+    min-height: 0;
+  }
+}
+
+.roleImage {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  background-color: $color-border-light;
+
+  @include mobile {
+    height: 180px;
+  }
+}
+
+.roleBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px 38px;
+
+  @include mobile {
+    padding: 12px 20px 20px;
+  }
+}
+
+.roleTitle {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+
+  @include mobile {
+    font-size: 24px;
+  }
+}
+
+.roleText {
+  margin-top: 12px;
+  font-size: 20px;
+  line-height: 1.2;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.roleBtn {
+  @include primary-button;
+  height: 60px;
+  margin-top: auto;
+  border-radius: $radius-sm;
+  font-size: 20px;
+
+  @include mobile {
+    height: 50px;
+    margin-top: 20px;
+  }
+}
+
+// ---------- card ----------
+.card {
+  width: 445px;
+  max-width: 100%;
+  padding: 22px 40px 48px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-xl;
+  background-color: $color-white;
+
+  @include mobile {
+    padding: 18px 18px 24px;
+  }
+}
+
+.cardWide {
+  width: 460px;
+}
+
+.back {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: -18px;
+  font-size: 20px;
+
+  &:hover {
+    color: $color-primary;
+  }
+
+  @include mobile {
+    margin-left: 0;
+    font-size: 16px;
+  }
+}
+
+.cardTitle {
+  margin-top: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+
+  @include mobile {
+    font-size: 24px;
+  }
+}
+
+.cardSubtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+// Figma: 50px numbered circles, navy when reached.
+.stepper {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 6px 4px;
+}
+
+.stepDot {
+  width: 50px;
+  height: 50px;
+  border: 3px solid $color-text-main;
+  border-radius: 50%;
+  font-size: 26px;
+  font-weight: 700;
+  @include flex-center;
+
+  @include mobile {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+
+.stepDone {
+  border-color: $color-primary;
+  background-color: $color-primary;
+  color: $color-white;
+}
+
+// ---------- form ----------
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.formTall {
+  min-height: 420px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 18px;
+
+  @include mobile {
+    padding: 0;
+  }
+}
+
+.label {
+  font-size: 20px;
+  font-weight: 700;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+// Figma: 300×35 box, 8px radius, 1px black border, grey placeholder.
+.input {
+  height: 35px;
+  padding: 0 10px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  background-color: $color-white;
+  font-size: 18px;
+  outline: none;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder {
+    color: $color-text-light;
+  }
+
+  &:focus,
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(22, 83, 137, 0.15);
+  }
+
+  &:user-invalid {
+    border-color: $color-red;
+  }
+}
+
+.phoneRow {
+  display: flex;
+  gap: 5px;
+}
+
+.flagSelect {
+  flex: 0 0 auto;
+  width: 96px;
+  padding: 0 4px;
+  font-size: 15px;
+}
+
+.phoneBox {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    font-size: 18px;
+
+    &::placeholder {
+      color: $color-text-light;
+    }
+  }
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 18px;
+  font-size: 14px;
+  line-height: 1.3;
+  cursor: pointer;
+
+  input {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    accent-color: $color-primary;
+  }
+
+  a {
+    color: $color-primary;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @include mobile {
+    padding: 0;
+  }
+}
+
+// Figma: 380×60 navy button with arrow.
+.submit {
+  @include primary-button;
+  height: 60px;
+  margin-top: 10px;
+  border-radius: $radius-md;
+  font-size: 20px;
+
+  @include mobile {
+    height: 50px;
+  }
+}
+
+.secondaryBtn {
+  @include button-reset;
+  @include flex-center;
+  height: 60px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-md;
+  background-color: #EFEFEF;
+  font-size: 20px;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: #E2E2E2;
+  }
+
+  @include mobile {
+    height: 50px;
+  }
+}
+
+.stepActions {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 20px;
+  margin-top: 10px;
+
+  .submit {
+    margin-top: 0;
+  }
+}
+
+.switchText {
+  text-align: center;
+  font-size: 15px;
+}
+
+.linkBtn {
+  @include button-reset;
+  color: $color-primary;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.muted {
+  color: $color-text-light;
+}
+
+// ---------- OTP ----------
+.otp {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 60px;
+}
+
+.otpBox {
+  width: 45px;
+  height: 60px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  font-size: 28px;
+  text-align: center;
+  outline: none;
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(22, 83, 137, 0.15);
+  }
+}
+
+.resend {
+  margin: 40px 0 auto;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+// ---------- passport ----------
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 2px dashed #9BB3CC;
+  border-radius: $radius-md;
+  background-color: #F0F5FB;
+  color: $color-primary;
+}
+
+.dropzoneDone {
+  border-color: $color-green;
+  background-color: $color-green-light;
+}
+
+.dropzoneHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  span {
+    color: $color-text-main;
+    font-size: 15px;
+    font-weight: 700;
+  }
+}
+
+.uploadBtn {
+  @include truncate;
+  max-width: 100%;
+  padding: 4px 26px;
+  border-radius: 3px;
+  background-color: $color-red;
+  color: $color-white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: filter $transition-fast;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:focus-within {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  .dropzoneDone & {
+    background-color: $color-green-text;
+  }
+}
+
+// ---------- host steps ----------
+.aboutRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.avatarPicker {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  margin-top: 16px;
+  overflow: hidden;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: $color-border-light;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &:focus-within {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.fieldGrow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.labelSmall {
+  font-size: 20px;
+}
+
+.textarea {
+  min-height: 120px;
+  padding: 8px 10px;
+  resize: vertical;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  outline: none;
+
+  &:focus {
+    border-color: $color-primary;
+  }
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.fieldSmall {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 16px;
+}
+
+.inputSmall {
+  height: 35px;
+  min-width: 0;
+  padding: 0 10px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  background-color: $color-white;
+  font-size: 15px;
+  outline: none;
+
+  &:focus {
+    border-color: $color-primary;
+  }
+}
+
+.chipsBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-height: 35px;
+  padding: 3px 4px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+}
+
+.langChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 6px;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+  background-color: #C9DAEE;
+  font-size: 14px;
+
+  button {
+    @include button-reset;
+    display: flex;
+  }
+}
+
+.chipSelect {
+  border: none;
+  background: transparent;
+  color: $color-text-muted;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.videoUpload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 70px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  background-color: #EFEFEF;
+  cursor: pointer;
+
+  span {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+  }
+
+  strong {
+    @include truncate;
+    font-weight: 500;
+  }
+
+  small {
+    font-size: 12px;
+  }
+
+  &:hover {
+    background-color: #E5E5E5;
+  }
+
+  &:focus-within {
+    outline: 2px solid $color-primary;
+  }
+}
+
+.guestStepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 5px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  background-color: #EFEFEF;
+  font-size: 20px;
+
+  button {
+    @include button-reset;
+    @include flex-center;
+    width: 84px;
+    height: 52px;
+    border: 1px solid $color-text-main;
+    border-radius: $radius-sm;
+    background-color: $color-white;
+
+    &:hover {
+      color: $color-primary;
+      border-color: $color-primary;
+    }
+  }
+}
+
+.priceBox {
+  display: flex;
+  align-items: stretch;
+  width: 315px;
+  max-width: 100%;
+  height: 50px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  overflow: hidden;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    font-size: 20px;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-left: 1px solid $color-text-main;
+    font-size: 20px;
+  }
+
+  &:focus-within {
+    border-color: $color-primary;
+  }
+}
+
+.activities {
+  border: none;
+
+  legend {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.activityList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+// Figma: outlined pills, bright green when chosen.
+.activity {
+  @include button-reset;
+  padding: 3px 20px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-pill;
+  font-size: 16px;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: #F1F1F1;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.activityOn,
+.activityOn:hover:not(:disabled) {
+  background-color: #3BF05B;
+}
+
+.moreBtn {
+  @include button-reset;
+  display: flex;
+  align-items: center;
+}
+
+.idOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.idCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 290px;
+  padding: 12px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  text-align: center;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  @include mobile {
+    min-height: 200px;
+  }
+}
+
+.idCardActive {
+  border-color: $color-primary;
+  box-shadow: 0 0 0 2px $color-primary;
+}
+
+.idTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.idText {
+  font-size: 11px;
+}
+
+.idBtn {
+  @include primary-button;
+  height: 40px;
+  margin-top: 6px;
+  border-radius: $radius-sm;
+  font-size: 16px;
+}
+
+.secureNote {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 16px 24px;
+  border-radius: $radius-md;
+  background-color: #AFC8E6;
+  font-size: 12px;
+}
+
+.secureIcon {
+  flex-shrink: 0;
+  color: $color-primary;
+}
+
+.secureTitle {
+  font-size: 15px;
+  font-weight: 700;
+}

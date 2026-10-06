@@ -1,0 +1,73 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Figma: cards start 65px below the section bar; 4 columns, 50px / 60px gaps.
+.page {
+  @include container;
+  padding-top: 65px;
+  padding-bottom: 110px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    padding-top: 40px;
+    padding-bottom: 72px;
+  }
+
+  @include mobile {
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+}
+
+.grid {
+  @include card-grid;
+  row-gap: 60px;
+  padding: 0 5px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    row-gap: 32px;
+  }
+
+  @include mobile {
+    row-gap: 16px;
+    padding: 0;
+  }
+}
+
+// Figma "Места": 3 columns of 550×400 photos, 70px / 30px gaps.
+.placesGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 70px;
+  row-gap: 30px;
+  margin-top: -35px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    column-gap: 32px;
+    row-gap: 24px;
+    margin-top: 0;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 80px 16px;
+  color: $color-text-muted;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: $color-text-main;
+}

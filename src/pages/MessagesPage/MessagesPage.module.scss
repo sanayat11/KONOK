@@ -1,0 +1,117 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.page {
+  @include container;
+  padding-top: 24px;
+  padding-bottom: 24px;
+
+  @include mobile {
+    padding: 0;
+  }
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  height: calc(100dvh - #{$header-height} - 48px);
+  min-height: 520px;
+  overflow: hidden;
+  background-color: $color-white;
+  border: 1px solid $color-sand-border;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-sm;
+
+  @include tablet {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+
+  // Mobile: one pane at a time — the list, or the open thread.
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    height: calc(100dvh - #{$header-height-mobile});
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+.single {
+  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+
+  @include mobile {
+    display: flex;
+  }
+}
+
+// Nothing to pick yet: the list pane (with its empty state) takes the full width.
+.noThreads {
+  grid-template-columns: minmax(0, 1fr);
+
+  .chatPane {
+    display: none;
+  }
+
+  .listPane {
+    border-right: none;
+  }
+}
+
+.listPane,
+.chatPane {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.listPane {
+  border-right: 1px solid $color-border-light;
+
+  > * {
+    flex: 1;
+  }
+
+  @include mobile {
+    border-right: none;
+
+    .threadOpen & {
+      display: none;
+    }
+  }
+}
+
+.chatPane {
+  background-color: $color-sand-bg;
+
+  > section {
+    flex: 1;
+  }
+
+  @include mobile {
+    display: none;
+
+    .threadOpen & {
+      display: flex;
+    }
+  }
+}
+
+.cta {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: $radius-pill;
+  background-color: $color-primary;
+  color: $color-white;
+  font-family: $font-heading;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.25);
+  transition: all $transition-normal;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+}

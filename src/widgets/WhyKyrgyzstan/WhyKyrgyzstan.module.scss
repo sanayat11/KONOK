@@ -1,0 +1,171 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Beige spiral ornament + mountain sketch in the top-right corner (Figma).
+$ornament: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260' fill='none'%3E%3Cpath d='M380 40c-60-30-140-10-150 50-8 46 40 74 72 52 26-18 14-60-16-56' stroke='%23E2D3C1' stroke-width='18' stroke-linecap='round'/%3E%3Cpath d='M240 30c-50-20-110 10-110 60 0 40 40 60 66 40' stroke='%23EADFD1' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M0 250 L90 150 L140 195 L210 110 L300 200 L400 120' stroke='%23C9D6E6' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M210 110 l-18 30 l14 -6 l10 14 z' fill='%23DCE6F1'/%3E%3C/svg%3E");
+
+.section {
+  background-color: $color-sand-light;
+  background-image: $ornament;
+  background-repeat: no-repeat;
+  background-position: right 40px top 20px;
+  background-size: min(46vw, 880px) auto;
+  padding: 56px 0 72px;
+
+  @include mobile {
+    padding: 32px 0 40px;
+    background-size: 70vw auto;
+    background-position: right -40px top 10px;
+  }
+}
+
+.container {
+  @include container;
+}
+
+.intro {
+  position: relative;
+  margin-left: min(2.4vw, 46px);
+  margin-bottom: 44px;
+
+  @include mobile {
+    margin-left: 0;
+    margin-bottom: 24px;
+  }
+}
+
+.peaks {
+  width: 64px;
+  height: 24px;
+  margin: 0 0 18px 70px;
+  color: #D4A985;
+
+  @include mobile {
+    margin-left: 0;
+  }
+}
+
+.title {
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 56px;
+  }
+
+  @include mobile {
+    font-size: 34px;
+  }
+}
+
+.subtitle {
+  margin-top: 14px;
+  font-size: 28px;
+  color: $color-text-muted;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 22px;
+  }
+
+  @include mobile {
+    font-size: 17px;
+  }
+}
+
+.grid {
+  @include card-grid;
+  gap: 24px;
+}
+
+.card {
+  overflow: hidden;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+  box-shadow: 0 6px 18px rgba(92, 72, 50, 0.08);
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(92, 72, 50, 0.14);
+  }
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 430 / 310;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: $color-border-light;
+  }
+}
+
+.icon {
+  position: absolute;
+  left: 22px;
+  bottom: -34px;
+  width: 92px;
+  height: 92px;
+  border: 5px solid $color-white;
+  border-radius: 50%;
+  @include flex-center;
+
+  &[data-tone='blue'] {
+    background-color: #E3ECF7;
+    color: $color-primary;
+  }
+
+  &[data-tone='peach'] {
+    background-color: #F8E6DA;
+    color: #B7643B;
+  }
+
+  &[data-tone='green'] {
+    background-color: #E4F0E4;
+    color: #3F7D4C;
+  }
+
+  &[data-tone='pink'] {
+    background-color: #FAE2E5;
+    color: #B83A4B;
+  }
+
+  @include mobile {
+    width: 72px;
+    height: 72px;
+    bottom: -26px;
+  }
+}
+
+.body {
+  padding: 50px 30px 32px;
+
+  @include mobile {
+    padding: 38px 20px 22px;
+  }
+}
+
+.cardTitle {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 22px;
+  }
+}
+
+.cardText {
+  margin-top: 14px;
+  font-size: 20px;
+  line-height: 1.5;
+  color: $color-text-muted;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 16px;
+  }
+}

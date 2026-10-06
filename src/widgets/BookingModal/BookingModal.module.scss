@@ -1,0 +1,126 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.itemPhoto {
+  width: 64px;
+  height: 64px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  background-color: $color-border-light;
+}
+
+.itemTitle {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.itemPrice {
+  color: $color-text-muted;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 16px;
+
+  input {
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid $color-text-main;
+    border-radius: $radius-md;
+    font-size: 16px;
+    outline: none;
+
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba(22, 83, 137, 0.15);
+    }
+  }
+}
+
+// Figma host-registration stepper: "— 2 гостя +".
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 4px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-md;
+  font-size: 18px;
+
+  button {
+    @include button-reset;
+    @include flex-center;
+    width: 44px;
+    height: 42px;
+    border: 1px solid $color-text-main;
+    border-radius: $radius-sm;
+
+    &:hover {
+      border-color: $color-primary;
+      color: $color-primary;
+    }
+  }
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid $color-divider;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.submit {
+  @include primary-button;
+  height: 52px;
+  font-size: 18px;
+}
+
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  text-align: center;
+
+  .submit {
+    align-self: stretch;
+    margin-top: 12px;
+  }
+}
+
+.doneIcon {
+  color: $color-green;
+}
+
+.doneTitle {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.doneText {
+  color: $color-text-muted;
+}

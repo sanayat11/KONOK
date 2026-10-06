@@ -1,0 +1,145 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: $radius-md;
+  color: $color-text-main;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-sand-light;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: -2px;
+  }
+}
+
+.active,
+.active:hover {
+  background-color: $color-primary-soft;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background-color: $color-primary;
+  }
+}
+
+.media {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+}
+
+.listingImage {
+  width: 52px;
+  height: 52px;
+  border-radius: $radius-md;
+  object-fit: cover;
+  background-color: #F1EFE9;
+}
+
+.avatar {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid $color-white;
+  background-color: $color-border-light;
+
+  .active & {
+    border-color: $color-primary-soft;
+  }
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topRow,
+.bottomRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
+  @include truncate;
+  flex: 1;
+  font-family: $font-heading;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.time {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: $color-text-light;
+
+  .unread & {
+    color: $color-primary;
+    font-weight: 600;
+  }
+}
+
+.listing {
+  @include truncate;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: $color-primary;
+  margin-bottom: 2px;
+}
+
+.preview {
+  @include truncate;
+  flex: 1;
+  font-size: 0.85rem;
+  color: $color-text-muted;
+
+  .unread & {
+    color: $color-text-main;
+    font-weight: 600;
+  }
+}
+
+.you {
+  color: $color-text-light;
+  font-weight: 500;
+}
+
+.draft {
+  font-style: italic;
+  color: $color-text-light;
+}
+
+.badge {
+  flex-shrink: 0;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: $radius-pill;
+  background-color: $color-primary;
+  color: $color-white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  @include flex-center;
+}

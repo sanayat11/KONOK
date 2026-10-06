@@ -1,0 +1,64 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background-color: $color-white;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid $color-border-light;
+}
+
+.titleRow {
+  @include flex-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.counter {
+  padding: 3px 10px;
+  border-radius: $radius-pill;
+  background-color: $color-primary-soft;
+  color: $color-primary;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+}
+
+.cta {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: $radius-pill;
+  background-color: $color-primary;
+  color: $color-white;
+  font-family: $font-heading;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.25);
+  transition: all $transition-normal;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+}

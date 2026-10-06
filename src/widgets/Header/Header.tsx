@@ -1,152 +1,216 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Globe, User, LogOut, ChevronDown, Bookmark, Compass } from 'lucide-react';
+import clsx from 'clsx';
+import {
+  Bookmark,
+  CalendarDays,
+  ChevronDown,
+  CircleUserRound,
+  Globe,
+  LogOut,
+  MessageSquareText,
+  Repeat,
+  Settings,
+  User,
+} from 'lucide-react';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
-import { useFavoritesStore } from '@/shared/lib/store/useFavoritesStore';
+import { useUnreadCount } from '@/entities/chat';
+import { mockDemoAccounts } from '@/shared/api/mocks/chatUsers';
+import { Logo } from '@/shared/ui/Logo';
 import styles from './Header.module.scss';
 
-export const Header: React.FC = () => {
+const LANGUAGES = [
+  { code: 'RU', label: 'Русский (RU)' },
+  { code: 'KG', label: 'Кыргызча (KG)' },
+  { code: 'EN', label: 'English (EN)' },
+];
+
+/** Closes a dropdown on outside click / Escape. */
+const useDismiss = (open: boolean, close: () => void) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onPointer = (e: PointerEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) close();
+    };
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, close]);
+  return ref;
+};
+
+export interface HeaderProps {
+  /** Transparent header laid over the hero photo (home, auth). */
+  transparent?: boolean;
+}
+
+export const Header: React.FC<HeaderProps> = ({ transparent = false }) => {
   const navigate = useNavigate();
-  const { isAuthenticated, user, logout } = useAuthStore();
-  const { favorites } = useFavoritesStore();
+  const { isAuthenticated, user, logout, switchAccount } = useAuthStore();
+  const unreadMessages = useUnreadCount(user?.id);
   const [langOpen, setLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('RU');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const langRef = useDismiss(langOpen, () => setLangOpen(false));
+  const userRef = useDismiss(userMenuOpen, () => setUserMenuOpen(false));
+
+  const isOwner = user?.role === 'host' || user?.role === 'guide';
+  const closeMenu = () => setUserMenuOpen(false);
 
   return (
-    <header className={styles.header}>
+    <header className={clsx(styles.header, transparent && styles.transparent)}>
       <div className={styles.container}>
-        {/* Brand Logo */}
-        <Link to="/" className={styles.logo}>
-          <span className={styles.logoText}>KӨNӨK</span>
-          <span className={styles.logoBadge}>KG</span>
-        </Link>
+        <Logo className={styles.logo} />
 
-        {/* Right Action Bar */}
         <div className={styles.actions}>
-          <Link to="/" className={styles.navLink}>
+          <Link to="/" className={clsx(styles.outlineBtn, styles.aboutBtn)}>
             О нас
           </Link>
 
-          {/* Language Switcher */}
-          <div className={styles.langWrapper}>
+          <div className={styles.dropdownWrapper} ref={langRef}>
             <button
               className={styles.langButton}
-              onClick={() => setLangOpen(!langOpen)}
+              onClick={() => setLangOpen((v) => !v)}
               type="button"
+              aria-haspopup="menu"
+              aria-expanded={langOpen}
             >
-              <Globe size={16} />
+              <Globe size={25} strokeWidth={1.6} />
               <span>{currentLang}</span>
-              <ChevronDown size={14} className={langOpen ? styles.rotate : ''} />
+              <ChevronDown size={15} className={clsx(styles.chevron, langOpen && styles.rotate)} />
             </button>
             {langOpen && (
-              <div className={styles.dropdownMenu}>
-                <button
-                  className={styles.dropdownItem}
-                  onClick={() => {
-                    setCurrentLang('RU');
-                    setLangOpen(false);
-                  }}
-                >
-                  Русский (RU)
-                </button>
-                <button
-                  className={styles.dropdownItem}
-                  onClick={() => {
-                    setCurrentLang('KG');
-                    setLangOpen(false);
-                  }}
-                >
-                  Кыргызча (KG)
-                </button>
-                <button
-                  className={styles.dropdownItem}
-                  onClick={() => {
-                    setCurrentLang('EN');
-                    setLangOpen(false);
-                  }}
-                >
-                  English (EN)
-                </button>
+              <div className={styles.dropdownMenu} role="menu">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    role="menuitem"
+                    className={clsx(styles.dropdownItem, lang.code === currentLang && styles.itemActive)}
+                    onClick={() => {
+                      setCurrentLang(lang.code);
+                      setLangOpen(false);
+                    }}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
               </div>
             )}
           </div>
 
-          {/* Favorites shortcut */}
-          <Link to="/cabinet?tab=favorites" className={styles.favBadgeBtn} title="Избранное">
-            <Bookmark size={18} />
-            {favorites.length > 0 && (
-              <span className={styles.favCount}>{favorites.length}</span>
-            )}
-          </Link>
-
-          {/* User Auth Buttons */}
           {isAuthenticated && user ? (
-            <div className={styles.userMenuWrapper}>
-              <button
-                className={styles.userButton}
-                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                type="button"
+            <>
+              <Link
+                to="/messages"
+                className={styles.iconBtn}
+                aria-label={unreadMessages > 0 ? `Сообщения, непрочитанных: ${unreadMessages}` : 'Сообщения'}
+                title="Сообщения"
               >
-                <img
-                  src={user.avatarUrl}
-                  alt={user.fullName}
-                  className={styles.userAvatar}
-                />
-                <span className={styles.userName}>{user.fullName}</span>
-                <ChevronDown size={14} />
-              </button>
+                <MessageSquareText size={30} strokeWidth={1.6} />
+                {unreadMessages > 0 && (
+                  <span className={styles.badge}>{unreadMessages > 9 ? '9+' : unreadMessages}</span>
+                )}
+              </Link>
 
-              {userMenuOpen && (
-                <div className={styles.dropdownMenu}>
-                  <Link
-                    to="/cabinet?tab=profile"
-                    className={styles.dropdownItem}
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    <User size={16} />
-                    <span>Профиль</span>
-                  </Link>
-                  <Link
-                    to="/cabinet?tab=trips"
-                    className={styles.dropdownItem}
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    <Compass size={16} />
-                    <span>Мои путешествия</span>
-                  </Link>
-                  <Link
-                    to="/cabinet?tab=favorites"
-                    className={styles.dropdownItem}
-                    onClick={() => setUserMenuOpen(false)}
-                  >
-                    <Bookmark size={16} />
-                    <span>Избранное</span>
-                  </Link>
-                  <div className={styles.divider} />
-                  <button
-                    className={styles.dropdownItem}
-                    onClick={() => {
-                      logout();
-                      setUserMenuOpen(false);
-                      navigate('/');
-                    }}
-                  >
-                    <LogOut size={16} />
-                    <span>Выйти</span>
-                  </button>
-                </div>
-              )}
-            </div>
+              <div className={styles.dropdownWrapper} ref={userRef}>
+                <button
+                  className={styles.iconBtn}
+                  onClick={() => setUserMenuOpen((v) => !v)}
+                  type="button"
+                  aria-haspopup="menu"
+                  aria-expanded={userMenuOpen}
+                  aria-label="Меню профиля"
+                >
+                  <CircleUserRound size={40} strokeWidth={1.5} />
+                </button>
+
+                {userMenuOpen && (
+                  <div className={clsx(styles.dropdownMenu, styles.userMenu)} role="menu">
+                    <div className={styles.menuUser}>
+                      <img src={user.avatarUrl} alt="" className={styles.menuAvatar} />
+                      <div>
+                        <div className={styles.menuName}>{user.fullName}</div>
+                        <div className={styles.menuRole}>{isOwner ? 'Хозяин' : 'Конок (гость)'}</div>
+                      </div>
+                    </div>
+                    <div className={styles.divider} />
+                    <Link to="/cabinet?tab=profile" className={styles.dropdownItem} onClick={closeMenu}>
+                      <User size={18} />
+                      <span>Профиль</span>
+                    </Link>
+                    <Link to="/cabinet?tab=trips" className={styles.dropdownItem} onClick={closeMenu}>
+                      <CalendarDays size={18} />
+                      <span>{isOwner ? 'Бронирование' : 'Мои бронирования'}</span>
+                    </Link>
+                    {!isOwner && (
+                      <Link to="/cabinet?tab=favorites" className={styles.dropdownItem} onClick={closeMenu}>
+                        <Bookmark size={18} />
+                        <span>Избранное</span>
+                      </Link>
+                    )}
+                    <Link to="/messages" className={styles.dropdownItem} onClick={closeMenu}>
+                      <MessageSquareText size={18} />
+                      <span>Сообщения</span>
+                      {unreadMessages > 0 && <span className={styles.menuCount}>{unreadMessages}</span>}
+                    </Link>
+                    <Link to="/cabinet?tab=settings" className={styles.dropdownItem} onClick={closeMenu}>
+                      <Settings size={18} />
+                      <span>Настройки</span>
+                    </Link>
+                    <div className={styles.divider} />
+                    {/* Demo-only: the app runs on mock data, so allow switching between sides of a chat. */}
+                    <span className={styles.menuLabel}>Демо-аккаунт</span>
+                    {mockDemoAccounts
+                      .filter((account) => account.id !== user.id)
+                      .map((account) => (
+                        <button
+                          key={account.id}
+                          type="button"
+                          className={styles.dropdownItem}
+                          onClick={() => {
+                            switchAccount(account.id);
+                            closeMenu();
+                            navigate('/messages');
+                          }}
+                        >
+                          <Repeat size={18} />
+                          <span>
+                            {account.fullName} · {account.role === 'tourist' ? 'гость' : 'хозяин'}
+                          </span>
+                        </button>
+                      ))}
+                    <div className={styles.divider} />
+                    <button
+                      type="button"
+                      className={styles.dropdownItem}
+                      onClick={() => {
+                        logout();
+                        closeMenu();
+                        navigate('/');
+                      }}
+                    >
+                      <LogOut size={18} />
+                      <span>Выйти</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
-            <div className={styles.authGroup}>
-              <Link to="/auth?mode=login" className={styles.loginBtn}>
+            <>
+              <Link to="/auth?mode=login" className={clsx(styles.outlineBtn, styles.loginBtn)}>
                 Войти
               </Link>
               <Link to="/auth?mode=register" className={styles.registerBtn}>
                 Регистрация
               </Link>
-            </div>
+            </>
           )}
         </div>
       </div>

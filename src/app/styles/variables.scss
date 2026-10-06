@@ -1,58 +1,64 @@
 // Global Design Variables - KONOK Kyrgyzstan Platform
+// Values follow the Figma file "ак шумкар" (desktop artboards are 1920px wide).
 
 // Colors
-$color-primary: #0F52BA;
-$color-primary-dark: #0A3C8A;
-$color-primary-light: #2A6FD6;
-$color-primary-soft: #EEF4FD;
-$color-primary-gradient: linear-gradient(135deg, #0F52BA 0%, #1E40AF 100%);
+$color-primary: #165389;          // header, footer, primary buttons
+$color-primary-dark: #0F3F6B;
+$color-primary-light: #4C7BA6;
+$color-primary-soft: #D4E1F0;     // active sidebar item, soft fills
+$color-primary-gradient: linear-gradient(135deg, #165389 0%, #0F3F6B 100%);
 
-$color-secondary: #3A86FF;
-$color-secondary-light: #EBF2FF;
+$color-secondary: #4C7BA6;
+$color-secondary-light: #E8EFF7;
 
-$color-sand-bg: #F8F6F1;
-$color-sand-light: #FAF9F6;
+$color-sand-bg: #F4EFE9;          // page background
+$color-sand-light: #FAF7F2;       // home sections background
 $color-sand-card: #FFFFFF;
-$color-sand-border: #E8E5DD;
+$color-sand-border: #E6DED3;
+$color-ornament: #E9DFD2;         // beige ornaments
 
-$color-dark-blue: #092C5E;
-$color-footer-bg: #0A2E63;
+$color-dark-blue: #165389;
+$color-footer-bg: #165389;
 
-$color-text-main: #182233;
-$color-text-body: #334155;
-$color-text-muted: #64748B;
-$color-text-light: #94A3B8;
+$color-text-main: #000000;
+$color-text-body: #1F1F1F;
+$color-text-muted: #5C5957;
+$color-text-light: #9A9590;
 
-$color-gold: #F59E0B;
-$color-gold-light: #FEF3C7;
-$color-gold-text: #B45309;
+$color-outline: #7F7F7F;          // outlined pills / buttons in Figma
+$color-divider: #5C5957;
 
-$color-green: #10B981;
-$color-green-light: #D1FAE5;
-$color-green-text: #065F46;
+$color-gold: #FFE200;             // rating star
+$color-gold-light: #FFF8C2;
+$color-gold-text: #8A6D00;
 
-$color-red: #E11D48;
-$color-red-light: #FFE4E6;
+$color-green: #22C55E;
+$color-green-light: #DCFCE7;
+$color-green-text: #166534;
+
+$color-red: #D0283A;              // "Загрузить файл"
+$color-red-light: #FDE2E5;
 
 $color-white: #FFFFFF;
-$color-border: #E2E8F0;
-$color-border-light: #F1F5F9;
+$color-border: #D9D4CD;
+$color-border-light: #EEE9E2;
 
 // Typography
-$font-main: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-$font-heading: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+$font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
 // Shadows
-$shadow-xs: 0 1px 2px 0 rgba(15, 82, 186, 0.05);
-$shadow-sm: 0 2px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-$shadow-md: 0 6px 16px -2px rgba(15, 82, 186, 0.08), 0 3px 6px -3px rgba(15, 23, 42, 0.08);
-$shadow-lg: 0 12px 28px -4px rgba(15, 82, 186, 0.12), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
-$shadow-xl: 0 20px 35px -5px rgba(15, 82, 186, 0.16), 0 8px 16px -6px rgba(15, 23, 42, 0.08);
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.12);
+$shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.16);
 
 // Border Radius
+$radius-xs: 5px;
 $radius-sm: 8px;
-$radius-md: 12px;
-$radius-lg: 16px;
+$radius-md: 10px;
+$radius-lg: 15px;
 $radius-xl: 20px;
 $radius-2xl: 24px;
 $radius-pill: 9999px;
@@ -61,6 +67,11 @@ $radius-pill: 9999px;
 $transition-fast: 0.15s ease;
 $transition-normal: 0.25s ease;
 $transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+// Layout
+$header-height: 100px;
+$header-height-mobile: 64px;
+$page-gutter: 60px;               // side padding on 1920 artboards
 
 // Breakpoints
 $bp-sm: 640px;

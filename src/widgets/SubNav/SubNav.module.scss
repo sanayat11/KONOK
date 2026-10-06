@@ -1,0 +1,183 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Figma: white 85px bar with rounded bottom corners; pills 152×37, 30px apart.
+.bar {
+  position: relative;
+  z-index: 5;
+  background-color: $color-white;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.container {
+  @include container;
+  min-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  @include mobile {
+    min-height: 0;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
+
+.pills {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    gap: 16px;
+  }
+
+  @include mobile {
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 152px;
+  height: 37px;
+  flex-shrink: 0;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  background-color: $color-white;
+  color: $color-text-main;
+  font-size: 20px;
+  font-weight: 700;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    width: 132px;
+    font-size: 17px;
+  }
+
+  @include mobile {
+    width: auto;
+    height: 34px;
+    padding: 0 16px;
+    font-size: 15px;
+  }
+}
+
+.active,
+.active:hover {
+  border-color: $color-primary;
+  background-color: $color-primary;
+  color: $color-white;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  @include mobile {
+    gap: 16px;
+    justify-content: space-between;
+  }
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    width: 20px;
+    height: 20px;
+    accent-color: $color-primary;
+    cursor: pointer;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 17px;
+  }
+
+  @include mobile {
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+}
+
+// Figma: 208×37 box, centred "Поиск", divider + magnifier on the right.
+.search {
+  display: flex;
+  align-items: stretch;
+  width: 208px;
+  height: 37px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  background-color: $color-white;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(22, 83, 137, 0.15);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 18px;
+    text-align: center;
+
+    &::placeholder {
+      color: $color-text-main;
+    }
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  button {
+    @include button-reset;
+    @include flex-center;
+    width: 48px;
+    border-left: 1px solid $color-text-main;
+    color: $color-text-main;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  @include mobile {
+    flex: 1;
+    width: auto;
+  }
+}

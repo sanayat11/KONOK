@@ -1,0 +1,77 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Figma: 1520px-wide panel, 15px radius, ornaments ~400px in each corner.
+.panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  transition: background-color $transition-normal;
+}
+
+.beige {
+  background-color: #F7F3EE;
+  --ornament-a: #E9DCCB;
+  --ornament-b: #D5DFEA;
+}
+
+.sky {
+  background-color: #88A5BD;
+  --ornament-a: #EFE5D6;
+  --ornament-b: #DCE5EE;
+}
+
+.navy {
+  background-color: $color-primary;
+  --ornament-a: #EFE5D6;
+  --ornament-b: #DCE5EE;
+}
+
+.horn {
+  position: absolute;
+  width: min(30vw, 420px);
+  height: min(30vw, 420px);
+  pointer-events: none;
+
+  @include mobile {
+    width: 46vw;
+    height: 46vw;
+    opacity: 0.6;
+  }
+}
+
+.shapeA {
+  fill: var(--ornament-a);
+}
+
+.shapeB {
+  fill: var(--ornament-b);
+}
+
+.tl {
+  top: 0;
+  left: 0;
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  transform: scaleY(-1);
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  transform: scale(-1, -1);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}

@@ -4,12 +4,15 @@
 .mapWidget {
   position: relative;
   width: 100%;
-  height: 480px;
+  // Figma: 1790×793 map block.
+  height: clamp(380px, 41.3vw, 793px);
   background-color: #E8F1EC;
-  border-radius: $radius-2xl;
-  border: 1px solid $color-sand-border;
+  border-radius: $radius-lg;
   overflow: hidden;
-  box-shadow: $shadow-md;
+
+  @include mobile {
+    height: 460px;
+  }
 }
 
 .mapCanvas {
@@ -37,8 +40,8 @@
 .mapPin {
   @include button-reset;
   position: absolute;
-  width: 38px;
-  height: 38px;
+  width: var(--pin-size, 40px);
+  height: var(--pin-size, 40px);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -47,8 +50,8 @@
   cursor: pointer;
   z-index: 10;
   transition: all $transition-normal;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  border: 2px solid #FFFFFF;
+  // Figma: amber cluster bubbles with a soft halo.
+  box-shadow: 0 0 0 6px rgba(214, 160, 72, 0.35);
 
   &:hover {
     transform: translate(-50%, -50%) scale(1.18);
@@ -58,13 +61,13 @@
   &.selected {
     transform: translate(-50%, -50%) scale(1.25);
     z-index: 30;
-    box-shadow: 0 0 0 4px rgba(15, 82, 186, 0.35);
+    box-shadow: 0 0 0 6px rgba(22, 83, 137, 0.4);
   }
 }
 
 .gold {
-  background-color: #F59E0B;
-  color: #111;
+  background-color: rgba(214, 160, 72, 0.92);
+  color: $color-white;
 }
 
 .blue {
@@ -180,7 +183,7 @@
   transition: all $transition-fast;
 
   &:hover {
-    background-color: darken(#EEF4FD, 5%);
+    background-color: #D9E5F1;
   }
 }
 

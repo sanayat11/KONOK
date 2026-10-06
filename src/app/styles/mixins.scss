@@ -32,17 +32,117 @@
 }
 
 // Layout Mixins
+// Figma artboards are 1920px with 60px side gutters; narrower screens shrink the gutter.
 @mixin container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: $page-gutter;
+  padding-right: $page-gutter;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @include tablet {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 
   @include mobile {
     padding-left: 16px;
     padding-right: 16px;
+  }
+}
+
+// Responsive card grid used by catalogs and home sections (4 → 3 → 2 → 1 columns).
+@mixin card-grid($min: 260px, $gap: 50px) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: $gap;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    gap: 32px;
+  }
+
+  @media (max-width: ($bp-xl - 1px)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// White rounded panel used throughout the Figma (cards, info blocks).
+@mixin panel {
+  background-color: $color-white;
+  border-radius: $radius-xl;
+}
+
+// Outlined pill/button from the Figma (thin grey border, bold black text).
+@mixin outline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid $color-outline;
+  border-radius: $radius-sm;
+  background-color: $color-white;
+  color: $color-text-main;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+// Solid navy button from the Figma.
+@mixin primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color $transition-fast, transform $transition-fast;
+
+  &:hover {
+    background-color: $color-primary-dark;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
   }
 }
 
@@ -61,7 +161,7 @@
 // Card and Elevation Mixins
 @mixin card-base {
   background: $color-sand-card;
-  border: 1px solid $color-sand-border;
+  border: none;
   border-radius: $radius-lg;
   transition: all $transition-normal;
 

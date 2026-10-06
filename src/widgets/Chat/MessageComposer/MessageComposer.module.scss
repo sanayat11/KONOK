@@ -1,0 +1,80 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  background-color: $color-white;
+  border-top: 1px solid $color-border-light;
+
+  @include mobile {
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  }
+}
+
+.input {
+  flex: 1;
+  min-height: 46px;
+  max-height: 140px;
+  padding: 12px 16px;
+  resize: none;
+  border: 1.5px solid $color-border;
+  border-radius: 23px;
+  background-color: $color-sand-light;
+  color: $color-text-main;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  outline: none;
+  transition: all $transition-fast;
+
+  &::placeholder {
+    color: $color-text-light;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    background-color: $color-white;
+    box-shadow: 0 0 0 3px rgba(15, 82, 186, 0.12);
+  }
+
+  // iOS zooms into inputs under 16px
+  @include mobile {
+    font-size: 1rem;
+  }
+}
+
+.send {
+  @include button-reset;
+  @include flex-center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: $color-primary;
+  color: $color-white;
+  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.25);
+  transition: all $transition-normal;
+
+  &:hover:not(:disabled) {
+    background-color: $color-primary-dark;
+    box-shadow: 0 6px 16px rgba(15, 82, 186, 0.35);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background-color: $color-border;
+    color: $color-text-light;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}

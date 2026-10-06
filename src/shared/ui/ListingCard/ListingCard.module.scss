@@ -1,0 +1,137 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Figma: 410×500 white card, 15px radius, 310px photo, 20px inner padding.
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.imageWrapper {
+  display: block;
+  aspect-ratio: 410 / 310;
+  overflow: hidden;
+  background-color: $color-border-light;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+
+  .card:hover & {
+    transform: scale(1.04);
+  }
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px 20px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.titles {
+  min-width: 0;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  @include truncate;
+
+  a:hover {
+    color: $color-primary;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 21px;
+  }
+}
+
+.region {
+  font-size: 16px;
+  line-height: 1.4;
+  @include truncate;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 15px;
+  }
+}
+
+.favBtn {
+  @include button-reset;
+  flex-shrink: 0;
+  margin-top: 5px;
+  color: $color-text-main;
+  transition: transform $transition-fast, color $transition-fast;
+
+  &:hover {
+    transform: scale(1.1);
+    color: $color-red;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    border-radius: 4px;
+  }
+
+  &.isFav {
+    color: $color-red;
+
+    svg {
+      fill: $color-red;
+    }
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    svg {
+      width: 26px;
+      height: 26px;
+    }
+  }
+}
+
+.meta {
+  margin-top: 8px;
+  margin-bottom: 20px;
+  font-size: 20px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 17px;
+  }
+}
+
+// Figma: 290×34 outlined button, centred.
+.actionBtn {
+  @include outline-button;
+  align-self: center;
+  width: min(290px, 100%);
+  height: 34px;
+  margin-top: auto;
+  font-size: 20px;
+  white-space: nowrap;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 16px;
+  }
+}

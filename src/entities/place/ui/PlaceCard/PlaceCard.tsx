@@ -1,53 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MapPin } from 'lucide-react';
+import { ArrowRight, Heart } from 'lucide-react';
+import clsx from 'clsx';
 import { Place } from '@/entities/types';
 import { useFavoritesStore } from '@/shared/lib/store/useFavoritesStore';
-import clsx from 'clsx';
 import styles from './PlaceCard.module.scss';
 
 export interface PlaceCardProps {
   place: Place;
 }
 
+/** Figma "Места": 550×400 photo card, title bottom-left, heart top-right, arrow bottom-right. */
 export const PlaceCard: React.FC<PlaceCardProps> = ({ place }) => {
   const { isFavorite, toggleFavorite } = useFavoritesStore();
   const favorite = isFavorite(place.id);
 
-  const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavorite(place.id);
-  };
-
   return (
-    <Link to={`/places/${place.id}`} className={styles.card}>
-      <img
-        src={place.photoUrl}
-        alt={place.name}
-        className={styles.image}
-        loading="lazy"
-      />
-      <div className={styles.gradientOverlay} />
+    <article className={styles.card}>
+      <Link to={`/places/${place.id}`} className={styles.link} aria-label={place.name}>
+        <img src={place.photoUrl} alt="" className={styles.image} loading="lazy" />
+        <span className={styles.overlay} />
+        <span className={styles.info}>
+          <h3 className={styles.name}>{place.name}</h3>
+          <span className={styles.arrow} aria-hidden="true">
+            <ArrowRight size={22} strokeWidth={1.8} />
+          </span>
+        </span>
+      </Link>
 
-      {/* Top action: favorite */}
       <button
         type="button"
-        onClick={handleFavoriteClick}
+        onClick={() => toggleFavorite(place.id)}
         className={clsx(styles.favBtn, favorite && styles.isFav)}
-        aria-label={favorite ? 'Удалить из сохраненных' : 'Сохранить'}
+        aria-label={favorite ? 'Удалить из избранного' : 'Добавить в избранное'}
+        aria-pressed={favorite}
       >
-        <Heart size={16} fill={favorite ? '#EF4444' : 'none'} color={favorite ? '#EF4444' : '#fff'} />
+        <Heart size={30} strokeWidth={1.5} />
       </button>
-
-      {/* Card bottom info */}
-      <div className={styles.info}>
-        <h3 className={styles.name}>{place.name}</h3>
-        <p className={styles.category}>
-          <MapPin size={13} className={styles.pinIcon} />
-          <span>{place.region}</span>
-        </p>
-      </div>
-    </Link>
+    </article>
   );
 };

@@ -33,6 +33,7 @@ export const mockCars: Car[] = [
       'Детское кресло по запросу',
     ],
     owner: {
+      id: 'host-aidar',
       name: 'Айдар Т.',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
       rating: 4.9,
@@ -82,6 +83,7 @@ export const mockCars: Car[] = [
     description: 'Король бездорожья для экспедиций по Памирскому тракту, базовому лагерю пика Ленина и сложным горным перевалам.',
     included: ['Страховка', 'Безлимитный пробег', 'GPS-навигатор'],
     owner: {
+      id: 'host-beknazar',
       name: 'Бекназар К.',
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
       rating: 5.0,
@@ -112,6 +114,7 @@ export const mockCars: Car[] = [
     description: 'Максимальный комфорт, гидроподвеска, мягкий ход по любым каменистым дорогам.',
     included: ['Страховка', 'Детское кресло', 'GPS-навигатор'],
     owner: {
+      id: 'host-almaz',
       name: 'Алмаз М.',
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
       rating: 4.8,
@@ -142,6 +145,7 @@ export const mockCars: Car[] = [
     description: 'Огромный салон и багажник, отлично подходит для больших компаний и семейных туров.',
     included: ['Страховка', 'Безлимитный пробег'],
     owner: {
+      id: 'host-kanat',
       name: 'Канат Б.',
       avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80',
       rating: 4.9,
@@ -172,6 +176,7 @@ export const mockCars: Car[] = [
     description: 'Экономичный и комфортный городской кроссовер для поездок вокруг Иссык-Куля и по Чуйской долине.',
     included: ['Страховка', 'Кондиционер'],
     owner: {
+      id: 'host-mirlan',
       name: 'Мирлан С.',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
       rating: 4.8,
@@ -202,6 +207,7 @@ export const mockCars: Car[] = [
     description: 'Комфортабельный минивэн с капитанскими креслами для комфортных трансферов и групповых поездок.',
     included: ['Страховка', 'Wi-Fi в авто', 'Детские кресла'],
     owner: {
+      id: 'host-chingiz',
       name: 'Чингиз А.',
       avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=200&q=80',
       rating: 4.9,

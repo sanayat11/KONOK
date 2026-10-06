@@ -1,0 +1,217 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+
+  @media (max-width: ($bp-xl - 1px)) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  font-size: 24px;
+  font-weight: 700;
+
+  svg {
+    color: $color-primary;
+  }
+
+  @include mobile {
+    font-size: 20px;
+  }
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  font-size: 18px;
+
+  & + & {
+    border-top: 1px solid $color-border-light;
+  }
+
+  span {
+    display: flex;
+    flex-direction: column;
+  }
+
+  small {
+    font-size: 14px;
+    color: $color-text-muted;
+  }
+
+  select {
+    min-width: 0;
+    max-width: 60%;
+    padding: 6px 10px;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    background-color: $color-white;
+    font-size: 16px;
+  }
+
+  @include mobile {
+    font-size: 15px;
+  }
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 18px;
+  cursor: pointer;
+
+  & + & {
+    border-top: 1px solid $color-border-light;
+  }
+}
+
+// iOS-style switch built on a checkbox.
+.switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+  height: 26px;
+  border-radius: $radius-pill;
+  background-color: #C9C4BD;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: $color-white;
+    box-shadow: $shadow-xs;
+    transition: transform $transition-fast;
+  }
+
+  &:checked {
+    background-color: $color-primary;
+
+    &::after {
+      transform: translateX(20px);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.channelsTitle {
+  margin: 14px 0 8px;
+  font-size: 18px;
+}
+
+.channels {
+  display: flex;
+  gap: 28px;
+  font-size: 18px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  input {
+    width: 18px;
+    height: 18px;
+    accent-color: $color-primary;
+  }
+}
+
+.linkBtn {
+  @include button-reset;
+  color: $color-primary;
+  font-size: 15px;
+  font-weight: 600;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.accountActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.accountBtn {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border: 1px solid $color-outline;
+  border-radius: $radius-sm;
+  font-size: 17px;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+}
+
+.danger {
+  color: $color-red;
+  border-color: rgba(208, 40, 58, 0.4);
+
+  &:hover {
+    border-color: $color-red;
+    color: $color-red;
+    background-color: $color-red-light;
+  }
+}
+
+.dangerFilled,
+.dangerFilled:hover {
+  border-color: $color-red;
+  background-color: $color-red;
+  color: $color-white;
+}
+
+.modalText {
+  color: $color-text-muted;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}

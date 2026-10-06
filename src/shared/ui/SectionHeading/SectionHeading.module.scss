@@ -1,0 +1,32 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: $color-text-main;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 32px;
+  }
+
+  @include mobile {
+    font-size: 26px;
+  }
+}
+
+.subtitle {
+  font-size: 16px;
+  color: $color-text-main;
+
+  @include mobile {
+    font-size: 14px;
+  }
+}

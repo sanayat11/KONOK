@@ -1,0 +1,135 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Shared cabinet tab styles (Figma "Профиль гостя" frames).
+
+.pageTitle {
+  font-size: 40px;
+  font-weight: 700;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 32px;
+  }
+
+  @include mobile {
+    font-size: 26px;
+  }
+}
+
+.pageSubtitle {
+  margin-top: 6px;
+  font-size: 20px;
+  color: $color-text-muted;
+
+  @include mobile {
+    font-size: 15px;
+  }
+}
+
+.panel {
+  @include panel;
+  padding: 20px 24px;
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  font-size: 20px;
+  font-weight: 400;
+
+  @include mobile {
+    font-size: 17px;
+  }
+}
+
+.cards3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+
+  @media (max-width: ($bp-xl - 1px)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}
+
+.filterTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+// Figma: outlined pill filters, navy when active.
+.filterTab {
+  @include button-reset;
+  padding: 6px 22px;
+  border: 1px solid $color-text-main;
+  border-radius: $radius-sm;
+  background-color: $color-white;
+  font-size: 20px;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+
+  @include mobile {
+    padding: 5px 14px;
+    font-size: 15px;
+  }
+}
+
+.filterActive,
+.filterActive:hover {
+  border-color: $color-primary;
+  background-color: $color-primary;
+  color: $color-white;
+}
+
+.primaryBtn {
+  @include primary-button;
+  padding: 8px 18px;
+  border-radius: $radius-sm;
+  font-size: 15px;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 24px;
+  text-align: center;
+  color: $color-text-muted;
+
+  svg {
+    color: $color-primary;
+  }
+
+  a {
+    color: $color-primary;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.emptyTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $color-text-main;
+}

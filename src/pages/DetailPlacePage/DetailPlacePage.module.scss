@@ -1,0 +1,305 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.page {
+  padding: 24px 0 60px;
+}
+
+.container {
+  @include container;
+}
+
+.backBtn {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: $color-text-body;
+  margin-bottom: 20px;
+  padding: 6px 12px;
+  border-radius: $radius-pill;
+  background-color: $color-white;
+  border: 1px solid $color-sand-border;
+  transition: all $transition-fast;
+
+  &:hover {
+    color: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.topGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 28px;
+  margin-bottom: 48px;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+// Slider card
+.sliderCard {
+  background-color: $color-white;
+  border-radius: $radius-2xl;
+  border: 1px solid $color-sand-border;
+  overflow: hidden;
+  box-shadow: $shadow-md;
+}
+
+.sliderWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background-color: #000;
+}
+
+.sliderImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sliderArrow {
+  @include button-reset;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-main;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: #fff;
+    transform: translateY(-50%) scale(1.08);
+  }
+}
+
+.arrowLeft {
+  left: 14px;
+}
+
+.arrowRight {
+  right: 14px;
+}
+
+.topActions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.actionCircleBtn {
+  @include button-reset;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+}
+
+.placeBody {
+  padding: 24px;
+}
+
+.placeCategory {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $color-primary;
+  margin-bottom: 8px;
+}
+
+.placeTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: $color-text-main;
+  margin-bottom: 12px;
+}
+
+.placeDesc {
+  font-size: 0.95rem;
+  color: $color-text-body;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.highlightsWrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.highlightItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $color-text-main;
+}
+
+.checkIcon {
+  color: $color-green;
+  flex-shrink: 0;
+}
+
+.actionsRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+// Right Map Card
+.mapCard {
+  background-color: $color-white;
+  border: 1px solid $color-sand-border;
+  border-radius: $radius-2xl;
+  padding: 24px;
+  box-shadow: $shadow-md;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mapHeader {
+  margin-bottom: 16px;
+}
+
+.mapRegionTag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: $color-primary;
+  letter-spacing: 0.05em;
+}
+
+.mapTitle {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: $color-text-main;
+}
+
+.mapViewport {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  background-color: #E2ECE9;
+}
+
+.miniMapSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.markerCallout {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 12px 18px;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  text-align: center;
+  width: 80%;
+}
+
+.calloutTitle {
+  font-weight: 700;
+  font-size: 1rem;
+  color: $color-text-main;
+}
+
+.calloutRating {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $color-gold;
+
+  span {
+    color: $color-text-muted;
+    font-weight: 500;
+  }
+}
+
+.calloutLoc {
+  font-size: 0.78rem;
+  color: $color-text-muted;
+  margin-top: 2px;
+}
+
+.mapFooterNote {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: $color-text-muted;
+  text-align: center;
+}
+
+// Hosts section
+.hostsSection {
+  margin-top: 20px;
+}
+
+.hostsTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: $color-text-main;
+  margin-bottom: 4px;
+}
+
+.hostsSubtitle {
+  font-size: 0.95rem;
+  color: $color-text-muted;
+  margin-bottom: 20px;
+}
+
+.hostsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,55 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 0;
+
+  & + & {
+    border-top: 1px solid $color-divider;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: $color-border-light;
+
+  @include mobile {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.text {
+  font-size: 20px;
+  line-height: 1.2;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 17px;
+  }
+
+  @include mobile {
+    font-size: 15px;
+  }
+}
+
+.empty {
+  color: $color-text-muted;
+  font-size: 17px;
+}

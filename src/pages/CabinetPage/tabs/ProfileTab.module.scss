@@ -1,0 +1,258 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// Figma: 1400×470 banner, 15px radius.
+.banner {
+  overflow: hidden;
+  border-radius: $radius-lg;
+  aspect-ratio: 1400 / 470;
+  background-color: $color-border-light;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @include mobile {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.head {
+  position: relative;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 24px;
+  margin-top: -130px;
+  padding-left: 100px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    grid-template-columns: 190px minmax(0, 1fr) auto;
+    margin-top: -100px;
+    padding-left: 40px;
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    margin-top: -70px;
+    padding-left: 0;
+    text-align: center;
+  }
+}
+
+.avatarWrap {
+  position: relative;
+  width: 210px;
+  height: 210px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    width: 170px;
+    height: 170px;
+  }
+
+  @include mobile {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border: 5px solid $color-white;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: $color-border-light;
+}
+
+.cameraBtn {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 30px;
+  height: 30px;
+  border: 2px solid $color-white;
+  border-radius: 50%;
+  background-color: $color-text-main;
+  color: $color-white;
+  cursor: pointer;
+  @include flex-center;
+
+  &:focus-within {
+    outline: 2px solid $color-primary;
+  }
+}
+
+.identity {
+  padding-top: 145px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    padding-top: 110px;
+  }
+
+  @include mobile {
+    padding-top: 0;
+  }
+}
+
+.name {
+  font-size: 28px;
+  font-weight: 700;
+  margin-left: 30px;
+
+  @include mobile {
+    margin-left: 0;
+    font-size: 24px;
+  }
+}
+
+.bio {
+  max-width: 640px;
+  margin-top: 6px;
+  font-size: 20px;
+  line-height: 1.2;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.editBtn {
+  margin-top: 145px;
+  gap: 8px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    margin-top: 110px;
+  }
+
+  @include mobile {
+    margin-top: 0;
+  }
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 140px;
+  width: 100%;
+  max-width: 640px;
+
+  input,
+  textarea {
+    padding: 8px 12px;
+    border: 1px solid $color-text-main;
+    border-radius: $radius-sm;
+    font-size: 18px;
+    outline: none;
+
+    &:focus {
+      border-color: $color-primary;
+    }
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    padding-top: 108px;
+  }
+
+  @include mobile {
+    padding-top: 0;
+  }
+}
+
+.editActions {
+  display: flex;
+  gap: 10px;
+}
+
+.cancelBtn {
+  @include button-reset;
+  padding: 8px 18px;
+  border: 1px solid $color-outline;
+  border-radius: $radius-sm;
+  font-size: 15px;
+}
+
+.infoList {
+  > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 4px 10px;
+    border-bottom: 1px solid $color-border;
+    font-size: 18px;
+  }
+
+  dt {
+    color: $color-text-light;
+  }
+
+  dd {
+    text-align: center;
+  }
+}
+
+.langList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 12px;
+    border: 1px solid $color-text-main;
+    border-radius: $radius-sm;
+  }
+}
+
+.flag {
+  font-size: 20px;
+}
+
+.langName {
+  flex: 1;
+  font-size: 18px;
+}
+
+.langLevel {
+  padding: 0 10px;
+  border-radius: $radius-sm;
+  background-color: $color-primary-soft;
+  color: $color-primary-light;
+  font-size: 13px;
+}
+
+.interests {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px;
+    border-radius: $radius-sm;
+    background-color: $color-sand-bg;
+    font-size: 18px;
+  }
+
+  img {
+    width: 52px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+}

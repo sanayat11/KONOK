@@ -1,14 +1,26 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
+// Figma: 100px navy bar; logo at x=228, actions end at the 60px gutter.
 .header {
-  background-color: $color-primary;
-  color: $color-white;
-  height: 68px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(15, 82, 186, 0.2);
+  height: $header-height;
+  background-color: $color-primary;
+  color: $color-white;
+
+  @include mobile {
+    height: $header-height-mobile;
+  }
+}
+
+// Home & auth: the header floats over the hero photo.
+.transparent {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: transparent;
 }
 
 .container {
@@ -17,60 +29,117 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: $color-white;
-  font-family: $font-heading;
-  font-weight: 800;
-  font-size: 1.6rem;
-  letter-spacing: 0.08em;
-  transition: opacity $transition-fast;
+  // 228px from the artboard edge = 60px gutter + 168px.
+  margin-left: min(8.75vw, 168px);
 
-  &:hover {
-    opacity: 0.92;
+  @include mobile {
+    margin-left: 0;
   }
-}
-
-.logoBadge {
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    gap: 14px;
+  }
+
+  @include mobile {
+    gap: 8px;
+  }
 }
 
-.navLink {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: $radius-pill;
-  transition: all $transition-fast;
+.outlineBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  min-width: 100px;
+  padding: 0 16px;
+  border: 1px solid $color-white;
+  border-radius: $radius-xs;
+  color: $color-white;
+  font-size: 20px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: background-color $transition-fast;
 
   &:hover {
-    color: $color-white;
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.14);
   }
+
+  &:focus-visible {
+    outline: 2px solid $color-white;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    height: 40px;
+    min-width: 88px;
+    font-size: 17px;
+  }
+
+  @include mobile {
+    height: 34px;
+    min-width: 0;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}
+
+.aboutBtn {
+  margin-right: 11px;
 
   @include mobile {
     display: none;
   }
 }
 
-.langWrapper, .userMenuWrapper {
+.registerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  min-width: 179px;
+  padding: 0 20px;
+  border-radius: $radius-xs;
+  background-color: $color-white;
+  color: $color-text-main;
+  font-size: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-primary-soft;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-white;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    height: 40px;
+    min-width: 150px;
+    font-size: 17px;
+  }
+
+  @include mobile {
+    height: 34px;
+    min-width: 0;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}
+
+.dropdownWrapper {
   position: relative;
 }
 
@@ -78,105 +147,130 @@
   @include button-reset;
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: $radius-pill;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  transition: all $transition-fast;
+  gap: 7px;
+  padding: 6px 4px;
+  color: $color-white;
+  font-size: 20px;
+  border-radius: $radius-xs;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.15);
+    opacity: 0.85;
   }
+
+  &:focus-visible {
+    outline: 2px solid $color-white;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 17px;
+  }
+
+  @include mobile {
+    gap: 3px;
+    font-size: 14px;
+
+    > svg:first-child {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.chevron {
+  transition: transform $transition-fast;
 }
 
 .rotate {
   transform: rotate(180deg);
 }
 
-.favBadgeBtn {
+.iconBtn {
+  @include button-reset;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all $transition-fast;
+  color: $color-white;
+  transition: background-color $transition-fast;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.22);
+    background-color: rgba(255, 255, 255, 0.14);
   }
-}
 
-.favCount {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background-color: $color-gold;
-  color: #111;
-  font-size: 0.7rem;
-  font-weight: 800;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.userButton {
-  @include button-reset;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 4px 12px 4px 4px;
-  border-radius: $radius-pill;
-  color: #fff;
-  transition: all $transition-fast;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+  &:focus-visible {
+    outline: 2px solid $color-white;
   }
-}
-
-.userAvatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid #fff;
-}
-
-.userName {
-  font-size: 0.9rem;
-  font-weight: 600;
 
   @include mobile {
-    display: none;
+    width: 38px;
+    height: 38px;
+
+    svg {
+      width: 26px;
+      height: 26px;
+    }
   }
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: $radius-pill;
+  border: 2px solid $color-primary;
+  background-color: $color-red;
+  color: $color-white;
+  font-size: 11px;
+  font-weight: 700;
+  @include flex-center;
 }
 
 .dropdownMenu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   right: 0;
-  min-width: 180px;
+  min-width: 200px;
+  padding: 6px;
+  border-radius: $radius-md;
   background-color: $color-white;
   color: $color-text-main;
-  border-radius: $radius-md;
   box-shadow: $shadow-lg;
-  border: 1px solid $color-border;
-  padding: 6px;
   z-index: 150;
-  animation: fadeIn 0.15s ease-out;
+}
+
+.userMenu {
+  min-width: 270px;
+}
+
+.menuUser {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+}
+
+.menuAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: $color-border-light;
+}
+
+.menuName {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.menuRole {
+  font-size: 13px;
+  color: $color-text-muted;
 }
 
 .dropdownItem {
@@ -185,60 +279,57 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
+  padding: 9px 12px;
   border-radius: $radius-sm;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 15px;
   color: $color-text-main;
-  transition: background-color $transition-fast;
   text-align: left;
+  transition: background-color $transition-fast;
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: $color-primary-soft;
     color: $color-primary;
   }
 }
 
+.itemActive {
+  color: $color-primary;
+  font-weight: 600;
+}
+
+.menuCount {
+  margin-left: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: $radius-pill;
+  background-color: $color-primary;
+  color: $color-white;
+  font-size: 11px;
+  font-weight: 700;
+  @include flex-center;
+}
+
+.menuLabel {
+  display: block;
+  padding: 6px 12px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: $color-text-light;
+}
+
 .divider {
   height: 1px;
-  background-color: $color-border;
   margin: 4px 0;
+  background-color: $color-border-light;
 }
 
-.authGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.loginBtn {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-decoration: none;
-  padding: 7px 16px;
-  border-radius: $radius-pill;
-  transition: all $transition-fast;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-  }
-}
-
-.registerBtn {
-  background-color: $color-white;
-  color: $color-primary;
-  font-size: 0.92rem;
-  font-weight: 700;
-  text-decoration: none;
-  padding: 8px 18px;
-  border-radius: $radius-pill;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: all $transition-fast;
-
-  &:hover {
-    background-color: #F8FAFC;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+// Very narrow phones: drop the globe so everything fits at 320px.
+@media (max-width: 400px) {
+  .langButton > svg:first-child {
+    display: none;
   }
 }

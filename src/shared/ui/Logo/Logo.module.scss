@@ -1,0 +1,41 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Figma: 48px heavy letters, 50px ornament, white on the navy header.
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: $color-white;
+  font-family: $font-heading;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-white;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: ($bp-2xl - 1px)) {
+    font-size: 40px;
+  }
+
+  @include mobile {
+    font-size: 28px;
+  }
+}
+
+.mark {
+  width: 1.04em;
+  height: 1.04em;
+  flex-shrink: 0;
+}
