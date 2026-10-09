@@ -35,7 +35,7 @@ export const mockCars: Car[] = [
     owner: {
       id: 'host-aidar',
       name: 'Айдар Т.',
-      avatar: '/images/people/1507003211169-0a1dd7228f2d.jpg',
+      avatar: '/images/people/resident-aidar.jpg',
       rating: 4.9,
       reviewsCount: 17,
       responseTime: 'Отвечает за 15 минут',
@@ -87,7 +87,7 @@ export const mockCars: Car[] = [
     owner: {
       id: 'host-beknazar',
       name: 'Бекназар К.',
-      avatar: '/images/people/1500648767791-00dcc994a43e.jpg',
+      avatar: '/images/people/resident-beknazar.jpg',
       rating: 5.0,
       reviewsCount: 29,
       responseTime: 'Отвечает за 10 минут',
@@ -118,7 +118,7 @@ export const mockCars: Car[] = [
     owner: {
       id: 'host-almaz',
       name: 'Алмаз М.',
-      avatar: '/images/people/1472099645785-5658abf4ff4e.jpg',
+      avatar: '/images/people/resident-almaz.jpg',
       rating: 4.8,
       reviewsCount: 22,
       responseTime: 'Отвечает за 30 минут',
@@ -149,7 +149,7 @@ export const mockCars: Car[] = [
     owner: {
       id: 'host-kanat',
       name: 'Канат Б.',
-      avatar: '/images/people/1519085360753-af0119f7cbe7.jpg',
+      avatar: '/images/people/resident-kanat.jpg',
       rating: 4.9,
       reviewsCount: 15,
       responseTime: 'Отвечает за 20 минут',
@@ -180,7 +180,7 @@ export const mockCars: Car[] = [
     owner: {
       id: 'host-mirlan',
       name: 'Мирлан С.',
-      avatar: '/images/people/1507003211169-0a1dd7228f2d.jpg',
+      avatar: '/images/people/resident-mirlan.jpg',
       rating: 4.8,
       reviewsCount: 14,
       responseTime: 'Отвечает за 15 минут',
@@ -211,7 +211,7 @@ export const mockCars: Car[] = [
     owner: {
       id: 'host-chingiz',
       name: 'Чингиз А.',
-      avatar: '/images/people/1522075469751-3a6694fb2f61.jpg',
+      avatar: '/images/people/resident-asan.jpg',
       rating: 4.9,
       reviewsCount: 30,
       responseTime: 'Отвечает за 5 минут',

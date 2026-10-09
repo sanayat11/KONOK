@@ -98,7 +98,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     pricePerDay: 3500,
     services: ['hiking', 'yurt', 'riding'],
     idType: 'national',
-    avatarUrl: '/images/people/1506794778202-cad84cf45f1d.jpg',
+    avatarUrl: '/images/people/resident-ruslan.jpg',
     locality: 'Айгүл-Таш',
     address: '',
     maxGuests: 2,

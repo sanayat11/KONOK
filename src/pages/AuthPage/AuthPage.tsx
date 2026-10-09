@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
 import type { UserProfile } from '@/entities/types';
 import { createId } from '@/shared/lib/date';
-import { IMAGES } from '@/shared/lib/images';
+import { IMAGES, responsiveImage } from '@/shared/lib/images';
 import { useT } from '@/shared/i18n';
 import { OrnamentPanel } from '@/shared/ui/OrnamentPanel';
 import { LoginStep } from './steps/LoginStep';
@@ -115,7 +115,7 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <img src={IMAGES.authAside} alt="" className={styles.hero} />
+      <img {...responsiveImage(IMAGES.authAside, '100vw')} alt="" className={styles.hero} />
       <div className={styles.container}>
         <OrnamentPanel tone={tone} className={styles.panel}>
           <div className={styles.panelInner}>

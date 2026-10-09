@@ -69,7 +69,7 @@ export const mockUserBookings: BookingItem[] = [
     dateRange: '17 сен – 19 сен (3 дня)',
     location: 'Таш-Рабат / Нарын',
     price: 14500,
-    photoUrl: '/images/people/1506794778202-cad84cf45f1d.jpg',
+    photoUrl: '/images/people/resident-ruslan.jpg',
     status: 'confirmed',
   },
   {

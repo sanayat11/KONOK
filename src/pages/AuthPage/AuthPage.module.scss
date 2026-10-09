@@ -2,29 +2,36 @@
 @use '@/app/styles/mixins' as *;
 
 // Figma: hero photo behind a wide ornament panel.
+// Strip of the welcome photo left open between the header and the panel.
+$photo-band: clamp(150px, 20vw, 300px);
+$photo-band-mobile: 170px;
+
 .page {
   position: relative;
   min-height: 100vh;
   overflow-x: clip;
-  padding: calc(#{$header-height} + 48px) 0 56px;
+  padding: calc(#{$header-height} + #{$photo-band}) 0 56px;
   background-color: $color-sand-light;
 
   @include mobile {
-    padding: calc(#{$header-height-mobile} + 20px) 0 32px;
+    padding: calc(#{$header-height-mobile} + #{$photo-band-mobile}) 0 32px;
   }
 }
 
+// The photo runs on behind the panel and fades into the page at the bottom.
 .hero {
   position: absolute;
   inset: 0 0 auto;
   width: 100%;
-  height: clamp(420px, 42vw, 760px);
+  height: clamp(520px, 48vw, 900px);
   object-fit: cover;
-  opacity: 0.8;
+  object-position: 50% 62%;
+  mask-image: linear-gradient(to bottom, #000 72%, transparent);
   animation: heroReveal 1400ms $ease-out both;
 
   @include mobile {
-    height: 380px;
+    height: 420px;
+    object-position: 46% 30%;
   }
 }
 

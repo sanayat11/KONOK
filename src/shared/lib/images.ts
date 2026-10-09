@@ -28,7 +28,7 @@ export const IMAGES = {
   story: image('tunduk'),
   storySecondary: image('shyrdak'),
   host: image('yurt-dinner'),
-  authAside: image('altyn-arashan', 1440),
+  authAside: image('welcome-bread-salt', 1440),
   roleTourist: image('son-kul-shore'),
   roleHost: image('yurt-dinner'),
   defaultBanner: image('son-kul-valley', 1440),
