@@ -1,0 +1,47 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+
+  @media (max-width: ($bp-xl - 1px)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.addBtn {
+  gap: 6px;
+}
+
+.cardBtn {
+  @include outline-button(36px);
+  gap: 6px;
+  padding: 0 10px;
+  border-color: $color-text-main;
+  font-size: $text-sm;
+  font-weight: 700;
+}
+
+// Icon-only delete keeps the row from wrapping on narrow cards.
+.deleteBtn {
+  flex: 0 0 40px !important;
+  padding: 0;
+
+  @include hover {
+    border-color: $color-red;
+    color: $color-red;
+  }
+}

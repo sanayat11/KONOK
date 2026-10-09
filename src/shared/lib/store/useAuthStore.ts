@@ -5,6 +5,34 @@ import { mockDemoAccounts } from '@/shared/api/mocks/chatUsers';
 
 const SESSION_KEY = 'konok_session_user';
 const REGISTERED_KEY = 'konok_registered_user';
+const PATCHES_KEY = 'konok_profile_patches';
+
+/** Edits to demo accounts that survive a reload. Blob avatars are excluded: they die with the tab. */
+type ProfilePatch = Partial<Pick<UserProfile, 'fullName' | 'name' | 'bio' | 'interests'>>;
+const PATCHABLE = ['fullName', 'name', 'bio', 'interests'] as const;
+
+const loadPatches = (): Record<string, ProfilePatch> => {
+  try {
+    const raw = typeof window !== 'undefined' ? localStorage.getItem(PATCHES_KEY) : null;
+    return raw ? (JSON.parse(raw) as Record<string, ProfilePatch>) : {};
+  } catch {
+    return {};
+  }
+};
+
+const withPatch = (user: UserProfile): UserProfile => ({ ...user, ...loadPatches()[user.id] });
+
+const savePatch = (id: string, data: Partial<UserProfile>) => {
+  const patch: ProfilePatch = {};
+  for (const key of PATCHABLE) if (key in data) Object.assign(patch, { [key]: data[key] });
+  if (!Object.keys(patch).length) return;
+  try {
+    const all = loadPatches();
+    localStorage.setItem(PATCHES_KEY, JSON.stringify({ ...all, [id]: { ...all[id], ...patch } }));
+  } catch {
+    // storage unavailable: the edit lives for this session only
+  }
+};
 
 /** Account created through the registration flow (frontend-only, kept in localStorage). */
 export const loadRegisteredUser = (): UserProfile | null => {
@@ -21,7 +49,7 @@ const loadSessionUser = (): UserProfile => {
     const id = typeof window !== 'undefined' ? localStorage.getItem(SESSION_KEY) : null;
     const registered = loadRegisteredUser();
     if (registered && registered.id === id) return registered;
-    return mockDemoAccounts.find((account) => account.id === id) ?? mockCurrentUser;
+    return withPatch(mockDemoAccounts.find((account) => account.id === id) ?? mockCurrentUser);
   } catch {
     return mockCurrentUser;
   }
@@ -109,7 +137,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   updateHostForm: (data) =>
     set((state) => ({ hostForm: { ...state.hostForm, ...data } })),
   login: (user) => {
-    const next = user || mockCurrentUser;
+    const next = user || withPatch(mockCurrentUser);
     saveSessionUser(next.id);
     set({ isAuthenticated: true, user: next });
   },
@@ -130,13 +158,15 @@ export const useAuthStore = create<AuthState>((set) => ({
     set((state) => {
       if (!state.user) return state;
       const user = { ...state.user, ...data };
-      // A registered (non-demo) account is persisted so edits survive a reload.
+      // A registered account is stored whole; demo accounts keep their text edits as patches.
       if (loadRegisteredUser()?.id === user.id) {
         try {
           localStorage.setItem(REGISTERED_KEY, JSON.stringify(user));
         } catch {
           // ignore
         }
+      } else {
+        savePatch(user.id, data);
       }
       return { user };
     }),
@@ -144,6 +174,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     const account = mockDemoAccounts.find((item) => item.id === userId);
     if (!account) return;
     saveSessionUser(account.id);
-    set({ isAuthenticated: true, user: account });
+    set({ isAuthenticated: true, user: withPatch(account) });
   },
 }));

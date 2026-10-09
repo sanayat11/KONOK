@@ -4,7 +4,8 @@ import confetti from 'canvas-confetti';
 import { BadgeCheck, CalendarDays, Minus, Plus } from 'lucide-react';
 import { Modal } from '@/shared/ui/Modal';
 import { useBookingStore } from '@/shared/lib/store/useBookingStore';
-import { createId, DAY_MS, toInputDate, useToday } from '@/shared/lib/date';
+import { createId, DAY_MS, parseInputDate, toInputDate, useToday } from '@/shared/lib/date';
+import { stayNightlyPrice } from '@/shared/lib/pricing';
 import { useT } from '@/shared/i18n';
 import styles from './BookingModal.module.scss';
 
@@ -19,13 +20,19 @@ const BookingForm: React.FC = () => {
   const { t, fmt } = useT();
   const { bookingModal, closeBookingModal, addBooking } = useBookingStore();
   const today = useToday();
-  const [start, setStart] = useState(toInputDate(new Date(today.getTime() + 7 * DAY_MS)));
-  const [end, setEnd] = useState(toInputDate(new Date(today.getTime() + 9 * DAY_MS)));
-  const [guests, setGuests] = useState(2);
+  const todayIso = toInputDate(today);
+  const presetIn = parseInputDate(bookingModal.checkIn);
+  const presetOut = parseInputDate(bookingModal.checkOut);
+  const validPreset = presetIn && presetOut && presetIn >= todayIso && presetOut > presetIn;
+  const [start, setStart] = useState(validPreset ? presetIn : toInputDate(new Date(today.getTime() + 7 * DAY_MS)));
+  const [end, setEnd] = useState(validPreset ? presetOut : toInputDate(new Date(today.getTime() + 9 * DAY_MS)));
+  const [guests, setGuests] = useState(Math.min(12, Math.max(1, bookingModal.guests ?? 2)));
   const [done, setDone] = useState(false);
 
+  const isStay = bookingModal.type === 'stay';
   const nights = Math.max(1, Math.round((new Date(end).getTime() - new Date(start).getTime()) / DAY_MS));
-  const price = bookingModal.pricePerDay ?? 0;
+  // Stays carry the host's base price; the markup is added here, once, from the shared pricing helper.
+  const price = isStay ? stayNightlyPrice(bookingModal.basePricePerNight ?? 0) : (bookingModal.pricePerDay ?? 0);
   const total = nights * price;
   const shortDate = (iso: string) => fmt.date(iso, { day: 'numeric', month: 'short' });
 
@@ -59,7 +66,7 @@ const BookingForm: React.FC = () => {
         addBooking({
           id: createId('b'),
           title: bookingModal.itemTitle,
-          category: bookingModal.type === 'car' ? 'car' : bookingModal.type === 'place' ? 'place' : 'guide',
+          category: isStay ? 'hotel' : bookingModal.type === 'car' ? 'car' : bookingModal.type === 'place' ? 'place' : 'guide',
           dateRange: `${shortDate(start)} – ${shortDate(end)} · ${t('common.guests', { count: guests })}`,
           location: '',
           price: total,
@@ -74,7 +81,9 @@ const BookingForm: React.FC = () => {
         <img src={bookingModal.photoUrl} alt="" className={styles.itemPhoto} />
         <div>
           <p className={styles.itemTitle}>{bookingModal.itemTitle}</p>
-          {price > 0 && <p className={styles.itemPrice}>{fmt.pricePerDay(price)}</p>}
+          {price > 0 && (
+            <p className={styles.itemPrice}>{isStay ? `${fmt.price(price)} ${t('stays.perNight')}` : fmt.pricePerDay(price)}</p>
+          )}
         </div>
       </div>
 

@@ -1,10 +1,14 @@
 # Image credits
 
 Landscape, cultural and vehicle photographs are from Wikimedia Commons and are used under the licenses listed below.
-Files in `people/` are from Unsplash (Unsplash License) and are placeholders for real host photos.
+Portraits in `people/` are listed in their own table further down.
 
 | File | Author | License | Source |
 |---|---|---|---|
+| hero-yurts | Ilya Varlamov (varlamov.ru) | All rights reserved — used at the site owner's request; written permission from the author is needed before public launch | https://cdn-1.aki.kg/st_gallery/52/1198352.d816643dac9a3174a0f7842ef870e7b9.jpg |
+| role-host | Theklan | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_women_and_child_offering_bread_and_salt.jpg |
+| role-guest | Ceyhun Kavakci | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_nomad_(14985906287).jpg |
+| ala-bel-pass | Ninara from Helsinki, Finland | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Ala-Bel_pass,_Kyrgyzstan_(43780867434).jpg |
 | ala-archa-stream | Kukich | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Pix113._Ala-Archa_National_Park.jpg |
 | ala-archa-valley | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%90%D0%BB%D0%B0-%D0%90%D1%80%D1%87%D0%B0_%D1%81%D0%B2%D0%B5%D1%80%D1%85%D1%83_(1).jpg |
 | altyn-arashan | Adam Harangozó | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Yurts_in_Altyn_Arashan,_Kyrgyzstan.jpg |
@@ -45,3 +49,36 @@ Files in `people/` are from Unsplash (Unsplash License) and are placeholders for
 | tunduk | Adam Harangozó | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Top_of_a_yurt_from_inside.jpg |
 | yurt-dinner | Malcolm Manners from Lakeland FL, USA | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Dinner_in_a_yurt_(4224445892).jpg |
 | yurt-interior | Incall | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Yurt_from_the_inside_(2025-03-26;_1).jpg |
+
+## People (`people/`)
+
+Rows marked "AI-generated" are synthetic portraits made for KONOK and do not show real people.
+The other rows are photographs of real people in Kyrgyzstan from Wikimedia Commons and Flickr, cropped to 480×560.
+The names shown next to them on the site belong to demo profiles, not to the people photographed;
+replace them with photos supplied (with consent) by the actual hosts before launch.
+The four remaining `people/<number>.jpg` files are Unsplash portraits (Unsplash License) used for visiting guests' reviews.
+
+| File | Author | License | Source |
+|---|---|---|---|
+| resident-aigul | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-bakyt | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-nurzat | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-erlan | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-asan | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-elmira | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-erkaiym | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-ruslan | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-akyl | AI-generated (Figma AI, gemini-3.1-flash-image) | — | Generated for KONOK; not a real person |
+| resident-bektur | Fearghal O'Nuallain (flickr.com/photos/11795120@N06) | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_Horseman.jpg |
+| resident-askar | Ceyhun Kavakci | CC BY-SA 2.0 | https://www.flickr.com/photos/127544265@N05/14987395618/ |
+| resident-nurtilek | Petar Milošević | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_man_with_ak-kalpak_hat_(%D0%B0%D0%BA-%D0%BA%D0%B0%D0%BB%D0%BF%D0%B0%D0%BA_%D1%88%D0%B0%D0%BF%D0%BAa).jpg |
+| resident-aida | Disicaray | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_nomad_girl.jpg |
+| resident-kuma | Gael Varoquaux | CC BY 2.0 | https://www.flickr.com/photos/gaelvaroquaux/15248924029/ |
+| resident-aidar | Ceyhun Kavakci | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_nomad_(14985906287).jpg |
+| resident-beknazar | Ceyhun Kavakci | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Old_Man_With_A_Hat_Inside_A_Car_At_The_Animal_Market_Of_Kochkor,_Kyrgyzstan._(14986523229).jpg |
+| resident-almaz | Gusjer (flickr.com/people/gusjer) | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_Naryn.jpg |
+| resident-kanat | Ceyhun Kavakci | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_horseman_in_Jeti-Oguz_region_(15172508475).jpg |
+| resident-mirlan | Peretz Partensky | CC BY-SA 2.0 | https://www.flickr.com/photos/ifl/3968084737/ |
+| guest-leila | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%91%D0%B8%D1%88%D0%BA%D0%B5%D0%BA,_%D0%B2%D0%B8%D0%BA%D0%B8-%D1%84%D0%BE%D1%82%D0%BE%D1%82%D1%80%D0%B5%D0%BD%D0%B8%D0%BD%D0%B3_2025_(31).jpg |
+| guest-daniyar | Z. U. (flickr.com/photos/uzolotaryova) | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_man,_Kochkor_(20812812862).jpg |
+| guest-sultan | pbarry (flickr.com/photos/pbarry) | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Kyrgyz_man.jpg |

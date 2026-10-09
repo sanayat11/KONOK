@@ -1,0 +1,494 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.wizard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+// ── Step indicator ──────────────────────────────────────────
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.step button {
+  @include button-reset;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px;
+  border-radius: $radius-sm;
+  text-align: left;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.stepDot {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid $color-outline;
+  border-radius: 50%;
+  background-color: $color-white;
+  font-size: $text-sm;
+  font-weight: 700;
+  color: $color-text-muted;
+  transition: background-color $transition-normal, border-color $transition-normal, color $transition-normal, transform $transition-normal;
+}
+
+.stepLabel {
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-muted;
+  @include truncate;
+
+  @media (max-width: 560px) {
+    display: none;
+  }
+}
+
+.stepActive {
+  .stepDot {
+    border-color: $color-primary;
+    background-color: $color-primary;
+    color: $color-white;
+    transform: scale(1.08);
+  }
+
+  .stepLabel {
+    color: $color-text-main;
+    font-weight: 600;
+  }
+}
+
+.stepDone .stepDot {
+  border-color: $color-primary;
+  background-color: $color-primary-soft;
+  color: $color-primary;
+}
+
+.stepError .stepDot {
+  border-color: $color-red;
+  color: $color-red;
+}
+
+.progress {
+  height: 3px;
+  overflow: hidden;
+  border-radius: $radius-pill;
+  background-color: $color-sage-light;
+
+  span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, $color-primary, $color-gold);
+    transform-origin: left;
+    transition: transform 500ms $ease-out;
+  }
+}
+
+// ── Step panel ──────────────────────────────────────────────
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 260px;
+}
+
+.fromRight {
+  animation: slideFromRight 420ms $ease-out both;
+}
+
+.fromLeft {
+  animation: slideFromLeft 420ms $ease-out both;
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.label {
+  margin-bottom: 6px;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-body;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.row4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+
+  @media (max-width: 560px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.typeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+
+  @media (max-width: 420px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.typeOption {
+  @include flex-center;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid $color-outline;
+  border-radius: $radius-sm;
+  font-size: $text-sm;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color $transition-fast, background-color $transition-fast, color $transition-fast, transform $transition-fast;
+
+  @include hover {
+    border-color: $color-primary;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:focus-within {
+    @include focus-ring;
+  }
+}
+
+.typeActive {
+  border-color: $color-primary;
+  background-color: $color-primary;
+  color: $color-white;
+}
+
+.textarea {
+  @include field(auto);
+  min-height: 120px;
+  padding: 10px 12px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.invalid {
+  border-color: $color-red !important;
+}
+
+.counter {
+  align-self: flex-end;
+  font-size: $text-xs;
+  color: $color-text-light;
+}
+
+.error {
+  font-size: $text-xs;
+  color: $color-red;
+}
+
+.hint {
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+// ── Amenities ───────────────────────────────────────────────
+.amenityGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.amenity {
+  @include button-reset;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid $color-outline;
+  border-radius: $radius-md;
+  background-color: $color-white;
+  font-size: $text-sm;
+  text-align: left;
+  transition: border-color $transition-fast, background-color $transition-fast, transform $transition-fast;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
+  }
+
+  @include hover {
+    border-color: $color-primary;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.amenityOn {
+  border-color: $color-primary;
+  background-color: $color-primary-soft;
+  font-weight: 600;
+}
+
+.amenityCheck {
+  margin-left: auto;
+  animation: pop 320ms $ease-out both;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+.priceRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 16px;
+  align-items: end;
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.pricePreview {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: $radius-md;
+  background-color: $color-sand-light;
+
+  span {
+    font-size: $text-xs;
+    color: $color-text-muted;
+  }
+
+  strong {
+    font-size: 22px;
+    font-weight: 800;
+    color: $color-primary;
+  }
+
+  small {
+    font-size: $text-xs;
+    color: $color-text-muted;
+  }
+}
+
+// ── Photos ──────────────────────────────────────────────────
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.photo {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: $radius-md;
+  animation: photoIn 380ms $ease-out both;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@keyframes photoIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+.cover {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
+}
+
+.coverBadge {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  border-radius: $radius-pill;
+  background-color: $color-primary;
+  font-size: $text-xs;
+  font-weight: 600;
+  color: $color-white;
+}
+
+.photoActions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+
+  button {
+    @include button-reset;
+    @include flex-center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(21, 48, 42, 0.72);
+    color: $color-white;
+    transition: background-color $transition-fast, transform $transition-fast;
+
+    @include hover {
+      background-color: $color-pine;
+      transform: scale(1.08);
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+}
+
+.addPhoto {
+  @include flex-center;
+  flex-direction: column;
+  gap: 6px;
+  aspect-ratio: 4 / 3;
+  padding: 8px;
+  border: 1.5px dashed $color-outline;
+  border-radius: $radius-md;
+  background-color: $color-sand-light;
+  font-size: $text-sm;
+  text-align: center;
+  color: $color-text-muted;
+  cursor: pointer;
+  transition: border-color $transition-fast, background-color $transition-fast;
+
+  svg {
+    color: $color-primary;
+  }
+
+  @include hover {
+    border-color: $color-primary;
+    background-color: $color-primary-soft;
+  }
+
+  &:focus-within {
+    @include focus-ring;
+  }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid $color-primary;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ── Footer ──────────────────────────────────────────────────
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: $radius-sm;
+  background-color: $color-red-light;
+  font-size: $text-sm;
+  color: $color-red;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.demoNote {
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid $color-border-light;
+}
+
+.actionsStart {
+  margin-right: auto;
+}
+
+@media (max-width: 480px) {
+  .actions > * {
+    flex: 1 1 auto;
+  }
+
+  .actionsStart {
+    flex-basis: 100%;
+  }
+}

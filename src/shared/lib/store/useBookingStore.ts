@@ -4,11 +4,18 @@ import { mockUserBookings } from '@/shared/api/mocks/itinerary';
 
 interface BookingModalData {
   isOpen: boolean;
-  type: 'guide' | 'car' | 'place';
+  type: 'guide' | 'car' | 'place' | 'stay';
   itemId: string;
   itemTitle: string;
+  /** Daily price for guides and cars, used as is. */
   pricePerDay?: number;
+  /** Stays: the host's base nightly price; the modal adds the markup via shared/lib/pricing. */
+  basePricePerNight?: number;
   photoUrl: string;
+  /** Optional prefill from the search (yyyy-mm-dd). */
+  checkIn?: string;
+  checkOut?: string;
+  guests?: number;
 }
 
 interface BookingStoreState {

@@ -4,8 +4,6 @@ import clsx from 'clsx';
 import { CalendarDays, LayoutList, MessagesSquare, NotebookTabs, Star } from 'lucide-react';
 import type { Review, UserProfile } from '@/entities/types';
 import { mockCars, mockGuides } from '@/shared/api/mocks';
-import { CarCard } from '@/entities/car/ui/CarCard';
-import { GuideCard } from '@/entities/guide/ui/GuideCard';
 import { ReviewList } from '@/entities/review/ui/ReviewList';
 import { useConversations } from '@/entities/chat';
 import { useToday } from '@/shared/lib/date';
@@ -31,30 +29,6 @@ const Header: React.FC<{ title: string; subtitle: string }> = ({ title, subtitle
     <p className={t$.pageSubtitle}>{subtitle}</p>
   </div>
 );
-
-export const ListingsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
-  const { t } = useT();
-  const { cars, guides } = useOwnListings(user.id);
-  const empty = cars.length + guides.length === 0;
-
-  return (
-    <div className={t$.tab}>
-      <Header title={t('cabinet.listings.title')} subtitle={t('cabinet.listings.subtitle')} />
-      {empty ? (
-        <EmptyState icon={<LayoutList size={22} />} title={t('cabinet.listings.emptyTitle')} text={t('cabinet.listings.emptyText')} />
-      ) : (
-        <Reveal stagger className={styles.grid}>
-          {guides.map((g, i) => (
-            <GuideCard key={g.id} guide={g} {...revealItem(i)} />
-          ))}
-          {cars.map((c, i) => (
-            <CarCard key={c.id} car={c} {...revealItem(guides.length + i)} />
-          ))}
-        </Reveal>
-      )}
-    </div>
-  );
-};
 
 export const HostBookingsTab: React.FC = () => {
   const { t } = useT();

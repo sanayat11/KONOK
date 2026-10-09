@@ -3,6 +3,7 @@ import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   CalendarDays,
+  CarFront,
   ChartColumn,
   Heart,
   LayoutList,
@@ -20,7 +21,9 @@ import { ProfileTab } from './tabs/ProfileTab';
 import { TripsTab } from './tabs/TripsTab';
 import { FavoritesTab } from './tabs/FavoritesTab';
 import { SettingsTab } from './tabs/SettingsTab';
-import { ListingsTab, HostBookingsTab, CalendarTab, ReviewsTab, StatsTab } from './tabs/HostTabs';
+import { HostBookingsTab, CalendarTab, ReviewsTab, StatsTab } from './tabs/HostTabs';
+import { ListingsTab } from './tabs/ListingsTab';
+import { VehiclesTab } from './tabs/VehiclesTab';
 import styles from './CabinetPage.module.scss';
 
 interface MenuItem {
@@ -42,6 +45,7 @@ const GUEST_MENU: MenuItem[] = [
 const HOST_MENU: MenuItem[] = [
   { tab: 'profile', label: 'cabinet.menu.profile', icon: UserRound },
   { tab: 'listings', label: 'cabinet.menu.listings', icon: LayoutList },
+  { tab: 'vehicles', label: 'cabinet.menu.vehicles', icon: CarFront },
   { tab: 'trips', label: 'cabinet.menu.hostTrips', icon: NotebookTabs },
   { tab: 'calendar', label: 'cabinet.menu.calendar', icon: CalendarDays },
   { tab: 'messages', label: 'cabinet.menu.messages', icon: MessageSquareText, href: '/messages' },
@@ -77,6 +81,9 @@ export const CabinetPage: React.FC = () => {
       break;
     case 'listings':
       content = <ListingsTab user={user} />;
+      break;
+    case 'vehicles':
+      content = <VehiclesTab user={user} />;
       break;
     case 'calendar':
       content = <CalendarTab />;

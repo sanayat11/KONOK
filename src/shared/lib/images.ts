@@ -18,6 +18,15 @@ export const responsiveImage = (url: string, sizes: string) => {
   return srcSet ? { src: url, srcSet, sizes } : { src: url };
 };
 
+/**
+ * Home hero photo chosen by the client (Ilya Varlamov, varlamov.ru — see CREDITS.md).
+ * The source is only 1000px wide, so the srcset says so honestly instead of claiming 1440w.
+ */
+export const HERO_IMAGE = {
+  src: '/images/hero-yurts-1000.jpg',
+  srcSet: '/images/hero-yurts-720.jpg 720w, /images/hero-yurts-1000.jpg 1000w',
+} as const;
+
 /** UI-level imagery (not tied to listing data). */
 export const IMAGES = {
   hero: image('son-kul-valley', 1440),
@@ -28,16 +37,8 @@ export const IMAGES = {
   story: image('tunduk'),
   storySecondary: image('shyrdak'),
   host: image('yurt-dinner'),
-  authAside: image('welcome-bread-salt', 1440),
-  roleTourist: image('son-kul-shore'),
-  roleHost: image('yurt-dinner'),
+  authAside: image('ala-bel-pass', 1440),
+  roleTourist: image('role-guest'),
+  roleHost: image('role-host'),
   defaultBanner: image('son-kul-valley', 1440),
-  interests: {
-    mountains: image('ala-archa-valley'),
-    nature: image('sary-chelek'),
-    horses: image('jeti-oguz-horses'),
-    culture: image('shyrdak'),
-    camping: image('son-kul-yurts-night'),
-    cuisine: image('yurt-dinner'),
-  },
 } as const;

@@ -1,0 +1,138 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// Same shell as the listing cards: white, 14px radius, 410:310 photo.
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+  box-shadow: 0 1px 2px rgba(21, 48, 42, 0.04);
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  @include hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(21, 48, 42, 0.12);
+
+    .image {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 410 / 310;
+  overflow: hidden;
+  @include image-placeholder;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 900ms $ease-out;
+}
+
+.status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  border-radius: $radius-pill;
+  font-size: $text-xs;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(21, 48, 42, 0.12);
+}
+
+.available {
+  background-color: $color-green-light;
+  color: $color-green-text;
+}
+
+.unavailable {
+  background-color: $color-sage-light;
+  color: $color-text-muted;
+}
+
+.maintenance {
+  background-color: $color-gold-light;
+  color: $color-gold-text;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 18px 18px;
+}
+
+.title {
+  font-size: clamp(18px, 1.45vw, 22px);
+  font-weight: 700;
+  line-height: 1.35;
+  @include truncate;
+}
+
+.specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: $text-md;
+  color: $color-text-body;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  svg {
+    color: $color-primary;
+  }
+}
+
+.plate {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border: 1.5px solid $color-text-main;
+  border-radius: $radius-xs;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: $text-sm;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.description {
+  font-size: $text-sm;
+  line-height: 1.5;
+  color: $color-text-muted;
+  @include line-clamp(2);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.actionBtn {
+  @include outline-button(36px);
+  flex: 1;
+  gap: 6px;
+  border-color: $color-text-main;
+  font-size: $text-sm;
+  font-weight: 700;
+}
+
+.deleteBtn {
+  @include hover {
+    border-color: $color-red;
+    color: $color-red;
+  }
+}

@@ -30,17 +30,41 @@ export const languageCode = (value: string): LanguageCode | null =>
 
 export const languageKey = (code: LanguageCode): TranslationKey => `auth.languageOptions.${code}`;
 
-export const INTEREST_CODES = ['mountains', 'nature', 'horses', 'culture', 'camping', 'cuisine'] as const;
+/** Travel interests a profile can list ("Мои интересы"). */
+export const INTEREST_CODES = [
+  'hiking',
+  'lakes',
+  'heritage',
+  'traditions',
+  'food',
+  'horses',
+  'adventure',
+  'family',
+  'photography',
+  'wellness',
+  'roadtrips',
+  'village',
+] as const;
 export type InterestCode = (typeof INTEREST_CODES)[number];
 
-const INTEREST_BY_NAME: Record<string, InterestCode> = {
-  Горы: 'mountains',
-  Природа: 'nature',
+/** Earlier profiles stored Russian names or an older, shorter code list. */
+const LEGACY_INTERESTS: Record<string, InterestCode> = {
+  Горы: 'hiking',
+  Природа: 'lakes',
   Лошади: 'horses',
-  Культура: 'culture',
-  Кемпинг: 'camping',
-  Кухня: 'cuisine',
+  Культура: 'traditions',
+  Кемпинг: 'adventure',
+  Кухня: 'food',
+  mountains: 'hiking',
+  nature: 'lakes',
+  culture: 'traditions',
+  camping: 'adventure',
+  cuisine: 'food',
 };
 
 export const interestCode = (value: string): InterestCode | null =>
-  (INTEREST_CODES as readonly string[]).includes(value) ? (value as InterestCode) : (INTEREST_BY_NAME[value] ?? null);
+  (INTEREST_CODES as readonly string[]).includes(value) ? (value as InterestCode) : (LEGACY_INTERESTS[value] ?? null);
+
+/** Normalised, de-duplicated interest codes for a profile. */
+export const interestCodes = (values: string[] | undefined): InterestCode[] =>
+  [...new Set((values ?? []).map(interestCode).filter((c): c is InterestCode => c !== null))];

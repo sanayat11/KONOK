@@ -7,6 +7,7 @@ import { HomePage } from '@/pages/HomePage';
 const CatalogPage = lazy(() => import('@/pages/CatalogPage').then((m) => ({ default: m.CatalogPage })));
 const GuidePage = lazy(() => import('@/pages/GuidePage').then((m) => ({ default: m.GuidePage })));
 const CarPage = lazy(() => import('@/pages/CarPage').then((m) => ({ default: m.CarPage })));
+const StayPage = lazy(() => import('@/pages/StayPage').then((m) => ({ default: m.StayPage })));
 const PlacePage = lazy(() => import('@/pages/PlacePage').then((m) => ({ default: m.PlacePage })));
 const AuthPage = lazy(() => import('@/pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const CabinetPage = lazy(() => import('@/pages/CabinetPage').then((m) => ({ default: m.CabinetPage })));
@@ -21,6 +22,7 @@ function App() {
           <Route path="catalog/:kind" element={<CatalogPage />} />
           <Route path="guides/:id" element={<GuidePage />} />
           <Route path="cars/:id" element={<CarPage />} />
+          <Route path="stays/:id" element={<StayPage />} />
           <Route path="places/:id" element={<PlacePage />} />
           <Route path="auth" element={<AuthPage />} />
           <Route path="cabinet" element={<CabinetPage />} />

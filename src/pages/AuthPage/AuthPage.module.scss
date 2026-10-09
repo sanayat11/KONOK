@@ -2,8 +2,8 @@
 @use '@/app/styles/mixins' as *;
 
 // Figma: hero photo behind a wide ornament panel.
-// Strip of the welcome photo left open between the header and the panel.
-$photo-band: clamp(150px, 20vw, 300px);
+// Strip of the landscape left open between the header and the panel.
+$photo-band: clamp(150px, 20vw, 400px);
 $photo-band-mobile: 170px;
 
 .page {
@@ -16,6 +16,16 @@ $photo-band-mobile: 170px;
   @include mobile {
     padding: calc(#{$header-height-mobile} + #{$photo-band-mobile}) 0 32px;
   }
+
+  // Soft shade under the transparent header so it stays legible over the photo.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: calc(#{$header-height} + 60px);
+    background: linear-gradient(rgba(12, 28, 23, 0.5), transparent);
+    pointer-events: none;
+  }
 }
 
 // The photo runs on behind the panel and fades into the page at the bottom.
@@ -25,13 +35,13 @@ $photo-band-mobile: 170px;
   width: 100%;
   height: clamp(520px, 48vw, 900px);
   object-fit: cover;
-  object-position: 50% 62%;
+  object-position: 50% 40%;
   mask-image: linear-gradient(to bottom, #000 72%, transparent);
   animation: heroReveal 1400ms $ease-out both;
 
   @include mobile {
     height: 420px;
-    object-position: 46% 30%;
+    object-position: 50% 45%;
   }
 }
 
@@ -463,8 +473,7 @@ $photo-band-mobile: 170px;
 .roleCard {
   display: flex;
   flex-direction: column;
-  width: 380px;
-  min-height: 540px;
+  width: 400px;
   overflow: hidden;
   border-radius: $radius-lg;
   background-color: $color-white;
@@ -483,17 +492,17 @@ $photo-band-mobile: 170px;
 
   @include mobile {
     width: 100%;
-    min-height: 0;
   }
 }
 
+// 4:3 photo, so faces are never cut and the card has no empty band under the text.
 .roleMedia {
-  height: 280px;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   @include image-placeholder;
 
   @include mobile {
-    height: 170px;
+    aspect-ratio: 16 / 10;
   }
 }
 
@@ -501,6 +510,7 @@ $photo-band-mobile: 170px;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 30%;
   transition: transform 900ms $ease-out;
 }
 

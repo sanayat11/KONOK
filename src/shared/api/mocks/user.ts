@@ -6,7 +6,7 @@ export const mockCurrentUser: UserProfile = {
   fullName: 'Лейла К.',
   email: 'leila.travels@example.kg',
   phone: '+996 700 88-99-00',
-  avatarUrl: '/images/people/1534528741775-53994a69daeb.jpg',
+  avatarUrl: '/images/people/guest-leila.jpg',
   bannerUrl: '/images/son-kul-shore-1440.jpg',
   bio: 'Люблю путешествовать, открывать новые места и знакомиться с местными жителями. Особенно вдохновляют горы, озера и культура стран.',
   role: 'tourist',

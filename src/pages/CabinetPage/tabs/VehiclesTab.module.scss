@@ -1,0 +1,262 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+// ── Tab ─────────────────────────────────────────────────────
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: $radius-sm;
+  background-color: $color-gold-light;
+  font-size: $text-sm;
+  line-height: 1.45;
+  color: $color-gold-text;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+.feedbackSlot:empty {
+  display: none;
+}
+
+.feedback {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: $radius-pill;
+  background-color: $color-primary-soft;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-primary;
+  animation: fadeIn $duration-base $ease-out both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.feedbackError {
+  background-color: $color-red-light;
+  color: $color-red;
+}
+
+.modalText {
+  color: $color-text-muted;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.dangerBtn {
+  @include button-base(38px);
+  border: 1px solid $color-red;
+  background-color: $color-red;
+  color: $color-white;
+
+  @include hover {
+    background-color: #9C3A31;
+  }
+}
+
+// ── Form ────────────────────────────────────────────────────
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-body;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 420px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.photo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 410 / 220;
+  overflow: hidden;
+  border: 1.5px dashed $color-outline;
+  border-radius: $radius-lg;
+  background-color: $color-sand-light;
+  cursor: pointer;
+  transition: border-color $transition-fast, background-color $transition-fast;
+
+  @include hover {
+    border-color: $color-primary;
+    background-color: $color-primary-soft;
+  }
+
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: $focus-ring;
+  }
+}
+
+.photoFilled {
+  border-style: solid;
+  border-color: transparent;
+
+  .photoOverlay {
+    position: absolute;
+    inset: auto 10px 10px auto;
+    flex-direction: row;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: $radius-pill;
+    background-color: rgba(21, 48, 42, 0.78);
+    color: $color-white;
+    font-size: $text-sm;
+    font-weight: 600;
+  }
+}
+
+.photoInvalid {
+  border-color: $color-red;
+}
+
+.photoPreview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoOverlay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px;
+  text-align: center;
+  color: $color-text-muted;
+
+  svg {
+    color: $color-primary;
+  }
+
+  strong {
+    color: $color-text-main;
+  }
+
+  small {
+    font-size: $text-xs;
+  }
+
+  .photoFilled & svg {
+    color: inherit;
+  }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+
+  @include reduced-motion {
+    animation-duration: 2s;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  font-size: $text-xs;
+  color: $color-red;
+}
+
+.textarea {
+  @include field(auto);
+  min-height: 84px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.textareaInvalid {
+  border-color: $color-red;
+}
+
+.counter {
+  align-self: flex-end;
+  font-size: $text-xs;
+  color: $color-text-light;
+}
+
+.counterOver {
+  color: $color-red;
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: $radius-sm;
+  background-color: $color-red-light;
+  font-size: $text-sm;
+  color: $color-red;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.formNote {
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  @media (max-width: 420px) {
+    > * {
+      flex: 1;
+    }
+  }
+}

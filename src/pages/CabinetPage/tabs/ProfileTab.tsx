@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Camera, CheckCircle2, Globe, Heart, MapPinned, Pencil, UserRound } from 'lucide-react';
+import { Camera, CheckCircle2, Globe, MapPinned, Pencil, UserRound } from 'lucide-react';
 import clsx from 'clsx';
 import type { UserProfile } from '@/entities/types';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
-import { useT, type TranslationKey } from '@/shared/i18n';
+import { useT } from '@/shared/i18n';
 import { IMAGES } from '@/shared/lib/images';
-import { interestCode, LANGUAGE_FLAGS, languageCode, languageKey } from '@/shared/lib/taxonomy';
+import { LANGUAGE_FLAGS, languageCode, languageKey } from '@/shared/lib/taxonomy';
 import { Avatar } from '@/shared/ui/Avatar';
+import { InterestsSection } from './InterestsSection';
 import styles from './ProfileTab.module.scss';
 import t$ from './tabs.module.scss';
 
@@ -153,7 +154,7 @@ export const ProfileTab: React.FC<{ user: UserProfile }> = ({ user }) => {
         </div>
       )}
 
-      <div className={t$.cards3}>
+      <div className={styles.cards2}>
         <section className={t$.panel}>
           <h3 className={t$.panelTitle}>
             <UserRound size={17} /> {t('cabinet.profile.personal')}
@@ -200,28 +201,9 @@ export const ProfileTab: React.FC<{ user: UserProfile }> = ({ user }) => {
             })}
           </ul>
         </section>
-
-        <section className={t$.panel}>
-          <h3 className={t$.panelTitle}>
-            <Heart size={17} /> {t('cabinet.profile.interests')}
-          </h3>
-          {user.interests?.length ? (
-            <ul className={styles.interests}>
-              {user.interests.map((interest) => {
-                const code = interestCode(interest);
-                return (
-                  <li key={interest}>
-                    {code && <img src={IMAGES.interests[code]} alt="" loading="lazy" />}
-                    <span>{code ? t(`cabinet.profile.interestNames.${code}` as TranslationKey) : interest}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className={styles.bioEmpty}>{t('cabinet.profile.interestsEmpty')}</p>
-          )}
-        </section>
       </div>
+
+      <InterestsSection user={user} />
     </div>
   );
 };

@@ -1,255 +1,259 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  CalendarDays,
-  ChevronDown,
-  Compass,
-  BedDouble,
-  Car,
-  MapPin,
-  Search,
-  Users,
-} from 'lucide-react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, BedDouble, CalendarDays, Car, MapPin, Search, Users, UsersRound } from 'lucide-react';
 import clsx from 'clsx';
 import type { RegionId } from '@/entities/types';
-import { useT, type TranslationKey } from '@/shared/i18n';
-import { IMAGES } from '@/shared/lib/images';
+import { useCatalogStays } from '@/entities/stay';
+import { mockGuides } from '@/shared/api/mocks';
+import { useT } from '@/shared/i18n';
+import { DAY_MS, toInputDate, useToday } from '@/shared/lib/date';
+import { HERO_IMAGE } from '@/shared/lib/images';
 import styles from './HeroSearch.module.scss';
 
-type SearchTab = 'tours' | 'stays' | 'transport';
-
-const TABS: SearchTab[] = ['tours', 'stays', 'transport'];
+type SearchTab = 'stays' | 'residents' | 'transport';
+const TABS: SearchTab[] = ['stays', 'residents', 'transport'];
 
 const TAB_ROUTES: Record<SearchTab, string> = {
-  tours: '/catalog/guides',
-  stays: '/catalog/places',
+  stays: '/catalog/stays',
+  residents: '/catalog/guides',
   transport: '/catalog/cars',
 };
 
 const TAB_ICONS: Record<SearchTab, React.ReactNode> = {
-  tours: <Compass size={18} strokeWidth={2} />,
-  stays: <BedDouble size={18} strokeWidth={2} />,
-  transport: <Car size={18} strokeWidth={2} />,
+  stays: <BedDouble size={17} strokeWidth={2} />,
+  residents: <UsersRound size={17} strokeWidth={2} />,
+  transport: <Car size={17} strokeWidth={2} />,
 };
 
-
-
-const CITIES = ['bishkek', 'osh', 'karakol', 'naryn', 'cholponAta', 'batken'] as const;
-
-/** Destinations map onto catalog regions (`?region=`). */
-const DESTINATIONS: Array<{ id: string; region: RegionId | null }> = [
-  { id: 'anywhere', region: null },
-  { id: 'issykKul', region: 'issyk-kul' },
-  { id: 'sonKul', region: 'naryn' },
-  { id: 'tashRabat', region: 'naryn' },
-  { id: 'alaArcha', region: 'chuy' },
-  { id: 'saryChelek', region: 'jalal-abad' },
-  { id: 'osh', region: 'osh' },
-];
-
-/** Transport is searched by pickup city. */
-const CITY_REGION: Record<(typeof CITIES)[number], RegionId> = {
-  bishkek: 'chuy',
-  osh: 'osh',
-  karakol: 'issyk-kul',
-  naryn: 'naryn',
-  cholponAta: 'issyk-kul',
-  batken: 'batken',
-};
-
-const DATES = ['any', 'weekend', 'nextWeek', 'nextMonth'] as const;
-const GUESTS = [1, 2, 3, 4, 5, 6];
-
-interface FieldProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  options: Array<{ value: string; label: string }>;
-  onChange: (value: string) => void;
-  className?: string;
-}
-
-/** Luxury field segment — native <select> covers the entire cell so clicks always open the dropdown. */
-const Field: React.FC<FieldProps> = ({ icon, label, value, options, onChange, className }) => {
-  const displayLabel = options.find((o) => o.value === value)?.label ?? value;
-  return (
-    <div className={clsx(styles.field, className)}>
-      <span className={styles.fieldIcon}>{icon}</span>
-      <span className={styles.fieldBody}>
-        <span className={styles.fieldLabel}>{label}</span>
-        <span className={styles.fieldValue}>{displayLabel}</span>
-      </span>
-      <ChevronDown size={16} className={styles.fieldChevron} aria-hidden="true" />
-      {/* Native select stretched over the whole field for reliable click target */}
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={styles.fieldSelect}
-        aria-label={label}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-};
+/** Every option maps onto a catalog region (`?region=`) — the only location filter the catalogs have. */
+const REGIONS: Array<RegionId | ''> = ['', 'issyk-kul', 'naryn', 'chuy', 'osh', 'jalal-abad', 'talas', 'batken', 'bishkek'];
+const MAX_GUESTS = 12;
 
 /**
- * Modern Kyrgyz ethno luxury HeroSearch:
- * Floating frosted-glass tab switcher with sliding active indicator pill,
- * paired with a unified glassmorphism search capsule bar.
+ * Home hero: the brief's photo, a clear value proposition and a search wired to the real catalog
+ * filters — region for every tab, plus dates and guests for stays (used for capacity, nightly totals
+ * and to prefill the booking form).
  */
 export const HeroSearch: React.FC = () => {
   const navigate = useNavigate();
   const { t, locale } = useT();
-  const [activeTab, setActiveTab] = useState<SearchTab>('tours');
-  const [from, setFrom] = useState<string>('bishkek');
-  const [to, setTo] = useState('anywhere');
-  const [dates, setDates] = useState<string>('any');
-  const [guests, setGuests] = useState('2');
+  const today = useToday();
+  const stays = useCatalogStays();
+  const [tab, setTab] = useState<SearchTab>('stays');
+  const [region, setRegion] = useState<RegionId | ''>('');
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [guests, setGuests] = useState(2);
+  const [dateError, setDateError] = useState(false);
 
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const activeIndex = TABS.indexOf(tab);
 
-  const activeIndex = TABS.indexOf(activeTab);
-
-  // Position animated sliding indicator pill behind the active tab
-  useEffect(() => {
-    const currentTab = tabRefs.current[activeIndex];
-    if (currentTab) {
-      setIndicatorStyle({
-        left: currentTab.offsetLeft,
-        width: currentTab.offsetWidth,
-      });
-    }
-  }, [activeTab, locale, activeIndex]);
-
-  useEffect(() => {
-    const updateIndicator = () => {
-      const currentTab = tabRefs.current[activeIndex];
-      if (currentTab) {
-        setIndicatorStyle({
-          left: currentTab.offsetLeft,
-          width: currentTab.offsetWidth,
-        });
-      }
+  useLayoutEffect(() => {
+    const update = () => {
+      const el = tabRefs.current[activeIndex];
+      if (el) setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
     };
-    window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
-  }, [activeIndex]);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [activeIndex, locale]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const todayIso = toInputDate(today);
+  const minCheckOut = checkIn ? toInputDate(new Date(new Date(checkIn).getTime() + DAY_MS)) : todayIso;
+
+  const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const region =
-      activeTab === 'transport'
-        ? CITY_REGION[from as (typeof CITIES)[number]]
-        : DESTINATIONS.find((d) => d.id === to)?.region;
-    navigate(region ? `${TAB_ROUTES[activeTab]}?region=${region}` : TAB_ROUTES[activeTab]);
+    const params = new URLSearchParams();
+    if (region) params.set('region', region);
+    if (tab === 'stays') {
+      // Dates are optional, but half a range or a reversed one is a mistake worth pointing out.
+      if (Boolean(checkIn) !== Boolean(checkOut) || (checkIn && checkOut && checkOut <= checkIn)) {
+        setDateError(true);
+        return;
+      }
+      if (checkIn && checkOut) {
+        params.set('checkIn', checkIn);
+        params.set('checkOut', checkOut);
+      }
+      params.set('guests', String(guests));
+    }
+    const query = params.toString();
+    navigate(query ? `${TAB_ROUTES[tab]}?${query}` : TAB_ROUTES[tab]);
   };
 
-
+  const regionField = (
+    <label className={clsx(styles.field, styles.fieldWide)}>
+      <span className={styles.fieldLabel}>
+        <MapPin size={15} aria-hidden="true" />
+        {tab === 'transport' ? t('search.pickupRegion') : t('search.to')}
+      </span>
+      <select value={region} onChange={(e) => setRegion(e.target.value as RegionId | '')} className={styles.control}>
+        {REGIONS.map((r) => (
+          <option key={r || 'any'} value={r}>
+            {r ? t(`regions.${r}.name`) : t('search.destinations.anywhere')}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
 
   return (
-    <section className={styles.heroSection}>
-      <img src={IMAGES.hero} alt={t('home.heroImageAlt')} className={styles.bannerImage} fetchPriority="high" />
-      <div className={styles.shade} aria-hidden="true" />
+    <section className={styles.hero} aria-labelledby="hero-title">
+      <div className={styles.media} aria-hidden="true">
+        <img
+          src={HERO_IMAGE.src}
+          srcSet={HERO_IMAGE.srcSet}
+          sizes="100vw"
+          alt=""
+          className={styles.image}
+          fetchPriority="high"
+          onError={(e) => {
+            // Keep the hero readable even if the photo can't load: the green backdrop remains.
+            e.currentTarget.style.visibility = 'hidden';
+          }}
+        />
+        <div className={styles.shade} />
+        <div className={styles.glow} />
+      </div>
 
-      <div className={styles.searchContainer}>
-        {/* Floating pill navigation header with animated sliding indicator */}
-        <div className={styles.headerBlock}>
-          <div className={styles.tabsNav} role="tablist" aria-label={t('search.tabsLabel')}>
-            {/* Smooth animated sliding background pill */}
-            <div
-              className={styles.tabIndicator}
-              style={{
-                transform: `translateX(${indicatorStyle.left}px)`,
-                width: indicatorStyle.width > 0 ? `${indicatorStyle.width}px` : undefined,
-              }}
-              aria-hidden="true"
-            />
-
-            {TABS.map((tab, index) => {
-              const isActive = activeTab === tab;
-              return (
-                <button
-                  key={tab}
-                  ref={(el) => {
-                    tabRefs.current[index] = el;
-                  }}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  className={clsx(styles.tabBtn, isActive && styles.tabActive)}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  <span className={styles.tabIcon}>{TAB_ICONS[tab]}</span>
-                  <span className={styles.tabIndex}>{index + 1}.</span>
-                  <span className={styles.tabText}>{t(`search.tabs.${tab}`)}</span>
-                </button>
-              );
-            })}
+      <div className={styles.inner}>
+        <div className={styles.copy}>
+          <p className={styles.eyebrow}>{t('hero.eyebrow')}</p>
+          {/* The visual headline was dropped for a calmer hero; the h1 stays for screen readers and search. */}
+          <h1 id="hero-title" className="visually-hidden">
+            {t('hero.titleStart')} {t('hero.titleAccent')}
+          </h1>
+          <p className={styles.lead}>{t('hero.lead')}</p>
+          <div className={styles.ctas}>
+            <Link to="/catalog/stays" className={styles.primaryCta}>
+              {t('hero.ctaStays')}
+              <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+            <Link to="/auth?role=host" className={styles.secondaryCta}>
+              {t('hero.ctaHost')}
+            </Link>
           </div>
-
-
+          <ul className={styles.facts}>
+            <li>
+              <strong>{stays.length}</strong> {t('hero.factStays', { count: stays.length })}
+            </li>
+            <li>
+              <strong>{mockGuides.length}</strong> {t('hero.factResidents', { count: mockGuides.length })}
+            </li>
+          </ul>
         </div>
 
-        {/* Unified luxury glassmorphism search capsule */}
-        <form className={styles.searchBar} onSubmit={handleSearch} aria-label={t('search.label')}>
-          <Field
-            icon={<MapPin size={20} strokeWidth={1.8} />}
-            label={t('search.from')}
-            value={from}
-            options={CITIES.map((c) => ({ value: c, label: t(`search.cities.${c}`) }))}
-            onChange={setFrom}
-            className={styles.fieldFrom}
-          />
+        <div className={styles.panel}>
+          <div className={styles.tabs} role="tablist" aria-label={t('search.tabsLabel')}>
+            <span
+              className={styles.indicator}
+              style={{ transform: `translateX(${indicator.left}px)`, width: indicator.width || undefined }}
+              aria-hidden="true"
+            />
+            {TABS.map((id, index) => (
+              <button
+                key={id}
+                ref={(el) => {
+                  tabRefs.current[index] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`hero-tab-${id}`}
+                aria-selected={tab === id}
+                aria-controls="hero-search"
+                className={clsx(styles.tab, tab === id && styles.tabActive)}
+                onClick={() => {
+                  setTab(id);
+                  setDateError(false);
+                }}
+              >
+                {TAB_ICONS[id]}
+                <span>{t(`search.tabs.${id}`)}</span>
+              </button>
+            ))}
+          </div>
 
-          <div className={styles.fieldDivider} aria-hidden="true" />
+          <form
+            id="hero-search"
+            role="tabpanel"
+            aria-labelledby={`hero-tab-${tab}`}
+            className={clsx(styles.form, tab !== 'stays' && styles.formCompact)}
+            onSubmit={submit}
+            noValidate
+          >
+            {regionField}
 
-          <Field
-            icon={<MapPin size={20} strokeWidth={1.8} />}
-            label={t('search.to')}
-            value={to}
-            options={DESTINATIONS.map((d) => ({
-              value: d.id,
-              label: t(`search.destinations.${d.id}` as TranslationKey),
-            }))}
-            onChange={setTo}
-            className={styles.fieldTo}
-          />
+            {tab === 'stays' && (
+              <>
+                <label className={styles.field}>
+                  <span className={styles.fieldLabel}>
+                    <CalendarDays size={15} aria-hidden="true" />
+                    {t('booking.checkIn')}
+                  </span>
+                  <input
+                    type="date"
+                    className={styles.control}
+                    value={checkIn}
+                    min={todayIso}
+                    onChange={(e) => {
+                      setCheckIn(e.target.value);
+                      setDateError(false);
+                      if (checkOut && e.target.value >= checkOut) setCheckOut('');
+                    }}
+                    aria-invalid={dateError}
+                  />
+                </label>
+                <label className={styles.field}>
+                  <span className={styles.fieldLabel}>
+                    <CalendarDays size={15} aria-hidden="true" />
+                    {t('booking.checkOut')}
+                  </span>
+                  <input
+                    type="date"
+                    className={styles.control}
+                    value={checkOut}
+                    min={minCheckOut}
+                    onChange={(e) => {
+                      setCheckOut(e.target.value);
+                      setDateError(false);
+                    }}
+                    aria-invalid={dateError}
+                  />
+                </label>
+                <label className={styles.field}>
+                  <span className={styles.fieldLabel}>
+                    <Users size={15} aria-hidden="true" />
+                    {t('search.guests')}
+                  </span>
+                  <select value={guests} onChange={(e) => setGuests(Number(e.target.value))} className={styles.control}>
+                    {Array.from({ length: MAX_GUESTS }, (_, i) => i + 1).map((n) => (
+                      <option key={n} value={n}>
+                        {t('common.guests', { count: n })}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </>
+            )}
 
-          <div className={styles.fieldDivider} aria-hidden="true" />
+            <button type="submit" className={styles.submit}>
+              <Search size={19} strokeWidth={2.4} aria-hidden="true" />
+              <span>{t('search.submit')}</span>
+            </button>
 
-          <Field
-            icon={<CalendarDays size={20} strokeWidth={1.8} />}
-            label={t('search.when')}
-            value={dates}
-            options={DATES.map((d) => ({ value: d, label: t(`search.dates.${d}`) }))}
-            onChange={setDates}
-            className={styles.fieldDates}
-          />
-
-          <div className={styles.fieldDivider} aria-hidden="true" />
-
-          <Field
-            icon={<Users size={20} strokeWidth={1.8} />}
-            label={t('search.guests')}
-            value={guests}
-            options={GUESTS.map((g) => ({ value: String(g), label: t('common.guests', { count: g }) }))}
-            onChange={setGuests}
-            className={styles.fieldGuests}
-          />
-
-          <button type="submit" className={styles.submitBtn} aria-label={t('search.submit')}>
-            <span className={styles.btnShimmer} aria-hidden="true" />
-            <Search size={20} strokeWidth={2.4} className={styles.searchIcon} />
-            <span className={styles.submitText}>{t('search.submit')}</span>
-          </button>
-        </form>
+            {dateError && (
+              <p className={styles.formError} role="alert">
+                {t('hero.dateError')}
+              </p>
+            )}
+          </form>
+          <p className={styles.panelNote}>{t(`hero.notes.${tab}`)}</p>
+        </div>
       </div>
+
+      <p className={styles.credit}>{t('hero.photoCredit')}</p>
     </section>
   );
 };

@@ -5,10 +5,11 @@ import { Search } from 'lucide-react';
 import { useT, type TranslationKey } from '@/shared/i18n';
 import styles from './SubNav.module.scss';
 
-export type CatalogKind = 'guides' | 'places' | 'cars';
+export type CatalogKind = 'stays' | 'guides' | 'places' | 'cars';
 
 const SECTIONS: Array<{ to: string; label: TranslationKey; match: (path: string) => boolean }> = [
   { to: '/', label: 'nav.home', match: (path) => path === '/' },
+  { to: '/catalog/stays', label: 'nav.stays', match: (path) => /^\/(catalog\/stays|stays)/.test(path) },
   { to: '/catalog/guides', label: 'nav.residents', match: (path) => /^\/(catalog\/guides|guides)/.test(path) },
   { to: '/catalog/places', label: 'nav.places', match: (path) => /^\/(catalog\/places|places)/.test(path) },
   { to: '/catalog/cars', label: 'nav.transport', match: (path) => /^\/(catalog\/cars|cars)/.test(path) },

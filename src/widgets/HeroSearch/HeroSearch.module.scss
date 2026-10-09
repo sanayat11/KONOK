@@ -1,127 +1,275 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Luxury Kyrgyz ethno Hero search:
-// Frosted-glass floating pill tab bar with animated sliding indicator,
-// paired with a seamless glassmorphism search console.
-.heroSection {
+// Home hero: full-bleed photo, value proposition top-left, search panel along the bottom.
+.hero {
   position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  height: clamp(560px, 46vw, 760px);
-  padding-top: clamp(180px, 15vw, 260px);
+  min-height: clamp(640px, 92svh, 900px);
   overflow: hidden;
   background-color: $color-pine;
+  color: $color-white;
+  isolation: isolate;
 
   @include mobile {
-    height: auto;
-    min-height: 580px;
-    padding: 110px 14px 32px;
-    align-items: flex-end;
+    min-height: 0;
   }
 }
 
-.bannerImage {
+// ── Photo layers ────────────────────────────────────────────
+.media {
   position: absolute;
   inset: 0;
+  z-index: -1;
+}
+
+.image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 60%;
+  object-position: 50% 62%;
   animation:
-    heroReveal 1600ms $ease-out both,
-    heroDrift 30s $ease-in-out 1600ms infinite alternate;
+    imageIn 1800ms $ease-out both,
+    drift 40s $ease-in-out 1800ms infinite alternate;
+
+  @include mobile {
+    object-position: 58% 60%;
+  }
 }
 
-@keyframes heroReveal {
+@keyframes imageIn {
   from {
     opacity: 0;
-    transform: scale(1.08);
-    filter: saturate(0.7);
+    transform: scale(1.12);
+    filter: saturate(0.6) brightness(0.8);
   }
   to {
     opacity: 1;
-    transform: scale(1.02);
+    transform: scale(1.03);
     filter: none;
   }
 }
 
-@keyframes heroDrift {
+@keyframes drift {
   from {
-    transform: scale(1.02);
+    transform: scale(1.03);
   }
   to {
-    transform: scale(1.06) translate3d(-0.8%, -0.4%, 0);
+    transform: scale(1.07) translate3d(-0.6%, -0.4%, 0);
   }
 }
 
-// Gentle cinematic vignette keeping the header and search crisp over the landscape
+// Readability: dark sky behind the copy, soft floor behind the panel, a lid for the header.
 .shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(10, 22, 19, 0.45) 0%,
-    rgba(10, 22, 19, 0.1) 28%,
-    rgba(10, 22, 19, 0.05) 55%,
-    rgba(10, 22, 19, 0.35) 100%
-  );
-  pointer-events: none;
-}
-
-.searchContainer {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: min(1080px, 100% - 32px);
-  animation: containerEnter 850ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  background:
+    linear-gradient(180deg, rgba(10, 24, 20, 0.55) 0%, rgba(10, 24, 20, 0) 24%),
+    linear-gradient(90deg, rgba(10, 24, 20, 0.6) 0%, rgba(10, 24, 20, 0.2) 46%, rgba(10, 24, 20, 0) 68%),
+    linear-gradient(0deg, rgba(10, 24, 20, 0.62) 0%, rgba(10, 24, 20, 0) 38%);
+  animation: fade 1200ms $ease-out both;
 
   @include mobile {
-    width: 100%;
+    background:
+      linear-gradient(180deg, rgba(10, 24, 20, 0.7) 0%, rgba(10, 24, 20, 0.35) 45%, rgba(10, 24, 20, 0.85) 100%);
   }
 }
 
-@keyframes containerEnter {
+// Warm evening light leaking in from the left — adds depth without a new image.
+.glow {
+  position: absolute;
+  left: -10%;
+  top: 30%;
+  width: 55%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba($color-gold, 0.28) 0%, transparent 65%);
+  filter: blur(20px);
+  animation: fade 2400ms $ease-out 400ms both;
+}
+
+@keyframes fade {
   from {
     opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
-// ── Header / Pill Tabs ─────────────────────────────────────────────────────────
-
-.headerBlock {
+// ── Layout ──────────────────────────────────────────────────
+.inner {
+  @include container;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 40px;
   width: 100%;
-  margin-bottom: 12px;
+  padding-top: calc(#{$header-height} + clamp(48px, 7vw, 110px));
+  padding-bottom: clamp(32px, 4vw, 56px);
+
+  @include mobile {
+    gap: 28px;
+    padding-top: calc(#{$header-height-mobile} + 36px);
+    padding-bottom: 24px;
+  }
 }
 
-.tabsNav {
-  position: relative;
+.copy {
+  max-width: 640px;
+}
+
+.eyebrow {
   display: inline-flex;
   align-items: center;
-  padding: 5px;
+  gap: 10px;
+  font-size: $text-sm;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
+  animation: rise 900ms $ease-out 150ms both;
+
+  &::before {
+    content: '';
+    width: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: $color-gold;
+  }
+}
+
+.lead {
+  max-width: 540px;
+  margin-top: 16px;
+  font-size: clamp(18px, 1.6vw, 24px);
+  font-weight: 500;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.3);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  animation: rise 1000ms $ease-out 420ms both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  animation: rise 1000ms $ease-out 560ms both;
+}
+
+.primaryCta,
+.secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 26px;
+  border-radius: $radius-pill;
+  font-size: $text-md;
+  font-weight: 700;
+  transition: transform $transition-normal, box-shadow $transition-normal, background-color $transition-normal;
+
+  &:focus-visible {
+    outline: 3px solid $color-white;
+    outline-offset: 3px;
+  }
+
+  @include mobile {
+    flex: 1 1 auto;
+    height: 48px;
+  }
+}
+
+.primaryCta {
+  background-color: $color-white;
+  color: $color-pine;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  svg {
+    transition: transform $transition-normal;
+  }
+
+  @include hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.secondaryCta {
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: $color-white;
+  backdrop-filter: blur(8px);
+
+  @include hover {
+    background-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+  }
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 26px;
+  font-size: $text-sm;
+  color: rgba(255, 255, 255, 0.82);
+  animation: rise 1000ms $ease-out 700ms both;
+
+  li {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+
+  strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: $color-white;
+  }
+
+  @include mobile {
+    display: none;
+  }
+}
+
+// ── Search panel ────────────────────────────────────────────
+.panel {
+  width: 100%;
+  max-width: 1120px;
+  animation: panelIn 1100ms $ease-out 650ms both;
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.98);
+  }
+}
+
+.tabs {
+  position: relative;
+  display: inline-flex;
+  gap: 4px;
   max-width: 100%;
-  border-radius: 9999px;
-  background-color: rgba(247, 243, 236, 0.86);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  box-shadow:
-    0 10px 30px rgba(10, 22, 19, 0.15),
-    0 2px 6px rgba(10, 22, 19, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  overflow-x: auto;
+  margin-bottom: 10px;
+  padding: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: $radius-pill;
+  background-color: rgba(10, 24, 20, 0.42);
+  backdrop-filter: blur(12px);
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
@@ -129,433 +277,255 @@
   }
 
   @include mobile {
+    display: flex;
     width: 100%;
-    padding: 4px;
-    border-radius: 16px;
-    justify-content: space-between;
   }
 }
 
-// Buttery-smooth sliding pill behind active tab
-.tabIndicator {
+.indicator {
   position: absolute;
   top: 5px;
+  bottom: 5px;
   left: 0;
-  height: calc(100% - 10px);
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #1F4A3D 0%, #15302A 100%);
-  box-shadow:
-    0 4px 14px rgba(21, 48, 42, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  transition:
-    transform 340ms cubic-bezier(0.34, 1.25, 0.64, 1),
-    width 340ms cubic-bezier(0.34, 1.25, 0.64, 1);
-  pointer-events: none;
-  z-index: 1;
-
-  @include mobile {
-    top: 4px;
-    height: calc(100% - 8px);
-    border-radius: 12px;
-  }
+  border-radius: $radius-pill;
+  background-color: $color-white;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  transition: transform 450ms $ease-out, width 450ms $ease-out;
 }
 
-.tabBtn {
+.tab {
   @include button-reset;
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 20px;
-  border-radius: 9999px;
-  color: $color-text-main;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: $radius-pill;
   font-size: $text-sm;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
-  cursor: pointer;
-  transition:
-    color 260ms ease,
-    transform 200ms ease;
+  color: rgba(255, 255, 255, 0.88);
+  transition: color 300ms $ease-out;
 
   @include hover {
-    color: $color-pine;
+    color: $color-white;
+  }
 
-    .tabIcon {
-      transform: scale(1.1);
+  &:focus-visible {
+    outline: 2px solid $color-white;
+    outline-offset: 2px;
+  }
+
+  // Three equal tabs that always fit: smaller type, icons dropped on the narrowest screens.
+  @include mobile {
+    flex: 1 1 0;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    height: 38px;
+    padding: 0 6px;
+    font-size: 12.5px;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+  }
+
+  @media (max-width: 380px) {
+    svg {
+      display: none;
+    }
+  }
+}
+
+.tabActive,
+.tabActive:hover {
+  color: $color-pine;
+}
+
+.form {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)) auto;
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 22px;
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 24px 60px rgba(5, 15, 12, 0.35);
+  color: $color-text-main;
+  backdrop-filter: blur(16px);
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    padding: 6px;
+    border-radius: 18px;
+  }
+}
+
+.formCompact {
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color $transition-fast, box-shadow $transition-fast;
+
+  @include hover {
+    background-color: $color-sand-light;
+  }
+
+  &:focus-within {
+    background-color: $color-sand-light;
+    box-shadow: inset 0 0 0 2px rgba($color-primary, 0.5);
+  }
+
+  @include mobile {
+    padding: 8px 12px;
+  }
+}
+
+.fieldWide {
+  @media (max-width: 1100px) {
+    grid-column: 1 / -1;
+  }
+}
+
+.fieldLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: $text-xs;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+
+  svg {
+    color: $color-primary;
+  }
+}
+
+.control {
+  width: 100%;
+  min-width: 0;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: $text-md;
+  font-weight: 600;
+  color: $color-text-main;
+  cursor: pointer;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &[aria-invalid='true'] {
+    color: $color-red;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    opacity: 0.55;
+    cursor: pointer;
+  }
+}
+
+.submit {
+  @include button-reset;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 0 30px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(135deg, $color-primary 0%, $color-pine 100%);
+  font-size: $text-md;
+  font-weight: 700;
+  color: $color-white;
+  box-shadow: 0 8px 22px rgba($color-primary, 0.35);
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  // Light sweep on hover only — no idle animation.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+    transform: translateX(-120%);
+  }
+
+  @include hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba($color-primary, 0.45);
+
+    &::after {
+      transform: translateX(120%);
+      transition: transform 800ms $ease-out;
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
   }
 
   &:focus-visible {
     @include focus-ring;
   }
 
-  @include mobile {
-    flex: 1 1 0;
-    justify-content: center;
-    height: 38px;
-    padding: 0 8px;
-    font-size: 12px;
-    gap: 5px;
-    border-radius: 12px;
+  @media (max-width: 1100px) {
+    grid-column: 1 / -1;
+    min-height: 52px;
   }
 }
 
-.tabActive {
-  color: $color-white;
-  font-weight: 600;
-
-  .tabIcon {
-    color: $color-gold;
-  }
-
-  .tabIndex {
-    opacity: 0.85;
-  }
+.formError {
+  grid-column: 1 / -1;
+  padding: 4px 12px 6px;
+  font-size: $text-sm;
+  color: $color-red;
+  animation: fade 300ms $ease-out both;
 }
 
-.tabIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-primary;
-  transition:
-    transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    color 240ms ease;
-
-  @include mobile {
-    display: none;
-  }
+.panelNote {
+  margin-top: 10px;
+  font-size: $text-xs;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
 }
 
-.tabIndex {
-  font-size: 11px;
-  font-weight: 700;
-  opacity: 0.6;
-  letter-spacing: 0.04em;
-  transition: opacity 240ms ease;
-}
-
-.tabText {
-  letter-spacing: -0.01em;
-}
-
-
-// ── Search Console (Capsule Bar) ──────────────────────────────────────────────
-
-.searchBar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  width: 100%;
-  padding: 8px 10px 8px 14px;
-  border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.93);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 24px 60px -10px rgba(10, 22, 19, 0.22),
-    0 4px 16px rgba(10, 22, 19, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  transition: box-shadow 300ms ease;
-
-  &:hover {
-    box-shadow:
-      0 28px 70px -10px rgba(10, 22, 19, 0.26),
-      0 6px 20px rgba(10, 22, 19, 0.08);
-  }
-
-  @include tablet {
-    border-radius: 24px;
-    padding: 12px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  @include mobile {
-    border-radius: 20px;
-    padding: 10px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-}
-
-// Segment fields
-.field {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex: 1 1 0;
-  gap: 12px;
-  min-width: 0;
-  height: 58px;
-  padding: 0 14px;
-  border-radius: 9999px;
-  border: 1px solid transparent;
-  background-color: transparent;
-  cursor: pointer;
-  transition:
-    background-color 220ms ease,
-    box-shadow 220ms ease,
-    border-color 220ms ease,
-    transform 220ms ease;
-
-  @include hover {
-    background-color: rgba(255, 255, 255, 0.98);
-    border-color: rgba($color-primary, 0.18);
-    box-shadow: 0 4px 18px rgba(10, 22, 19, 0.06);
-    transform: translateY(-1px);
-
-    .fieldIcon {
-      transform: scale(1.12);
-      color: $color-gold;
-    }
-  }
-
-  &:focus-within {
-    background-color: #FFFFFF;
-    border-color: $color-primary;
-    box-shadow:
-      0 8px 24px rgba(31, 74, 61, 0.12),
-      $focus-ring;
-    transform: translateY(-1px);
-
-    .fieldIcon {
-      transform: scale(1.12);
-      color: $color-primary;
-    }
-
-    .fieldChevron {
-      transform: rotate(180deg);
-      color: $color-primary;
-    }
-  }
-
-  @include tablet {
-    flex: 1 1 calc(50% - 6px);
-    border-radius: 16px;
-    background-color: rgba(247, 243, 236, 0.6);
-  }
-
-  @include mobile {
-    flex: none;
-    width: 100%;
-    height: 52px;
-    padding: 0 12px;
-    border-radius: 14px;
-    background-color: #FFFFFF;
-    border-color: rgba(10, 22, 19, 0.06);
-  }
-}
-
-.fieldFrom {
-  flex-basis: 22%;
-}
-
-.fieldTo {
-  flex-basis: 25%;
-}
-
-.fieldDates {
-  flex-basis: 25%;
-}
-
-.fieldGuests {
-  flex-basis: 18%;
-}
-
-@include tablet {
-  .fieldFrom,
-  .fieldTo,
-  .fieldDates,
-  .fieldGuests {
-    flex-basis: calc(50% - 6px);
-  }
-}
-
-@include mobile {
-  .fieldFrom,
-  .fieldTo,
-  .fieldDates,
-  .fieldGuests {
-    flex-basis: auto;
-  }
-}
-
-.fieldDivider {
-  width: 1px;
-  height: 32px;
-  background-color: rgba(21, 48, 42, 0.1);
-  flex-shrink: 0;
-  transition: opacity 200ms ease;
-
-  @include tablet {
-    display: none;
-  }
-}
-
-.fieldIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: $color-primary;
-  transition:
-    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    color 220ms ease;
-}
-
-.fieldBody {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.fieldLabel {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  line-height: 1.2;
-  color: $color-text-light;
-}
-
-.fieldValue {
-  color: $color-text-main;
-  font-size: $text-md;
-  font-weight: 600;
-  line-height: 1.35;
-  @include truncate;
-}
-
-.fieldSelect {
+.credit {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  cursor: pointer;
-  z-index: 5;
-  font-size: 16px; // avoids mobile browser auto-zoom
-  -webkit-appearance: menulist;
-
-  option {
-    color: #1a1a1a;
-    background-color: #ffffff;
-    font-size: 14px;
-    padding: 8px;
-  }
-}
-
-.fieldChevron {
-  flex-shrink: 0;
-  color: $color-text-light;
-  pointer-events: none;
-  transition:
-    transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    color 220ms ease;
-}
-
-// ── Search Submit CTA ─────────────────────────────────────────────────────────
-
-.submitBtn {
-  @include button-reset;
-  position: relative;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-shrink: 0;
-  height: 58px;
-  padding: 0 26px;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #1F4A3D 0%, #15302A 100%);
-  color: $color-white;
-  font-size: $text-md;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  box-shadow:
-    0 6px 20px rgba(21, 48, 42, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease,
-    background 200ms ease;
-
-  @include hover {
-    transform: translateY(-1px) scale(1.02);
-    box-shadow:
-      0 10px 28px rgba(21, 48, 42, 0.42),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-
-    .searchIcon {
-      transform: scale(1.12) rotate(-8deg);
-    }
-  }
-
-  &:active {
-    transform: scale(0.96);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-white;
-    outline-offset: -3px;
-    box-shadow: 0 0 0 4px rgba($color-primary, 0.4);
-  }
-
-  @include tablet {
-    flex: 1 1 100%;
-    border-radius: 16px;
-    height: 52px;
-  }
+  right: 12px;
+  bottom: 6px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.62);
 
   @include mobile {
-    width: 100%;
-    height: 52px;
-    border-radius: 14px;
-    margin-top: 4px;
-  }
-}
-
-.searchIcon {
-  flex-shrink: 0;
-  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.submitText {
-  white-space: nowrap;
-}
-
-// Luxury diagonal light shimmer sweep across button
-.btnShimmer {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 20%,
-    rgba(255, 255, 255, 0.22) 50%,
-    transparent 80%
-  );
-  transform: translateX(-100%);
-  animation: shimmerSweep 3.6s infinite ease-in-out;
-  pointer-events: none;
-}
-
-@keyframes shimmerSweep {
-  0% {
-    transform: translateX(-100%);
-  }
-  35%, 100% {
-    transform: translateX(100%);
+    right: 8px;
+    bottom: 4px;
   }
 }

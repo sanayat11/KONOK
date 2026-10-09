@@ -1,0 +1,195 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: $text-lg;
+  font-weight: 700;
+
+  svg {
+    color: $color-primary;
+  }
+}
+
+.subtitle {
+  margin-top: 4px;
+  font-size: $text-sm;
+  color: $color-text-muted;
+}
+
+// ── Edit mode: selectable cards ─────────────────────────────
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 10px;
+
+  @media (max-width: 420px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+.option {
+  @include button-reset;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 10px 14px;
+  border: 1.5px solid $color-border-light;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+  text-align: left;
+  animation: optionIn 420ms $ease-out both;
+  transition: border-color $transition-normal, background-color $transition-normal, transform $transition-fast, box-shadow $transition-normal;
+
+  @include hover {
+    border-color: rgba($color-primary, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(21, 48, 42, 0.08);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  @media (max-width: 420px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-height: 0;
+    padding: 10px;
+  }
+}
+
+@keyframes optionIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.icon {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: $color-sage-light;
+  color: $color-primary;
+  transition: background-color $transition-normal, color $transition-normal, transform 400ms $ease-out;
+}
+
+.label {
+  font-size: $text-sm;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.check {
+  @include flex-center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: $color-primary;
+  color: $color-white;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity $transition-fast, transform 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.optionOn {
+  border-color: $color-primary;
+  background-color: $color-primary-soft;
+
+  .icon {
+    background-color: $color-primary;
+    color: $color-white;
+    transform: rotate(-6deg) scale(1.05);
+  }
+
+  .check {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.count {
+  font-size: $text-sm;
+  color: $color-text-muted;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+// ── View mode: chips ────────────────────────────────────────
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: $radius-pill;
+  background-color: $color-primary-soft;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $color-primary;
+  animation: optionIn 380ms $ease-out both;
+}
+
+.empty {
+  font-size: $text-sm;
+  color: $color-text-muted;
+}
+
+.toast {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: $radius-pill;
+  background-color: $color-pine;
+  font-size: $text-sm;
+  color: $color-white;
+  animation: optionIn 320ms $ease-out both;
+}
