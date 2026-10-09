@@ -1,44 +1,55 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Beige ornament in the lower-left corner of the cabinet (Figma).
-$ornament: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 600' fill='none'%3E%3Cpath d='M0 120c70 0 120 50 120 120 0 90-120 110-120 200v160h40c0-90 130-120 130-240C170 230 100 140 0 120z' fill='%23EADFD1'/%3E%3Cpath d='M30 300c40-10 80 20 70 60-8 34-50 40-60 14 30 0 34-40 4-44-14-2-24 4-28 12-6-20 0-38 14-42z' fill='%23F4EFE9'/%3E%3C/svg%3E");
+// Ram's-horn ornament in the lower-left corner of the cabinet (Figma).
+$ornament: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 600' fill='none'%3E%3Cpath d='M0 120c70 0 120 50 120 120 0 90-120 110-120 200v160h40c0-90 130-120 130-240C170 230 100 140 0 120z' fill='%23E9DFD0'/%3E%3Cpath d='M30 300c40-10 80 20 70 60-8 34-50 40-60 14 30 0 34-40 4-44-14-2-24 4-28 12-6-20 0-38 14-42z' fill='%23DCE6DD'/%3E%3C/svg%3E");
 
 .page {
   display: grid;
-  grid-template-columns: 330px minmax(0, 1fr);
+  grid-template-columns: 300px minmax(0, 1fr);
   gap: 40px;
-  padding: 30px $page-gutter 110px 40px;
+  padding: 30px $page-gutter 88px 40px;
   background-image: $ornament;
   background-repeat: no-repeat;
   background-position: left bottom 60px;
-  background-size: 280px auto;
+  background-size: 260px auto;
 
   @media (max-width: ($bp-2xl - 1px)) {
-    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-columns: 250px minmax(0, 1fr);
     gap: 28px;
     padding: 24px 40px 72px 24px;
   }
 
-  @media (max-width: ($bp-lg - 1px)) {
+  @include below-desktop {
     grid-template-columns: minmax(0, 1fr);
-    padding: 16px 24px 56px;
+    gap: 16px;
+    padding: 12px 24px 56px;
     background-image: none;
   }
 
   @include mobile {
-    padding: 12px 16px 40px;
+    padding: 10px 16px 40px;
   }
 }
 
 .sidebar {
+  position: sticky;
+  top: calc(#{$header-height} + 20px);
+  align-self: start;
+
+  @include below-desktop {
+    position: static;
+  }
+}
+
+.menu {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
 
-  @media (max-width: ($bp-lg - 1px)) {
+  @include below-desktop {
     flex-direction: row;
-    gap: 8px;
+    gap: 6px;
     overflow-x: auto;
     scrollbar-width: none;
 
@@ -48,43 +59,45 @@ $ornament: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vie
   }
 }
 
-// Figma: 30px icon + 20px label; active item is a light-blue 15px-radius pill.
+// Figma: icon + label; active item is a soft 15px-radius pill.
 .menuItem {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 22px;
-  width: 100%;
-  max-width: 330px;
-  padding: 10px 20px;
+  gap: 16px;
+  padding: 10px 18px;
   border-radius: $radius-lg;
   color: $color-text-main;
-  font-size: 20px;
+  font-size: $text-lg;
   white-space: nowrap;
-  transition: background-color $transition-fast, color $transition-fast;
+  transition: background-color $transition-normal, color $transition-normal, padding $transition-normal;
 
-  &:hover {
-    background-color: rgba(212, 225, 240, 0.55);
+  svg {
+    flex-shrink: 0;
+    transition: transform $transition-normal;
+  }
+
+  @include hover {
+    background-color: rgba($color-primary-soft, 0.7);
+
+    svg {
+      transform: scale(1.08);
+    }
   }
 
   &:focus-visible {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
+    @include focus-ring;
   }
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    gap: 14px;
-    font-size: 17px;
-  }
-
-  @media (max-width: ($bp-lg - 1px)) {
-    width: auto;
-    padding: 8px 14px;
+  @include below-desktop {
+    flex-shrink: 0;
     gap: 8px;
-    font-size: 15px;
+    padding: 8px 14px;
+    font-size: $text-sm;
 
     svg {
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
     }
   }
 }
@@ -93,21 +106,23 @@ $ornament: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vie
 .menuActive:hover {
   background-color: $color-primary-soft;
   color: $color-primary;
+  font-weight: 600;
 }
 
 .menuBadge {
   margin-left: auto;
   min-width: 22px;
-  height: 22px;
+  height: 20px;
   padding: 0 6px;
   border-radius: $radius-pill;
-  background-color: $color-red;
+  background-color: $color-primary;
   color: $color-white;
-  font-size: 12px;
+  font-size: $text-2xs;
   font-weight: 700;
   @include flex-center;
 }
 
 .content {
   min-width: 0;
+  animation: fadeIn $duration-slow $ease-out both;
 }

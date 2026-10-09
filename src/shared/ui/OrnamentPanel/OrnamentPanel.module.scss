@@ -1,42 +1,54 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Figma: 1520px-wide panel, 15px radius, ornaments ~400px in each corner.
+// Figma: wide rounded panel with ornaments in each corner.
 .panel {
   position: relative;
   overflow: hidden;
   border-radius: $radius-lg;
-  transition: background-color $transition-normal;
+  transition: background-color 600ms $ease-out;
 }
 
 .beige {
   background-color: #F7F3EE;
   --ornament-a: #E9DCCB;
-  --ornament-b: #D5DFEA;
+  --ornament-b: #D9E4DA;
 }
 
-.sky {
-  background-color: #88A5BD;
-  --ornament-a: #EFE5D6;
-  --ornament-b: #DCE5EE;
+.sage {
+  background-color: #8FA593;
+  --ornament-a: #EFE7D8;
+  --ornament-b: #DDE7DE;
 }
 
-.navy {
+.forest {
   background-color: $color-primary;
-  --ornament-a: #EFE5D6;
-  --ornament-b: #DCE5EE;
+  --ornament-a: #E9E1D2;
+  --ornament-b: #CFDCD2;
 }
 
 .horn {
   position: absolute;
-  width: min(30vw, 420px);
-  height: min(30vw, 420px);
+  width: min(28vw, 400px);
+  height: min(28vw, 400px);
   pointer-events: none;
+  animation: hornIn 1200ms $ease-out both;
+
+  path {
+    transition: fill 600ms $ease-out;
+  }
 
   @include mobile {
-    width: 46vw;
-    height: 46vw;
-    opacity: 0.6;
+    width: 44vw;
+    height: 44vw;
+    opacity: 0.55;
+  }
+}
+
+@keyframes hornIn {
+  from {
+    opacity: 0;
+    scale: 0.85;
   }
 }
 
@@ -57,18 +69,21 @@
   top: 0;
   right: 0;
   transform: scaleX(-1);
+  animation-delay: 120ms;
 }
 
 .bl {
   bottom: 0;
   left: 0;
   transform: scaleY(-1);
+  animation-delay: 240ms;
 }
 
 .br {
   bottom: 0;
   right: 0;
   transform: scale(-1, -1);
+  animation-delay: 360ms;
 }
 
 .content {

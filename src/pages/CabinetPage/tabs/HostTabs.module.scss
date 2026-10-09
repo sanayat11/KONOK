@@ -1,14 +1,19 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-.tab {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
 .grid {
-  @include card-grid;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+
+  @media (max-width: ($bp-xl - 1px)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  @media (max-width: 520px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .calendarTitle {
@@ -16,7 +21,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 16px;
-  font-size: 22px;
+  font-size: $text-xl;
   font-weight: 700;
   text-transform: capitalize;
 
@@ -29,49 +34,60 @@
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 6px;
-  max-width: 640px;
 }
 
 .weekday {
-  padding: 4px 0;
-  font-size: 14px;
+  padding: 6px 0;
+  font-size: $text-xs;
   font-weight: 600;
-  color: $color-text-muted;
   text-align: center;
+  text-transform: capitalize;
+  color: $color-text-muted;
 }
 
 .day {
-  aspect-ratio: 1;
-  border-radius: $radius-sm;
-  font-size: 16px;
   @include flex-center;
+  aspect-ratio: 1;
+  min-height: 36px;
+  border-radius: $radius-sm;
+  background-color: $color-primary-soft;
+  font-size: $text-sm;
+  font-weight: 600;
+  color: $color-primary;
+  transition: transform $transition-fast, background-color $transition-fast;
 
-  &:not(:empty) {
-    background-color: $color-green-light;
+  &:empty {
+    background: none;
+  }
+
+  @include hover {
+    &:not(:empty) {
+      transform: scale(1.06);
+    }
   }
 }
 
-.past:not(:empty) {
-  background-color: $color-border-light;
+.past {
+  background-color: $color-sand-light;
   color: $color-text-light;
 }
 
-.today:not(:empty) {
+.today {
   background-color: $color-primary;
   color: $color-white;
-  font-weight: 700;
+  box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
 }
 
 .legend {
   margin-top: 14px;
-  font-size: 15px;
+  font-size: $text-sm;
   color: $color-text-muted;
 }
 
 .tiles {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  gap: 16px;
 
   @media (max-width: ($bp-xl - 1px)) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -89,10 +105,14 @@
 }
 
 .tileValue {
-  font-size: 34px;
-  font-weight: 700;
+  margin-top: 6px;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .tileLabel {
+  font-size: $text-sm;
   color: $color-text-muted;
 }

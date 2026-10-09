@@ -4,77 +4,86 @@
 .composer {
   display: flex;
   align-items: flex-end;
-  gap: 10px;
-  padding: 12px 16px 16px;
-  background-color: $color-white;
+  gap: 8px;
+  padding: 10px 16px 12px;
   border-top: 1px solid $color-border-light;
+  background-color: $color-white;
 
   @include mobile {
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
   }
 }
 
-.input {
+.inputWrap {
+  display: flex;
   flex: 1;
-  min-height: 46px;
-  max-height: 140px;
-  padding: 12px 16px;
-  resize: none;
-  border: 1.5px solid $color-border;
-  border-radius: 23px;
-  background-color: $color-sand-light;
-  color: $color-text-main;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  outline: none;
-  transition: all $transition-fast;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
 
-  &::placeholder {
-    color: $color-text-light;
-  }
+.input {
+  @include field(auto);
+  min-height: 42px;
+  max-height: 140px;
+  padding: 10px 14px;
+  border-radius: 21px;
+  background-color: $color-sand-light;
+  font-size: $text-base;
+  line-height: 1.45;
+  resize: none;
 
   &:focus {
-    border-color: $color-primary;
     background-color: $color-white;
-    box-shadow: 0 0 0 3px rgba(15, 82, 186, 0.12);
   }
+}
 
-  // iOS zooms into inputs under 16px
+.hint {
+  padding-left: 14px;
+  font-size: 10px;
+  color: $color-text-light;
+
   @include mobile {
-    font-size: 1rem;
+    display: none;
   }
 }
 
 .send {
-  @include button-reset;
-  @include flex-center;
-  flex-shrink: 0;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background-color: $color-primary;
-  color: $color-white;
-  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.25);
-  transition: all $transition-normal;
-
-  &:hover:not(:disabled) {
-    background-color: $color-primary-dark;
-    box-shadow: 0 6px 16px rgba(15, 82, 186, 0.35);
-  }
-
-  &:active:not(:disabled) {
-    transform: scale(0.95);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
-  }
+  @include icon-button(42px);
+  margin-bottom: 18px;
+  background-color: $color-sage-light;
+  color: $color-text-light;
+  transition: background-color $transition-normal, color $transition-normal, transform $transition-fast;
 
   &:disabled {
-    background-color: $color-border;
-    color: $color-text-light;
-    box-shadow: none;
     cursor: not-allowed;
+  }
+
+  @include mobile {
+    margin-bottom: 0;
+  }
+}
+
+.ready {
+  background-color: $color-primary;
+  color: $color-white;
+
+  @include hover {
+    background-color: $color-primary-dark;
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  svg {
+    animation: sendReady $duration-slow $ease-out;
+  }
+}
+
+@keyframes sendReady {
+  from {
+    transform: translateX(-4px);
+    opacity: 0.4;
   }
 }

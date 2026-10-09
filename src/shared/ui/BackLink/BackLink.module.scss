@@ -5,13 +5,19 @@
   @include button-reset;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: $color-text-main;
-  font-size: 20px;
+  gap: 6px;
+  padding: 4px 0;
+  color: $color-text-muted;
+  font-size: $text-sm;
+  font-weight: 500;
   transition: color $transition-fast;
 
-  &:hover {
+  @include hover {
     color: $color-primary;
+
+    .icon {
+      transform: translateX(-3px);
+    }
   }
 
   &:focus-visible {
@@ -19,13 +25,8 @@
     outline-offset: 2px;
     border-radius: 4px;
   }
+}
 
-  @include mobile {
-    font-size: 16px;
-
-    svg {
-      width: 24px;
-      height: 24px;
-    }
-  }
+.icon {
+  transition: transform $transition-fast;
 }

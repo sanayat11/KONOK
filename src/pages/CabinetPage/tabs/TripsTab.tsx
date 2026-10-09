@@ -1,26 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { BadgeCheck, CarFront, Clock3, House, NotebookTabs } from 'lucide-react';
+import { BadgeCheck, CarFront, Clock3, House, MapPin, NotebookTabs, Wallet } from 'lucide-react';
 import type { BookingItem } from '@/entities/types';
 import { useBookingStore } from '@/shared/lib/store/useBookingStore';
 import { mockItineraryWaypoints } from '@/shared/api/mocks';
+import { useT } from '@/shared/i18n';
+import { EmptyState } from '@/shared/ui/EmptyState';
 import styles from './TripsTab.module.scss';
-import t from './tabs.module.scss';
+import t$ from './tabs.module.scss';
 
 type Filter = 'all' | 'stay' | 'transport';
 
 const isTransport = (b: BookingItem) => b.category === 'car';
-const STATUS: Record<BookingItem['status'], string> = {
-  confirmed: 'Подтверждено',
-  pending: 'Ожидает подтверждения',
-  completed: 'Завершено',
-};
-const plural = (n: number) => `${n} ${n === 1 ? 'бронирование' : n < 5 ? 'бронирования' : 'бронирований'}`;
-const som = (n: number) => `${n.toLocaleString('ru-RU')} сом`;
 
-/** Figma "Мои бронирования": totals, filters, booking cards and the route timeline. */
+/** Guest bookings: totals, filters, booking cards and the route timeline. */
 export const TripsTab: React.FC = () => {
+  const { t, fmt } = useT();
   const bookings = useBookingStore((s) => s.bookings);
   const [filter, setFilter] = useState<Filter>('all');
 
@@ -34,56 +30,58 @@ export const TripsTab: React.FC = () => {
 
   return (
     <div className={styles.layout}>
-      <div className={styles.main}>
+      <div className={t$.tab}>
         <div>
-          <h1 className={t.pageTitle}>Моё путешествие по Кыргызстану</h1>
-          <p className={styles.dates}>
-            {first.dates.split(' — ')[0]} – {last.dates.split(' — ')[1]}
-          </p>
+          <h1 className={t$.pageTitle}>{t('cabinet.trips.title')}</h1>
+          {first && last && (
+            <p className={t$.pageSubtitle}>
+              {first.dates.split(' — ')[0]} – {last.dates.split(' — ')[1] ?? last.dates}
+            </p>
+          )}
         </div>
 
         <div className={styles.summary}>
           <div className={styles.summaryItem}>
-            <House size={30} strokeWidth={1.5} />
+            <span className={styles.summaryIcon}>
+              <House size={16} />
+            </span>
             <div>
-              <p>Проживание</p>
-              <p className={styles.summaryValue}>{som(sum(stays))}</p>
-              <p className={styles.summaryNote}>{plural(stays.length)}</p>
+              <p className={styles.summaryLabel}>{t('cabinet.trips.stays')}</p>
+              <p className={styles.summaryValue}>{fmt.price(sum(stays))}</p>
+              <p className={styles.summaryNote}>{t('common.bookings', { count: stays.length })}</p>
             </div>
           </div>
           <div className={styles.summaryItem}>
-            <CarFront size={30} strokeWidth={1.5} />
+            <span className={styles.summaryIcon}>
+              <CarFront size={16} />
+            </span>
             <div>
-              <p>Транспорт</p>
-              <p className={styles.summaryValue}>{som(sum(transport))}</p>
-              <p className={styles.summaryNote}>{plural(transport.length)}</p>
+              <p className={styles.summaryLabel}>{t('cabinet.trips.transport')}</p>
+              <p className={styles.summaryValue}>{fmt.price(sum(transport))}</p>
+              <p className={styles.summaryNote}>{t('common.bookings', { count: transport.length })}</p>
             </div>
           </div>
           <div className={clsx(styles.summaryItem, styles.summaryTotal)}>
+            <span className={styles.summaryIcon}>
+              <Wallet size={16} />
+            </span>
             <div>
-              <p>Итого</p>
-              <p className={styles.summaryValue}>{som(sum(bookings))}</p>
+              <p className={styles.summaryLabel}>{t('cabinet.trips.total')}</p>
+              <p className={styles.summaryValue}>{fmt.price(sum(bookings))}</p>
               <p className={styles.summaryNote}>
-                {allConfirmed ? (
-                  <>
-                    <BadgeCheck size={14} /> Всё подтверждено
-                  </>
-                ) : (
-                  <>
-                    <Clock3 size={14} /> Есть заявки в ожидании
-                  </>
-                )}
+                {allConfirmed ? <BadgeCheck size={13} /> : <Clock3 size={13} />}
+                {allConfirmed ? t('cabinet.trips.allConfirmed') : t('cabinet.trips.pending')}
               </p>
             </div>
           </div>
         </div>
 
-        <div className={t.filterTabs} role="tablist">
+        <div className={t$.filterTabs} role="tablist" aria-label={t('cabinet.menu.trips')}>
           {(
             [
-              ['all', `Все (${bookings.length})`],
-              ['stay', 'Проживание'],
-              ['transport', 'Транспорт'],
+              ['all', t('cabinet.trips.filterAll', { count: bookings.length })],
+              ['stay', t('cabinet.trips.filterStays')],
+              ['transport', t('cabinet.trips.filterTransport')],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -91,7 +89,7 @@ export const TripsTab: React.FC = () => {
               type="button"
               role="tab"
               aria-selected={filter === id}
-              className={clsx(t.filterTab, filter === id && t.filterActive)}
+              className={clsx(t$.filterTab, filter === id && t$.filterActive)}
               onClick={() => setFilter(id)}
             >
               {label}
@@ -100,24 +98,34 @@ export const TripsTab: React.FC = () => {
         </div>
 
         {visible.length === 0 ? (
-          <div className={clsx(t.panel, t.empty)}>
-            <NotebookTabs size={36} />
-            <p className={t.emptyTitle}>Бронирований пока нет</p>
-            <p>
-              Найдите <Link to="/catalog/guides">жителей</Link> или <Link to="/catalog/cars">транспорт</Link> для поездки.
-            </p>
-          </div>
+          <EmptyState
+            icon={<NotebookTabs size={22} />}
+            title={t('cabinet.trips.emptyTitle')}
+            text={t('cabinet.trips.emptyText')}
+            action={<Link to="/catalog/guides">{t('cabinet.trips.emptyCta')}</Link>}
+          />
         ) : (
-          <ul className={styles.bookings}>
-            {visible.map((booking) => (
-              <li key={booking.id} className={styles.booking}>
+          <ul key={filter} className={styles.bookings}>
+            {visible.map((booking, index) => (
+              <li key={booking.id} className={styles.booking} style={{ animationDelay: `${index * 50}ms` }}>
                 <img src={booking.photoUrl} alt="" className={styles.bookingPhoto} />
                 <div className={styles.bookingBody}>
-                  <p className={styles.bookingTitle}>{booking.title}</p>
-                  {booking.location && <p>{booking.location}</p>}
-                  <p>{booking.dateRange}</p>
-                  <p>{isTransport(booking) ? 'Автомобиль' : som(booking.price)}</p>
-                  <span className={clsx(styles.status, styles[booking.status])}>{STATUS[booking.status]}</span>
+                  <div className={styles.bookingHead}>
+                    <p className={styles.bookingTitle}>{booking.title}</p>
+                    <span className={clsx(styles.status, styles[booking.status])}>
+                      {t(`cabinet.trips.status.${booking.status}`)}
+                    </span>
+                  </div>
+                  {booking.location && (
+                    <p className={styles.bookingMeta}>
+                      <MapPin size={12} /> {booking.location}
+                    </p>
+                  )}
+                  <p className={styles.bookingMeta}>{booking.dateRange}</p>
+                  <p className={styles.bookingPrice}>
+                    {isTransport(booking) && <span>{t('cabinet.trips.vehicle')} · </span>}
+                    {fmt.price(booking.price)}
+                  </p>
                 </div>
               </li>
             ))}
@@ -125,18 +133,16 @@ export const TripsTab: React.FC = () => {
         )}
       </div>
 
-      <aside className={clsx(t.panel, styles.route)}>
-        <h2 className={styles.routeTitle}>Ваш маршрут</h2>
+      <aside className={clsx(t$.panel, styles.route)}>
+        <h2 className={styles.routeTitle}>{t('cabinet.trips.route')}</h2>
         <ol className={styles.timeline}>
           {mockItineraryWaypoints.map((wp) => (
             <li key={wp.id} className={styles.stop}>
-              <span className={styles.stopDay}>
-                {wp.dates.split(' — ')[0]}
-                <br />
-                День {wp.dayNumber}
-              </span>
               <span className={styles.stopDot} aria-hidden="true" />
               <span className={styles.stopBody}>
+                <span className={styles.stopDay}>
+                  {t('cabinet.trips.day', { day: wp.dayNumber })} · {wp.dates.split(' — ')[0]}
+                </span>
                 <strong>{wp.title}</strong>
                 <span>{wp.subtitle}</span>
               </span>

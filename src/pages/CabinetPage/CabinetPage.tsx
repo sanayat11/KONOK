@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
 import { useUnreadCount } from '@/entities/chat';
+import { useT, type TranslationKey } from '@/shared/i18n';
 import { ProfileTab } from './tabs/ProfileTab';
 import { TripsTab } from './tabs/TripsTab';
 import { FavoritesTab } from './tabs/FavoritesTab';
@@ -24,34 +25,35 @@ import styles from './CabinetPage.module.scss';
 
 interface MenuItem {
   tab: string;
-  label: string;
+  label: TranslationKey;
   icon: LucideIcon;
   /** Items that live on their own page (the messenger). */
   href?: string;
 }
 
 const GUEST_MENU: MenuItem[] = [
-  { tab: 'profile', label: 'Профиль', icon: UserRound },
-  { tab: 'trips', label: 'Мои бронирования', icon: NotebookTabs },
-  { tab: 'favorites', label: 'Избранное', icon: Heart },
-  { tab: 'settings', label: 'Настройки', icon: Settings },
+  { tab: 'profile', label: 'cabinet.menu.profile', icon: UserRound },
+  { tab: 'trips', label: 'cabinet.menu.trips', icon: NotebookTabs },
+  { tab: 'favorites', label: 'cabinet.menu.favorites', icon: Heart },
+  { tab: 'messages', label: 'cabinet.menu.messages', icon: MessageSquareText, href: '/messages' },
+  { tab: 'settings', label: 'cabinet.menu.settings', icon: Settings },
 ];
 
-// Figma "Профиль хозяина" sidebar.
 const HOST_MENU: MenuItem[] = [
-  { tab: 'profile', label: 'Профиль', icon: UserRound },
-  { tab: 'listings', label: 'Мои объявления', icon: LayoutList },
-  { tab: 'trips', label: 'Бронирование', icon: NotebookTabs },
-  { tab: 'calendar', label: 'Календарь', icon: CalendarDays },
-  { tab: 'messages', label: 'Сообщения', icon: MessageSquareText, href: '/messages' },
-  { tab: 'reviews', label: 'Отзывы', icon: Star },
-  { tab: 'stats', label: 'Статистика', icon: ChartColumn },
-  { tab: 'settings', label: 'Настройки', icon: Settings },
+  { tab: 'profile', label: 'cabinet.menu.profile', icon: UserRound },
+  { tab: 'listings', label: 'cabinet.menu.listings', icon: LayoutList },
+  { tab: 'trips', label: 'cabinet.menu.hostTrips', icon: NotebookTabs },
+  { tab: 'calendar', label: 'cabinet.menu.calendar', icon: CalendarDays },
+  { tab: 'messages', label: 'cabinet.menu.messages', icon: MessageSquareText, href: '/messages' },
+  { tab: 'reviews', label: 'cabinet.menu.reviews', icon: Star },
+  { tab: 'stats', label: 'cabinet.menu.stats', icon: ChartColumn },
+  { tab: 'settings', label: 'cabinet.menu.settings', icon: Settings },
 ];
 
-/** Figma "Профиль гостя" / "Профиль хозяина": sidebar menu + tab content. */
+/** Personal cabinet for guests and hosts: sidebar menu + tab content. */
 export const CabinetPage: React.FC = () => {
   const [params] = useSearchParams();
+  const { t } = useT();
   const user = useAuthStore((s) => s.user);
   const unread = useUnreadCount(user?.id);
 
@@ -91,25 +93,29 @@ export const CabinetPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <nav className={styles.sidebar} aria-label="Личный кабинет">
-        {menu.map(({ tab: id, label, icon: Icon, href }) => {
-          const active = !href && id === tab;
-          return (
-            <Link
-              key={id}
-              to={href ?? `/cabinet?tab=${id}`}
-              className={clsx(styles.menuItem, active && styles.menuActive)}
-              aria-current={active ? 'page' : undefined}
-            >
-              <Icon size={30} strokeWidth={1.4} />
-              <span>{label}</span>
-              {id === 'messages' && unread > 0 && <span className={styles.menuBadge}>{unread}</span>}
-            </Link>
-          );
-        })}
-      </nav>
+      <aside className={styles.sidebar}>
+        <nav className={styles.menu} aria-label={t('cabinet.menuLabel')}>
+          {menu.map(({ tab: id, label, icon: Icon, href }) => {
+            const active = !href && id === tab;
+            return (
+              <Link
+                key={id}
+                to={href ?? `/cabinet?tab=${id}`}
+                className={clsx(styles.menuItem, active && styles.menuActive)}
+                aria-current={active ? 'page' : undefined}
+              >
+                <Icon size={26} strokeWidth={1.4} />
+                <span>{t(label)}</span>
+                {id === 'messages' && unread > 0 && <span className={styles.menuBadge}>{unread}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
 
-      <div className={styles.content}>{content}</div>
+      <div key={tab} className={styles.content}>
+        {content}
+      </div>
     </div>
   );
 };

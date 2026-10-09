@@ -9,8 +9,11 @@ import { GuideCard } from '@/entities/guide/ui/GuideCard';
 import { ReviewList } from '@/entities/review/ui/ReviewList';
 import { useConversations } from '@/entities/chat';
 import { useToday } from '@/shared/lib/date';
+import { useT } from '@/shared/i18n';
+import { EmptyState } from '@/shared/ui/EmptyState';
+import { Reveal, revealItem } from '@/shared/ui/Reveal';
 import styles from './HostTabs.module.scss';
-import t from './tabs.module.scss';
+import t$ from './tabs.module.scss';
 
 /** Listings owned by a host: their cars and/or their own resident profile. */
 const useOwnListings = (userId: string) =>
@@ -24,54 +27,52 @@ const useOwnListings = (userId: string) =>
 
 const Header: React.FC<{ title: string; subtitle: string }> = ({ title, subtitle }) => (
   <div>
-    <h1 className={t.pageTitle}>{title}</h1>
-    <p className={t.pageSubtitle}>{subtitle}</p>
+    <h1 className={t$.pageTitle}>{title}</h1>
+    <p className={t$.pageSubtitle}>{subtitle}</p>
   </div>
 );
 
 export const ListingsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
+  const { t } = useT();
   const { cars, guides } = useOwnListings(user.id);
   const empty = cars.length + guides.length === 0;
 
   return (
-    <div className={styles.tab}>
-      <Header title="Мои объявления" subtitle="Жильё, услуги и транспорт, которые видят гости." />
+    <div className={t$.tab}>
+      <Header title={t('cabinet.listings.title')} subtitle={t('cabinet.listings.subtitle')} />
       {empty ? (
-        <div className={clsx(t.panel, t.empty)}>
-          <LayoutList size={36} />
-          <p className={t.emptyTitle}>Объявлений пока нет</p>
-          <p>Здесь появятся ваши объявления после модерации.</p>
-        </div>
+        <EmptyState icon={<LayoutList size={22} />} title={t('cabinet.listings.emptyTitle')} text={t('cabinet.listings.emptyText')} />
       ) : (
-        <div className={styles.grid}>
-          {guides.map((g) => (
-            <GuideCard key={g.id} guide={g} />
+        <Reveal stagger className={styles.grid}>
+          {guides.map((g, i) => (
+            <GuideCard key={g.id} guide={g} {...revealItem(i)} />
           ))}
-          {cars.map((c) => (
-            <CarCard key={c.id} car={c} />
+          {cars.map((c, i) => (
+            <CarCard key={c.id} car={c} {...revealItem(guides.length + i)} />
           ))}
-        </div>
+        </Reveal>
       )}
     </div>
   );
 };
 
-export const HostBookingsTab: React.FC = () => (
-  <div className={styles.tab}>
-    <Header title="Бронирование" subtitle="Заявки гостей на ваши объявления." />
-    <div className={clsx(t.panel, t.empty)}>
-      <NotebookTabs size={36} />
-      <p className={t.emptyTitle}>Новых заявок нет</p>
-      <p>
-        Пока гости только присматриваются — ответьте на их <Link to="/messages">сообщения</Link>.
-      </p>
+export const HostBookingsTab: React.FC = () => {
+  const { t } = useT();
+  return (
+    <div className={t$.tab}>
+      <Header title={t('cabinet.hostBookings.title')} subtitle={t('cabinet.hostBookings.subtitle')} />
+      <EmptyState
+        icon={<NotebookTabs size={22} />}
+        title={t('cabinet.hostBookings.emptyTitle')}
+        text={t('cabinet.hostBookings.emptyText')}
+        action={<Link to="/messages">{t('cabinet.hostBookings.emptyCta')}</Link>}
+      />
     </div>
-  </div>
-);
-
-const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+  );
+};
 
 export const CalendarTab: React.FC = () => {
+  const { t, fmt } = useT();
   const now = useToday();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -79,17 +80,19 @@ export const CalendarTab: React.FC = () => {
   const offset = (first.getDay() + 6) % 7; // Monday-first
   const days = new Date(year, month + 1, 0).getDate();
   const cells = [...Array(offset).fill(null), ...Array.from({ length: days }, (_, i) => i + 1)];
+  // Localized weekday names, Monday first (2024-01-01 was a Monday).
+  const weekdays = Array.from({ length: 7 }, (_, i) => fmt.date(new Date(2024, 0, 1 + i), { weekday: 'short' }));
 
   return (
-    <div className={styles.tab}>
-      <Header title="Календарь" subtitle="Свободные и занятые даты." />
-      <section className={t.panel}>
+    <div className={t$.tab}>
+      <Header title={t('cabinet.calendar.title')} subtitle={t('cabinet.calendar.subtitle')} />
+      <section className={t$.panel}>
         <h2 className={styles.calendarTitle}>
-          <CalendarDays size={24} />
-          {first.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+          <CalendarDays size={22} />
+          {fmt.date(first, { month: 'long', year: 'numeric' })}
         </h2>
         <div className={styles.calendar}>
-          {WEEKDAYS.map((d) => (
+          {weekdays.map((d) => (
             <span key={d} className={styles.weekday}>
               {d}
             </span>
@@ -97,40 +100,44 @@ export const CalendarTab: React.FC = () => {
           {cells.map((day, i) => (
             <span
               key={i}
-              className={clsx(styles.day, day === now.getDate() && styles.today, day !== null && day < now.getDate() && styles.past)}
+              className={clsx(
+                styles.day,
+                day === now.getDate() && styles.today,
+                day !== null && day < now.getDate() && styles.past,
+              )}
+              aria-current={day === now.getDate() ? 'date' : undefined}
             >
               {day}
             </span>
           ))}
         </div>
-        <p className={styles.legend}>Все даты свободны — бронирований на этот месяц нет.</p>
+        <p className={styles.legend}>{t('cabinet.calendar.legend')}</p>
       </section>
     </div>
   );
 };
 
 export const ReviewsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
+  const { t } = useT();
   const { cars, guides } = useOwnListings(user.id);
   const reviews: Review[] = [...guides.flatMap((g) => g.reviews), ...cars.flatMap((c) => c.reviews)];
 
   return (
-    <div className={styles.tab}>
-      <Header title="Отзывы" subtitle="Что гости пишут о ваших объявлениях." />
-      <section className={t.panel}>
-        {reviews.length ? (
+    <div className={t$.tab}>
+      <Header title={t('cabinet.reviews.title')} subtitle={t('cabinet.reviews.subtitle')} />
+      {reviews.length ? (
+        <section className={t$.panel}>
           <ReviewList reviews={reviews} />
-        ) : (
-          <div className={t.empty}>
-            <Star size={36} />
-            <p className={t.emptyTitle}>Отзывов пока нет</p>
-          </div>
-        )}
-      </section>
+        </section>
+      ) : (
+        <EmptyState icon={<Star size={22} />} title={t('cabinet.reviews.empty')} />
+      )}
     </div>
   );
 };
 
 export const StatsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
+  const { t } = useT();
   const { cars, guides } = useOwnListings(user.id);
   const conversations = useConversations(user.id);
   const listings = [...cars, ...guides];
@@ -138,24 +145,24 @@ export const StatsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
   const rating = listings.length ? listings.reduce((sum, l) => sum + l.rating, 0) / listings.length : 0;
 
   const tiles = [
-    { label: 'Объявления', value: listings.length, icon: LayoutList },
-    { label: 'Средний рейтинг', value: rating ? rating.toFixed(1) : '—', icon: Star },
-    { label: 'Отзывы', value: reviewsCount, icon: NotebookTabs },
-    { label: 'Диалоги с гостями', value: conversations.length, icon: MessagesSquare },
+    { label: t('cabinet.stats.listings'), value: listings.length, icon: LayoutList },
+    { label: t('cabinet.stats.rating'), value: rating ? rating.toFixed(1) : '—', icon: Star },
+    { label: t('cabinet.stats.reviews'), value: reviewsCount, icon: NotebookTabs },
+    { label: t('cabinet.stats.conversations'), value: conversations.length, icon: MessagesSquare },
   ];
 
   return (
-    <div className={styles.tab}>
-      <Header title="Статистика" subtitle="Как гости находят и оценивают ваши объявления." />
-      <div className={styles.tiles}>
-        {tiles.map(({ label, value, icon: Icon }) => (
-          <div key={label} className={clsx(t.panel, styles.tile)}>
-            <Icon size={28} className={styles.tileIcon} />
+    <div className={t$.tab}>
+      <Header title={t('cabinet.stats.title')} subtitle={t('cabinet.stats.subtitle')} />
+      <Reveal stagger className={styles.tiles}>
+        {tiles.map(({ label, value, icon: Icon }, i) => (
+          <div key={label} className={clsx(t$.panel, styles.tile)} {...revealItem(i)}>
+            <Icon size={24} className={styles.tileIcon} />
             <p className={styles.tileValue}>{value}</p>
             <p className={styles.tileLabel}>{label}</p>
           </div>
         ))}
-      </div>
+      </Reveal>
     </div>
   );
 };

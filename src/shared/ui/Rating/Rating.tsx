@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 import clsx from 'clsx';
+import { useT } from '@/shared/i18n';
 import styles from './Rating.module.scss';
 
 export interface RatingProps {
@@ -11,19 +12,24 @@ export interface RatingProps {
   className?: string;
 }
 
-export const Rating: React.FC<RatingProps> = ({
-  score,
-  count,
-  showStar = true,
-  size = 'md',
-  className,
-}) => {
+export const Rating: React.FC<RatingProps> = ({ score, count, showStar = true, size = 'md', className }) => {
+  const { t, fmt } = useT();
+  const label =
+    count !== undefined
+      ? t('rating.labelWithCount', { score: fmt.rating(score), count })
+      : t('rating.label', { score: fmt.rating(score) });
+
   return (
-    <div className={clsx(styles.ratingContainer, styles[size], className)}>
+    <span className={clsx(styles.ratingContainer, styles[size], className)} aria-label={label} role="img">
       {showStar && <Star className={styles.starIcon} aria-hidden="true" />}
-      {/* Figma format: "4.39 / (38)" — keep the score's own precision, at least one decimal. */}
-      <span className={styles.score}>{Number.isInteger(score) ? score.toFixed(1) : String(score)}</span>
-      {count !== undefined && <span className={styles.count}>/ ({count})</span>}
-    </div>
+      <span className={styles.score} aria-hidden="true">
+        {fmt.rating(score)}
+      </span>
+      {count !== undefined && (
+        <span className={styles.count} aria-hidden="true">
+          / ({count})
+        </span>
+      )}
+    </span>
   );
 };

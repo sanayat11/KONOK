@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, LogOut, ShieldCheck, SlidersHorizontal, Trash2, UserCog } from 'lucide-react';
+import { Bell, CheckCircle2, LogOut, ShieldCheck, SlidersHorizontal, Trash2, UserCog } from 'lucide-react';
 import type { UserProfile } from '@/entities/types';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
+import { LOCALES, useT, type Locale } from '@/shared/i18n';
 import { Modal } from '@/shared/ui/Modal';
 import styles from './SettingsTab.module.scss';
-import t from './tabs.module.scss';
+import t$ from './tabs.module.scss';
 
 const SETTINGS_KEY = 'konok_settings';
+const CURRENCIES = ['kgs', 'usd', 'eur'] as const;
+const TIMEZONES = ['bishkek', 'moscow', 'london'] as const;
 
 interface Settings {
-  language: string;
-  currency: string;
-  timezone: string;
+  currency: (typeof CURRENCIES)[number];
+  timezone: (typeof TIMEZONES)[number];
   notifyMessages: boolean;
   notifyTrips: boolean;
   notifyRecommendations: boolean;
@@ -21,9 +23,8 @@ interface Settings {
 }
 
 const DEFAULTS: Settings = {
-  language: 'Русский',
-  currency: 'KGS-Кыргызский сом',
-  timezone: 'Бишкек (GMT+6)',
+  currency: 'kgs',
+  timezone: 'bishkek',
   notifyMessages: true,
   notifyTrips: true,
   notifyRecommendations: false,
@@ -31,9 +32,16 @@ const DEFAULTS: Settings = {
   channelApp: true,
 };
 
+/** Reads saved preferences; older saves stored display strings, which fall back to defaults. */
 const loadSettings = (): Settings => {
   try {
-    return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}') };
+    const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}') as Partial<Settings>;
+    return {
+      ...DEFAULTS,
+      ...saved,
+      currency: CURRENCIES.includes(saved.currency as Settings['currency']) ? saved.currency! : DEFAULTS.currency,
+      timezone: TIMEZONES.includes(saved.timezone as Settings['timezone']) ? saved.timezone! : DEFAULTS.timezone,
+    };
   } catch {
     return DEFAULTS;
   }
@@ -49,9 +57,18 @@ const Toggle: React.FC<{ label: string; checked: boolean; onChange: (v: boolean)
 /** Figma "Настройки": general, notifications, security and account panels. Preferences are kept in localStorage. */
 export const SettingsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
   const navigate = useNavigate();
+  const { t, locale, setLocale } = useT();
   const logout = useAuthStore((s) => s.logout);
   const [settings, setSettings] = useState<Settings>(loadSettings);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [savedAt, setSavedAt] = useState(0);
+  const [notice, setNotice] = useState(false);
+
+  useEffect(() => {
+    if (!savedAt) return;
+    const timer = window.setTimeout(() => setSavedAt(0), 2200);
+    return () => window.clearTimeout(timer);
+  }, [savedAt]);
 
   const update = (patch: Partial<Settings>) => {
     const next = { ...settings, ...patch };
@@ -61,6 +78,7 @@ export const SettingsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
     } catch {
       // ignore
     }
+    setSavedAt(Date.now());
   };
 
   const signOut = () => {
@@ -69,124 +87,136 @@ export const SettingsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
   };
 
   return (
-    <div className={styles.settings}>
-      <div>
-        <h1 className={t.pageTitle}>Настройки</h1>
-        <p className={t.pageSubtitle}>Управляйте аккаунтом, уведомлениями и конфиденциальностью.</p>
+    <div className={t$.tab}>
+      <div className={t$.pageHeader}>
+        <div>
+          <h1 className={t$.pageTitle}>{t('cabinet.settings.title')}</h1>
+          <p className={t$.pageSubtitle}>{t('cabinet.settings.subtitle')}</p>
+        </div>
+        {savedAt > 0 && (
+          <p key={savedAt} className={styles.saved} role="status">
+            <CheckCircle2 size={16} /> {t('cabinet.settings.savedLocally')}
+          </p>
+        )}
       </div>
 
       <div className={styles.grid}>
-        <section className={t.panel}>
+        <section className={t$.panel}>
           <h2 className={styles.panelTitle}>
-            <SlidersHorizontal size={24} /> Основные настройки
+            <SlidersHorizontal size={22} /> {t('cabinet.settings.general')}
           </h2>
           <div className={styles.rows}>
             <label className={styles.row}>
-              <span>Язык интерфейса</span>
-              <select value={settings.language} onChange={(e) => update({ language: e.target.value })}>
-                <option>Русский</option>
-                <option>Кыргызча</option>
-                <option>English</option>
+              <span>{t('cabinet.settings.language')}</span>
+              <select value={locale} onChange={(e) => setLocale(e.target.value as Locale)}>
+                {LOCALES.map((l) => (
+                  <option key={l.code} value={l.code} lang={l.code}>
+                    {l.native}
+                  </option>
+                ))}
               </select>
             </label>
             <label className={styles.row}>
-              <span>Валюта</span>
-              <select value={settings.currency} onChange={(e) => update({ currency: e.target.value })}>
-                <option>KGS-Кыргызский сом</option>
-                <option>USD-Доллар США</option>
-                <option>EUR-Евро</option>
+              <span>{t('cabinet.settings.currency')}</span>
+              <select value={settings.currency} onChange={(e) => update({ currency: e.target.value as Settings['currency'] })}>
+                {CURRENCIES.map((c) => (
+                  <option key={c} value={c}>
+                    {t(`cabinet.settings.currencies.${c}`)}
+                  </option>
+                ))}
               </select>
             </label>
             <label className={styles.row}>
-              <span>Часовой пояс</span>
-              <select value={settings.timezone} onChange={(e) => update({ timezone: e.target.value })}>
-                <option>Бишкек (GMT+6)</option>
-                <option>Москва (GMT+3)</option>
-                <option>Лондон (GMT+0)</option>
+              <span>{t('cabinet.settings.timezone')}</span>
+              <select value={settings.timezone} onChange={(e) => update({ timezone: e.target.value as Settings['timezone'] })}>
+                {TIMEZONES.map((tz) => (
+                  <option key={tz} value={tz}>
+                    {t(`cabinet.settings.timezones.${tz}`)}
+                  </option>
+                ))}
               </select>
             </label>
             <div className={styles.row}>
-              <span>Тип аккаунта</span>
-              <strong>{user.role === 'tourist' ? 'Конок (гость)' : 'Хозяин'}</strong>
+              <span>{t('cabinet.settings.accountType')}</span>
+              <strong>{user.role === 'tourist' ? t('cabinet.settings.typeGuest') : t('cabinet.settings.typeHost')}</strong>
             </div>
           </div>
         </section>
 
-        <section className={t.panel}>
+        <section className={t$.panel}>
           <h2 className={styles.panelTitle}>
-            <Bell size={24} /> Уведомления
+            <Bell size={22} /> {t('cabinet.settings.notifications')}
           </h2>
           <div className={styles.rows}>
-            <Toggle label="Сообщения" checked={settings.notifyMessages} onChange={(v) => update({ notifyMessages: v })} />
-            <Toggle label="Напоминания о поездках" checked={settings.notifyTrips} onChange={(v) => update({ notifyTrips: v })} />
-            <Toggle label="Рекомендации" checked={settings.notifyRecommendations} onChange={(v) => update({ notifyRecommendations: v })} />
+            <Toggle label={t('cabinet.settings.notifyMessages')} checked={settings.notifyMessages} onChange={(v) => update({ notifyMessages: v })} />
+            <Toggle label={t('cabinet.settings.notifyTrips')} checked={settings.notifyTrips} onChange={(v) => update({ notifyTrips: v })} />
+            <Toggle
+              label={t('cabinet.settings.notifyRecommendations')}
+              checked={settings.notifyRecommendations}
+              onChange={(v) => update({ notifyRecommendations: v })}
+            />
           </div>
-          <p className={styles.channelsTitle}>Получать уведомления через</p>
+          <p className={styles.channelsTitle}>{t('cabinet.settings.channels')}</p>
           <div className={styles.channels}>
             <label>
-              <input type="checkbox" checked={settings.channelEmail} onChange={(e) => update({ channelEmail: e.target.checked })} /> Email
+              <input type="checkbox" checked={settings.channelEmail} onChange={(e) => update({ channelEmail: e.target.checked })} />{' '}
+              {t('cabinet.settings.channelEmail')}
             </label>
             <label>
-              <input type="checkbox" checked={settings.channelApp} onChange={(e) => update({ channelApp: e.target.checked })} /> В приложении
+              <input type="checkbox" checked={settings.channelApp} onChange={(e) => update({ channelApp: e.target.checked })} />{' '}
+              {t('cabinet.settings.channelApp')}
             </label>
           </div>
         </section>
 
-        <section className={t.panel}>
+        <section className={t$.panel}>
           <h2 className={styles.panelTitle}>
-            <ShieldCheck size={24} /> Безопасность
+            <ShieldCheck size={22} /> {t('cabinet.settings.security')}
           </h2>
           <div className={styles.rows}>
-            <div className={styles.row}>
-              <span>
-                Пароль
-                <small>Последнее изменение: 12 сен 2026</small>
-              </span>
-              <button type="button" className={styles.linkBtn}>
-                Изменить
-              </button>
-            </div>
-            <div className={styles.row}>
-              <span>
-                Номер телефона
-                <small>{user.phone || '—'}</small>
-              </span>
-              <button type="button" className={styles.linkBtn}>
-                Изменить
-              </button>
-            </div>
-            <div className={styles.row}>
-              <span>
-                Email
-                <small>{user.email || '—'}</small>
-              </span>
-              <button type="button" className={styles.linkBtn}>
-                Изменить
-              </button>
-            </div>
+            {[
+              { label: t('cabinet.settings.password'), value: '••••••••' },
+              { label: t('cabinet.settings.phone'), value: user.phone || '—' },
+              { label: t('cabinet.settings.email'), value: user.email || '—' },
+            ].map((row) => (
+              <div key={row.label} className={styles.row}>
+                <span>
+                  {row.label}
+                  <small>{row.value}</small>
+                </span>
+                <button type="button" className={styles.linkBtn} onClick={() => setNotice(true)}>
+                  {t('cabinet.settings.change')}
+                </button>
+              </div>
+            ))}
           </div>
+          {notice && (
+            <p className={styles.notice} role="status">
+              {t('cabinet.settings.changeUnavailable')}
+            </p>
+          )}
         </section>
 
-        <section className={t.panel}>
+        <section className={t$.panel}>
           <h2 className={styles.panelTitle}>
-            <UserCog size={24} /> Управление аккаунтом
+            <UserCog size={22} /> {t('cabinet.settings.account')}
           </h2>
           <div className={styles.accountActions}>
             <button type="button" className={styles.accountBtn} onClick={signOut}>
-              <LogOut size={20} /> Выйти из аккаунта
+              <LogOut size={18} /> {t('cabinet.settings.logout')}
             </button>
             <button type="button" className={`${styles.accountBtn} ${styles.danger}`} onClick={() => setConfirmDelete(true)}>
-              <Trash2 size={20} /> Удалить аккаунт
+              <Trash2 size={18} /> {t('cabinet.settings.delete')}
             </button>
           </div>
         </section>
       </div>
 
-      <Modal isOpen={confirmDelete} onClose={() => setConfirmDelete(false)} title="Удалить аккаунт?" maxWidth="sm">
-        <p className={styles.modalText}>Это демо-версия: аккаунт будет удалён только с этого устройства, и вы выйдете из системы.</p>
+      <Modal isOpen={confirmDelete} onClose={() => setConfirmDelete(false)} title={t('cabinet.settings.deleteTitle')} maxWidth="sm">
+        <p className={styles.modalText}>{t('cabinet.settings.deleteText')}</p>
         <div className={styles.modalActions}>
           <button type="button" className={styles.accountBtn} onClick={() => setConfirmDelete(false)}>
-            Отмена
+            {t('common.cancel')}
           </button>
           <button
             type="button"
@@ -202,7 +232,7 @@ export const SettingsTab: React.FC<{ user: UserProfile }> = ({ user }) => {
               signOut();
             }}
           >
-            Удалить
+            {t('cabinet.settings.deleteConfirm')}
           </button>
         </div>
       </Modal>

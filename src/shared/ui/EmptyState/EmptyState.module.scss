@@ -1,0 +1,60 @@
+@use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 48px 20px;
+  border: 1px dashed $color-border;
+  border-radius: $radius-xl;
+  background-color: rgba($color-white, 0.5);
+  text-align: center;
+  animation: fadeIn $duration-slow $ease-out both;
+}
+
+.icon {
+  position: relative;
+  @include flex-center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background-color: $color-sage-light;
+  color: $color-primary;
+
+  // Tunduk ring.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border: 1px dashed rgba($color-sage, 0.6);
+    border-radius: 50%;
+  }
+}
+
+.title {
+  font-size: $text-lg;
+  font-weight: 600;
+}
+
+.text {
+  max-width: 380px;
+  font-size: $text-sm;
+  line-height: 1.6;
+  color: $color-text-muted;
+
+  a {
+    color: $color-primary;
+    font-weight: 500;
+  }
+}
+
+.action {
+  margin-top: 10px;
+
+  a {
+    @include primary-button(38px);
+  }
+}

@@ -3,228 +3,98 @@
 
 .mapWidget {
   position: relative;
-  width: 100%;
-  // Figma: 1790×793 map block.
+}
+
+// Figma: 1790×793 map block.
+.map {
   height: clamp(380px, 41.3vw, 793px);
-  background-color: #E8F1EC;
-  border-radius: $radius-lg;
-  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(21, 48, 42, 0.05);
 
   @include mobile {
-    height: 460px;
+    height: 520px;
   }
 }
 
-.mapCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.3s ease-out;
-  transform-origin: center center;
-}
-
-.mapGraphic {
-  width: 100%;
-  height: 100%;
-}
-
-.svgMap {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-// Cluster Pin Markers
-.mapPin {
-  @include button-reset;
-  position: absolute;
-  width: var(--pin-size, 40px);
-  height: var(--pin-size, 40px);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all $transition-normal;
-  // Figma: amber cluster bubbles with a soft halo.
-  box-shadow: 0 0 0 6px rgba(214, 160, 72, 0.35);
-
-  &:hover {
-    transform: translate(-50%, -50%) scale(1.18);
-    z-index: 20;
-  }
-
-  &.selected {
-    transform: translate(-50%, -50%) scale(1.25);
-    z-index: 30;
-    box-shadow: 0 0 0 6px rgba(22, 83, 137, 0.4);
-  }
-}
-
-.gold {
-  background-color: rgba(214, 160, 72, 0.92);
-  color: $color-white;
-}
-
-.blue {
-  background-color: #0F52BA;
-  color: #fff;
-}
-
-.pinNumber {
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-// Popover Card
 .pointDetailCard {
   position: absolute;
-  bottom: 20px;
   left: 20px;
-  max-width: 420px;
-  width: calc(100% - 40px);
-  background-color: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(10px);
+  bottom: 28px;
+  z-index: 500;
+  width: min(360px, calc(100% - 40px));
+  padding: 16px 18px;
   border-radius: $radius-lg;
-  padding: 16px 20px;
-  box-shadow: $shadow-xl;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  z-index: 40;
-  animation: slideUp 0.2s ease-out;
+  background-color: rgba($color-white, 0.97);
+  box-shadow: $shadow-lg;
+  animation: cardIn $duration-slow $ease-out both;
 
   @include mobile {
-    bottom: 12px;
-    left: 12px;
-    width: calc(100% - 24px);
-    padding: 14px;
+    left: 10px;
+    right: 10px;
+    bottom: 22px;
+    width: auto;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
   }
 }
 
 .pointHeader {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 8px;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .pointTag {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: $text-xs;
+  font-weight: 600;
   color: $color-primary;
-  letter-spacing: 0.04em;
 }
 
 .pointTitle {
-  font-size: 1.15rem;
+  margin-top: 2px;
+  font-size: $text-xl;
   font-weight: 700;
-  color: $color-text-main;
+  line-height: 1.2;
 }
 
 .closeCardBtn {
-  @include button-reset;
-  color: $color-text-muted;
-  font-size: 1.1rem;
-  padding: 4px;
-  line-height: 1;
+  @include icon-button(28px);
+  margin: -4px -6px 0 0;
+  color: $color-text-light;
 
-  &:hover {
+  @include hover {
+    background-color: $color-primary-soft;
     color: $color-text-main;
   }
 }
 
 .pointDesc {
-  font-size: 0.88rem;
-  color: $color-text-body;
-  margin-bottom: 14px;
-  line-height: 1.4;
+  margin-top: 6px;
+  font-size: $text-sm;
+  line-height: 1.55;
+  color: $color-text-muted;
 }
 
 .pointActions {
   display: flex;
-  align-items: center;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .viewGuidesBtn {
-  @include button-reset;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: $color-primary;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: $radius-pill;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: all $transition-fast;
-
-  &:hover {
-    background-color: $color-primary-dark;
-  }
+  @include primary-button(34px);
+  padding: 0 12px;
+  font-size: $text-sm;
 }
 
 .viewPlacesBtn {
-  @include button-reset;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: $color-primary-soft;
-  color: $color-primary;
-  padding: 8px 14px;
-  border-radius: $radius-pill;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: all $transition-fast;
-
-  &:hover {
-    background-color: #D9E5F1;
-  }
-}
-
-// Map Controls
-.mapControls {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 30;
-}
-
-.ctrlBtn {
-  @include button-reset;
-  width: 36px;
-  height: 36px;
-  background-color: #FFFFFF;
-  border-radius: $radius-sm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-text-main;
-  box-shadow: $shadow-sm;
-  border: 1px solid $color-sand-border;
-  transition: all $transition-fast;
-
-  &:hover {
-    background-color: #F8FAFC;
-    color: $color-primary;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  @include outline-button(34px);
+  padding: 0 12px;
+  font-size: $text-sm;
 }

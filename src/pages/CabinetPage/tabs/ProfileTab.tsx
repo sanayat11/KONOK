@@ -1,157 +1,224 @@
-import React, { useState } from 'react';
-import { Camera, Globe, Heart, Pencil, UserRound } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Camera, CheckCircle2, Globe, Heart, MapPinned, Pencil, UserRound } from 'lucide-react';
+import clsx from 'clsx';
 import type { UserProfile } from '@/entities/types';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
+import { useT, type TranslationKey } from '@/shared/i18n';
+import { IMAGES } from '@/shared/lib/images';
+import { interestCode, LANGUAGE_FLAGS, languageCode, languageKey } from '@/shared/lib/taxonomy';
+import { Avatar } from '@/shared/ui/Avatar';
 import styles from './ProfileTab.module.scss';
-import t from './tabs.module.scss';
+import t$ from './tabs.module.scss';
 
-const LEVELS: Record<string, string> = { Native: 'Родной', Fluent: 'Свободно', Basic: 'Базовый' };
-const FLAGS: Record<string, string> = {
-  Английский: '🇬🇧',
-  Русский: '🇷🇺',
-  Кыргызский: '🇰🇬',
-  Казахский: '🇰🇿',
-  Узбекский: '🇺🇿',
-  Немецкий: '🇩🇪',
-};
-const INTEREST_IMAGES: Record<string, string> = {
-  Горы: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=120&q=60',
-  Природа: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=120&q=60',
-  Лошади: 'https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&w=120&q=60',
-  Культура: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=120&q=60',
-  Кемпинг: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=120&q=60',
-  Кухня: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=120&q=60',
-};
+const LEVELS = ['Native', 'Fluent', 'Basic'] as const;
 
-/** Figma "Профиль гостя": banner, round avatar, bio, and three info cards. */
+/** Own profile: banner, identity, inline editing and info cards. */
 export const ProfileTab: React.FC<{ user: UserProfile }> = ({ user }) => {
+  const { t } = useT();
   const updateUser = useAuthStore((s) => s.updateUser);
   const [editing, setEditing] = useState(false);
   const [fullName, setFullName] = useState(user.fullName);
   const [bio, setBio] = useState(user.bio);
+  const [nameError, setNameError] = useState<string>();
+  const [saved, setSaved] = useState(false);
   const [first, ...rest] = user.fullName.split(' ');
   const isOwner = user.role !== 'tourist';
 
+  useEffect(() => {
+    if (!saved) return;
+    const timer = window.setTimeout(() => setSaved(false), 2600);
+    return () => window.clearTimeout(timer);
+  }, [saved]);
+
+  const startEditing = () => {
+    setFullName(user.fullName);
+    setBio(user.bio);
+    setNameError(undefined);
+    setEditing(true);
+  };
+
   const save = (e: React.FormEvent) => {
     e.preventDefault();
-    updateUser({ fullName: fullName.trim() || user.fullName, name: fullName.trim().split(' ')[0] || user.name, bio: bio.trim() });
+    const name = fullName.trim();
+    if (!name) {
+      setNameError(t('cabinet.profile.nameRequired'));
+      return;
+    }
+    updateUser({ fullName: name, name: name.split(' ')[0], bio: bio.trim() });
     setEditing(false);
+    setSaved(true);
   };
 
   return (
-    <div className={styles.profile}>
-      {isOwner && (
+    <div className={t$.tab}>
+      <div className={t$.pageHeader}>
         <div>
-          <h1 className={t.pageTitle}>Мой профиль</h1>
-          <p className={t.pageSubtitle}>Расскажите о себе и о своей семье, чтобы привлечь больше гостей</p>
+          <h1 className={t$.pageTitle}>{t('cabinet.profile.title')}</h1>
+          <p className={t$.pageSubtitle}>
+            {isOwner ? t('cabinet.profile.hostSubtitle') : t('cabinet.profile.guestSubtitle')}
+          </p>
+        </div>
+      </div>
+
+      <section className={styles.hero}>
+        <div className={styles.banner}>
+          <img src={user.bannerUrl || IMAGES.defaultBanner} alt="" />
+        </div>
+
+        <div className={styles.head}>
+          <div className={styles.avatarWrap}>
+            <Avatar src={user.avatarUrl} name={user.fullName} size={96} className={styles.avatar} />
+            <label className={styles.cameraBtn} title={t('cabinet.profile.changePhoto')}>
+              <Camera size={14} />
+              <input
+                type="file"
+                accept="image/*"
+                className="visually-hidden"
+                aria-label={t('cabinet.profile.changePhoto')}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) updateUser({ avatarUrl: URL.createObjectURL(file) });
+                }}
+              />
+            </label>
+          </div>
+
+          {editing ? (
+            <form className={styles.editForm} onSubmit={save} noValidate>
+              <label className={styles.editLabel}>
+                <span>{t('cabinet.profile.fullName')}</span>
+                <input
+                  value={fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setNameError(undefined);
+                  }}
+                  aria-invalid={Boolean(nameError)}
+                  className={clsx(nameError && styles.invalid)}
+                  autoFocus
+                />
+                {nameError && <small className={styles.error}>{nameError}</small>}
+              </label>
+              <label className={styles.editLabel}>
+                <span>{t('cabinet.profile.bio')}</span>
+                <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3} />
+              </label>
+              <div className={styles.editActions}>
+                <button type="submit" className={t$.primaryBtn}>
+                  {t('common.save')}
+                </button>
+                <button type="button" className={t$.secondaryBtn} onClick={() => setEditing(false)}>
+                  {t('common.cancel')}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className={styles.identity}>
+              <h2 className={styles.name}>{user.fullName}</h2>
+              <p className={styles.memberSince}>{t('cabinet.profile.memberSince', { date: user.memberSince })}</p>
+              <p className={clsx(styles.bio, !user.bio && styles.bioEmpty)}>{user.bio || t('cabinet.profile.bioEmpty')}</p>
+            </div>
+          )}
+
+          {!editing && (
+            <button type="button" className={clsx(t$.secondaryBtn, styles.editBtn)} onClick={startEditing}>
+              <Pencil size={14} /> {t('cabinet.profile.editProfile')}
+            </button>
+          )}
+        </div>
+
+        {saved && (
+          <p className={styles.toast} role="status">
+            <CheckCircle2 size={16} /> {t('common.saved')}
+          </p>
+        )}
+      </section>
+
+      {!isOwner && (user.tripsCount > 0 || user.daysTravelled > 0) && (
+        <div className={styles.stats}>
+          <div>
+            <strong>{user.tripsCount}</strong>
+            <span>{t('cabinet.profile.trips')}</span>
+          </div>
+          <div>
+            <strong>{user.daysTravelled}</strong>
+            <span>{t('cabinet.profile.days')}</span>
+          </div>
+          <div>
+            <strong>{user.visitedRegions.length}</strong>
+            <span>
+              <MapPinned size={12} /> {t('cabinet.profile.regions')}
+            </span>
+          </div>
         </div>
       )}
 
-      <div className={styles.banner}>
-        <img src={user.bannerUrl} alt="" />
-      </div>
-
-      <div className={styles.head}>
-        <div className={styles.avatarWrap}>
-          <img src={user.avatarUrl} alt={user.fullName} className={styles.avatar} />
-          <label className={styles.cameraBtn} title="Сменить фото">
-            <Camera size={14} />
-            <input
-              type="file"
-              accept="image/*"
-              className="visually-hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) updateUser({ avatarUrl: URL.createObjectURL(file) });
-              }}
-            />
-          </label>
-        </div>
-
-        {editing ? (
-          <form className={styles.editForm} onSubmit={save}>
-            <input value={fullName} onChange={(e) => setFullName(e.target.value)} aria-label="Имя и фамилия" required />
-            <textarea value={bio} onChange={(e) => setBio(e.target.value)} aria-label="О себе" rows={3} />
-            <div className={styles.editActions}>
-              <button type="submit" className={t.primaryBtn}>
-                Сохранить
-              </button>
-              <button type="button" className={styles.cancelBtn} onClick={() => setEditing(false)}>
-                Отмена
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div className={styles.identity}>
-            <h2 className={styles.name}>{user.fullName}</h2>
-            <p className={styles.bio}>{user.bio || 'Расскажите о себе — нажмите «Редактировать профиль».'}</p>
-          </div>
-        )}
-
-        {!editing && (
-          <button type="button" className={`${t.primaryBtn} ${styles.editBtn}`} onClick={() => setEditing(true)}>
-            <Pencil size={16} /> Редактировать профиль
-          </button>
-        )}
-      </div>
-
-      <div className={t.cards3}>
-        <section className={t.panel}>
-          <h3 className={t.panelTitle}>
-            <UserRound size={26} strokeWidth={1.5} /> Личная информация
+      <div className={t$.cards3}>
+        <section className={t$.panel}>
+          <h3 className={t$.panelTitle}>
+            <UserRound size={17} /> {t('cabinet.profile.personal')}
           </h3>
           <dl className={styles.infoList}>
             <div>
-              <dt>Имя</dt>
+              <dt>{t('cabinet.profile.firstName')}</dt>
               <dd>{first}</dd>
             </div>
             <div>
-              <dt>Фамилия</dt>
+              <dt>{t('cabinet.profile.lastName')}</dt>
               <dd>{rest.join(' ') || '—'}</dd>
             </div>
             <div>
-              <dt>Страна</dt>
-              <dd>{user.country ?? 'Кыргызстан'}</dd>
+              <dt>{t('cabinet.profile.country')}</dt>
+              <dd>{user.country ?? t('cabinet.profile.defaultCountry')}</dd>
             </div>
             <div>
-              <dt>Дата рождения</dt>
+              <dt>{t('cabinet.profile.birthDate')}</dt>
               <dd>{user.birthDate ?? '—'}</dd>
             </div>
           </dl>
         </section>
 
-        <section className={t.panel}>
-          <h3 className={t.panelTitle}>
-            <Globe size={26} strokeWidth={1.5} /> Языки
+        <section className={t$.panel}>
+          <h3 className={t$.panelTitle}>
+            <Globe size={17} /> {t('cabinet.profile.languages')}
           </h3>
           <ul className={styles.langList}>
-            {user.languages.map((lang) => (
-              <li key={lang.name}>
-                <span className={styles.flag} aria-hidden="true">
-                  {FLAGS[lang.name] ?? '🏳️'}
-                </span>
-                <span className={styles.langName}>{lang.name}</span>
-                <span className={styles.langLevel}>{LEVELS[lang.level] ?? lang.level}</span>
-              </li>
-            ))}
+            {user.languages.map((lang) => {
+              const code = languageCode(lang.name);
+              const level = (LEVELS as readonly string[]).includes(lang.level)
+                ? t(`cabinet.profile.levels.${lang.level as (typeof LEVELS)[number]}`)
+                : lang.level;
+              return (
+                <li key={lang.name}>
+                  <span className={styles.flag} aria-hidden="true">
+                    {code ? LANGUAGE_FLAGS[code] : '🏳️'}
+                  </span>
+                  <span className={styles.langName}>{code ? t(languageKey(code)) : lang.name}</span>
+                  <span className={styles.langLevel}>{level}</span>
+                </li>
+              );
+            })}
           </ul>
         </section>
 
-        <section className={t.panel}>
-          <h3 className={t.panelTitle}>
-            <Heart size={26} strokeWidth={1.5} /> Интересы
+        <section className={t$.panel}>
+          <h3 className={t$.panelTitle}>
+            <Heart size={17} /> {t('cabinet.profile.interests')}
           </h3>
           {user.interests?.length ? (
             <ul className={styles.interests}>
-              {user.interests.map((interest) => (
-                <li key={interest}>
-                  {INTEREST_IMAGES[interest] && <img src={INTEREST_IMAGES[interest]} alt="" />}
-                  <span>{interest}</span>
-                </li>
-              ))}
+              {user.interests.map((interest) => {
+                const code = interestCode(interest);
+                return (
+                  <li key={interest}>
+                    {code && <img src={IMAGES.interests[code]} alt="" loading="lazy" />}
+                    <span>{code ? t(`cabinet.profile.interestNames.${code}` as TranslationKey) : interest}</span>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
-            <p className={styles.bio}>Интересы пока не указаны.</p>
+            <p className={styles.bioEmpty}>{t('cabinet.profile.interestsEmpty')}</p>
           )}
         </section>
       </div>

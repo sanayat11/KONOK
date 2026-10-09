@@ -1,70 +1,28 @@
-// Kyrgyz Traditional Ornaments and Decorative SVG Patterns
+@use './variables' as *;
 
-.kyrgyz-ornament-bg {
-  position: relative;
-  overflow: hidden;
+// Kyrgyz ornament primitives. Used sparingly: section dividers, editorial blocks, empty states.
+
+// Thin rule with a small "kochkor muiuz" (ram's horn) diamond in the middle.
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: $color-sage;
 
   &::before,
   &::after {
     content: '';
-    position: absolute;
-    pointer-events: none;
-    background-repeat: no-repeat;
-    background-size: contain;
-    z-index: 0;
-    opacity: 0.15;
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
   }
 }
 
-.auth-ornament-bg {
-  background-color: #F7F5F0;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(15, 82, 186, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(58, 134, 255, 0.06) 0%, transparent 40%);
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 280px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 800' fill='none'%3E%3Cpath d='M-50 100 C 150 100, 200 250, 80 320 C -20 380, 50 500, 180 480 C 280 460, 320 600, 200 700 C 100 780, 0 720, -50 800' stroke='%230F52BA' stroke-width='38' stroke-linecap='round' fill='none' opacity='0.22'/%3E%3Cpath d='M-20 180 C 100 180, 140 280, 60 340 C 0 380, 60 460, 140 440 C 220 420, 240 540, 160 620' stroke='%230F52BA' stroke-width='20' stroke-linecap='round' fill='none' opacity='0.16'/%3E%3Ccircle cx='90' cy='230' r='18' fill='%230F52BA' opacity='0.22'/%3E%3Ccircle cx='180' cy='560' r='22' fill='%230F52BA' opacity='0.22'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: contain;
-    pointer-events: none;
-    opacity: 0.85;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 280px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 800' fill='none'%3E%3Cpath d='M450 100 C 250 100, 200 250, 320 320 C 420 380, 350 500, 220 480 C 120 460, 80 600, 200 700 C 300 780, 400 720, 450 800' stroke='%230F52BA' stroke-width='38' stroke-linecap='round' fill='none' opacity='0.22'/%3E%3Cpath d='M420 180 C 300 180, 260 280, 340 340 C 400 380, 340 460, 260 440 C 180 420, 160 540, 240 620' stroke='%230F52BA' stroke-width='20' stroke-linecap='round' fill='none' opacity='0.16'/%3E%3Ccircle cx='310' cy='230' r='18' fill='%230F52BA' opacity='0.22'/%3E%3Ccircle cx='220' cy='560' r='22' fill='%230F52BA' opacity='0.22'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right center;
-    background-size: contain;
-    pointer-events: none;
-    opacity: 0.85;
-  }
-}
-
-.ornament-card-header {
-  position: relative;
-  &::after {
-    content: '';
-    position: absolute;
-    right: 12px;
-    top: 12px;
-    width: 32px;
-    height: 32px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none'%3E%3Cpath d='M20 5 C 12 5, 5 12, 5 20 C 5 28, 12 35, 20 35 C 28 35, 35 28, 35 20 C 35 12, 28 5, 20 5 Z M20 10 C 24 10, 28 14, 28 20 C 28 26, 24 30, 20 30 C 16 30, 12 26, 12 20 C 12 14, 16 10, 20 10 Z' stroke='%230F52BA' stroke-width='2.5' fill='none' opacity='0.25'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    pointer-events: none;
-  }
+// Narrow textile-like band (shyrdak border) for editorial blocks.
+.ornament-band {
+  height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 10'%3E%3Cpath d='M0 5 L5 0 L10 5 L5 10 Z M20 5 L25 0 L30 5 L25 10 Z' fill='%23C39A55' opacity='.55'/%3E%3Cpath d='M10 5 H20 M30 5 H40' stroke='%23C39A55' stroke-width='1' opacity='.45'/%3E%3C/svg%3E");
+  background-size: 40px 10px;
+  background-repeat: repeat-x;
 }

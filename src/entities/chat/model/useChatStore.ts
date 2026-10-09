@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { create } from 'zustand';
 import { createMockChatData, findChatListing } from '@/shared/api/mocks/chats';
 import { findChatUser } from '@/shared/api/mocks/chatUsers';
+import { t } from '@/shared/i18n';
 import type { ChatListingType, ChatMessage, ChatThread, Conversation } from './types';
 
 const STORAGE_KEY = 'konok_chat';
@@ -119,7 +120,7 @@ const toConversation = (thread: ChatThread, messages: ChatMessage[], userId: str
     id: thread.id,
     listing: thread.listing,
     role: isTourist ? 'tourist' : 'owner',
-    participant: { id: otherId, name: other?.name ?? 'Пользователь', avatarUrl: other?.avatarUrl ?? '' },
+    participant: { id: otherId, name: other?.name ?? t('chat.unknownUser'), avatarUrl: other?.avatarUrl ?? '' },
     lastMessage: own[own.length - 1] ?? null,
     unreadCount: own.filter((m) => m.senderId !== userId && !m.readAt).length,
     updatedAt: thread.updatedAt,

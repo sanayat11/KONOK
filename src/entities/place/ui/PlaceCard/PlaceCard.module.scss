@@ -1,24 +1,35 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
+// Figma: 550×400 photo card with a soft bottom gradient.
 .card {
   position: relative;
   aspect-ratio: 550 / 400;
   overflow: hidden;
   border-radius: $radius-lg;
-  background-color: $color-border-light;
-  transition: transform $transition-normal, box-shadow $transition-normal;
+  @include image-placeholder;
+  transition: box-shadow $transition-normal, transform $transition-normal;
 
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
+  @include hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 34px rgba(21, 48, 42, 0.18);
+
+    .image {
+      transform: scale(1.06);
+    }
+
+    .arrow {
+      background-color: $color-white;
+      color: $color-primary;
+      transform: translateX(4px);
+    }
   }
 }
 
 .link {
-  position: absolute;
-  inset: 0;
   display: block;
+  width: 100%;
+  height: 100%;
   color: $color-white;
 
   &:focus-visible {
@@ -32,24 +43,20 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-
-  .card:hover & {
-    transform: scale(1.05);
-  }
+  transition: transform 1000ms $ease-out;
 }
 
 .overlay {
   position: absolute;
-  inset: 45% 0 0;
-  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.45));
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 22, 19, 0) 50%, rgba(10, 22, 19, 0.6) 100%);
 }
 
 .info {
   position: absolute;
-  left: 24px;
-  right: 19px;
-  bottom: 14px;
+  left: 22px;
+  right: 18px;
+  bottom: 16px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -57,62 +64,26 @@
 }
 
 .name {
-  color: $color-white;
-  font-size: 40px;
+  font-size: clamp(20px, 1.8vw, 28px);
   font-weight: 700;
-  line-height: 1.2;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 30px;
-  }
-
-  @include mobile {
-    font-size: 24px;
-  }
+  line-height: 1.15;
+  color: $color-white;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  @include truncate;
 }
 
-// Figma: 40px outlined arrow circle.
 .arrow {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 4px;
-  border: 2px solid $color-white;
-  border-radius: 50%;
   @include flex-center;
-  transition: background-color $transition-fast, color $transition-fast;
-
-  .card:hover & {
-    background-color: $color-white;
-    color: $color-primary;
-  }
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  transition: background-color $transition-normal, color $transition-normal, transform $transition-normal;
 }
 
 .favBtn {
-  @include button-reset;
   position: absolute;
-  top: 12px;
-  right: 18px;
-  z-index: 1;
-  color: $color-white;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
-  transition: transform $transition-fast;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-white;
-    border-radius: 4px;
-  }
-
-  &.isFav {
-    color: $color-red;
-
-    svg {
-      fill: $color-red;
-    }
-  }
+  top: 8px;
+  right: 10px;
 }

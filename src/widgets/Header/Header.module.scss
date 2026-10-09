@@ -1,7 +1,7 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Figma: 100px navy bar; logo at x=228, actions end at the 60px gutter.
+// Figma: solid brand bar; logo inset from the left gutter, actions at the right gutter.
 .header {
   position: sticky;
   top: 0;
@@ -9,18 +9,20 @@
   height: $header-height;
   background-color: $color-primary;
   color: $color-white;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 
   @include mobile {
     height: $header-height-mobile;
   }
 }
 
-// Home & auth: the header floats over the hero photo.
+// Home: the header floats over the hero photo.
 .transparent {
   position: absolute;
   left: 0;
   right: 0;
   background-color: transparent;
+  box-shadow: none;
 }
 
 .container {
@@ -30,11 +32,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  animation: headerIn 600ms $ease-out both;
+}
+
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .logo {
-  // 228px from the artboard edge = 60px gutter + 168px.
-  margin-left: min(8.75vw, 168px);
+  // Figma insets the logo from the gutter on wide screens.
+  margin-left: min(5vw, 96px);
 
   @include mobile {
     margin-left: 0;
@@ -44,57 +54,42 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 20px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    gap: 14px;
-  }
+  gap: 12px;
 
   @include mobile {
-    gap: 8px;
+    gap: 6px;
   }
 }
 
 .outlineBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px;
-  min-width: 100px;
+  @include button-base(38px);
+  min-width: 88px;
   padding: 0 16px;
-  border: 1px solid $color-white;
+  border-color: rgba(255, 255, 255, 0.9);
   border-radius: $radius-xs;
   color: $color-white;
-  font-size: 20px;
-  font-weight: 400;
-  white-space: nowrap;
-  transition: background-color $transition-fast;
+  font-weight: 500;
 
-  &:hover {
+  @include hover {
     background-color: rgba(255, 255, 255, 0.14);
   }
 
   &:focus-visible {
     outline: 2px solid $color-white;
     outline-offset: 2px;
-  }
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    height: 40px;
-    min-width: 88px;
-    font-size: 17px;
+    box-shadow: none;
   }
 
   @include mobile {
-    height: 34px;
+    height: 32px;
     min-width: 0;
     padding: 0 10px;
-    font-size: 14px;
+    font-size: $text-sm;
   }
 }
 
 .aboutBtn {
-  margin-right: 11px;
+  margin-right: 4px;
 
   @include mobile {
     display: none;
@@ -102,43 +97,84 @@
 }
 
 .registerBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 44px;
-  min-width: 179px;
-  padding: 0 20px;
+  @include button-base(38px);
+  min-width: 140px;
+  padding: 0 18px;
   border-radius: $radius-xs;
   background-color: $color-white;
   color: $color-text-main;
-  font-size: 20px;
   font-weight: 700;
-  white-space: nowrap;
-  transition: background-color $transition-fast;
 
-  &:hover {
+  @include hover {
     background-color: $color-primary-soft;
   }
 
   &:focus-visible {
     outline: 2px solid $color-white;
     outline-offset: 2px;
-  }
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    height: 40px;
-    min-width: 150px;
-    font-size: 17px;
+    box-shadow: none;
   }
 
   @include mobile {
-    height: 34px;
+    height: 32px;
     min-width: 0;
     padding: 0 10px;
-    font-size: 14px;
+    font-size: $text-sm;
   }
 }
 
+.iconBtn {
+  @include icon-button(40px);
+  position: relative;
+  color: $color-white;
+
+  @include hover {
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  @include mobile {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 2px solid $color-primary;
+  border-radius: $radius-pill;
+  background-color: $color-red;
+  color: $color-white;
+  font-size: 10px;
+  font-weight: 700;
+  @include flex-center;
+  animation: scaleIn $duration-slow $ease-out both;
+
+  .transparent & {
+    border-color: transparent;
+  }
+}
+
+.avatarBtn {
+  @include icon-button(40px);
+
+  @include hover {
+    .avatar {
+      box-shadow: 0 0 0 2px $color-white;
+    }
+  }
+}
+
+.avatar {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55);
+  transition: box-shadow $transition-fast;
+}
+
+// ── Language switcher ───────────────────────────────────────
 .dropdownWrapper {
   position: relative;
 }
@@ -147,32 +183,26 @@
   @include button-reset;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 4px;
-  color: $color-white;
-  font-size: 20px;
+  gap: 6px;
+  height: 38px;
+  padding: 0 8px;
   border-radius: $radius-xs;
+  font-size: $text-md;
+  color: $color-white;
+  transition: background-color $transition-fast;
 
-  &:hover {
-    opacity: 0.85;
+  @include hover {
+    background-color: rgba(255, 255, 255, 0.12);
   }
 
   &:focus-visible {
     outline: 2px solid $color-white;
   }
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 17px;
-  }
-
   @include mobile {
     gap: 3px;
-    font-size: 14px;
-
-    > svg:first-child {
-      width: 20px;
-      height: 20px;
-    }
+    padding: 0 4px;
+    font-size: $text-sm;
   }
 }
 
@@ -184,68 +214,43 @@
   transform: rotate(180deg);
 }
 
-.iconBtn {
-  @include button-reset;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  color: $color-white;
-  transition: background-color $transition-fast;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.14);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-white;
-  }
-
-  @include mobile {
-    width: 38px;
-    height: 38px;
-
-    svg {
-      width: 26px;
-      height: 26px;
-    }
-  }
-}
-
-.badge {
-  position: absolute;
-  top: 2px;
-  right: 0;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 5px;
-  border-radius: $radius-pill;
-  border: 2px solid $color-primary;
-  background-color: $color-red;
-  color: $color-white;
-  font-size: 11px;
-  font-weight: 700;
-  @include flex-center;
-}
-
+// ── Dropdowns ───────────────────────────────────────────────
 .dropdownMenu {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
+  z-index: 150;
   min-width: 200px;
   padding: 6px;
+  border: 1px solid $color-border-light;
   border-radius: $radius-md;
   background-color: $color-white;
   color: $color-text-main;
   box-shadow: $shadow-lg;
-  z-index: 150;
+  transform-origin: top right;
+  animation: menuIn $duration-base $ease-out both;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+}
+
+.langMenu {
+  min-width: 190px;
+}
+
+.langCode {
+  width: 24px;
+  font-size: $text-2xs;
+  font-weight: 700;
+  color: $color-text-light;
 }
 
 .userMenu {
-  min-width: 270px;
+  min-width: 260px;
 }
 
 .menuUser {
@@ -255,21 +260,18 @@
   padding: 8px 10px;
 }
 
-.menuAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: $color-border-light;
+.menuUserText {
+  min-width: 0;
 }
 
 .menuName {
-  font-weight: 700;
-  font-size: 15px;
+  @include truncate;
+  font-weight: 600;
+  font-size: $text-base;
 }
 
 .menuRole {
-  font-size: 13px;
+  font-size: $text-xs;
   color: $color-text-muted;
 }
 
@@ -279,18 +281,33 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 12px;
+  padding: 8px 10px;
   border-radius: $radius-sm;
-  font-size: 15px;
-  color: $color-text-main;
+  font-size: $text-base;
+  color: $color-text-body;
   text-align: left;
-  transition: background-color $transition-fast;
+  transition: background-color $transition-fast, color $transition-fast;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-text-light;
+    transition: color $transition-fast;
+  }
 
   &:hover,
   &:focus-visible {
+    outline: none;
     background-color: $color-primary-soft;
     color: $color-primary;
+
+    svg {
+      color: $color-primary;
+    }
   }
+}
+
+.itemText {
+  @include truncate;
 }
 
 .itemActive {
@@ -298,26 +315,31 @@
   font-weight: 600;
 }
 
+.itemCheck {
+  margin-left: auto;
+  color: $color-primary !important;
+}
+
 .menuCount {
   margin-left: auto;
   min-width: 20px;
-  height: 20px;
+  height: 18px;
   padding: 0 6px;
   border-radius: $radius-pill;
   background-color: $color-primary;
   color: $color-white;
-  font-size: 11px;
+  font-size: $text-2xs;
   font-weight: 700;
   @include flex-center;
 }
 
 .menuLabel {
   display: block;
-  padding: 6px 12px 2px;
-  font-size: 11px;
+  padding: 6px 10px 4px;
+  font-size: 10px;
   font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: $color-text-light;
 }
 
@@ -325,6 +347,37 @@
   height: 1px;
   margin: 4px 0;
   background-color: $color-border-light;
+}
+
+// Segmented language control (settings).
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  border-radius: $radius-md;
+  background-color: $color-sage-light;
+}
+
+.segment {
+  @include button-reset;
+  height: 34px;
+  border-radius: $radius-sm;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-muted;
+  transition: background-color $transition-fast, color $transition-fast, box-shadow $transition-fast;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.segmentActive {
+  background-color: $color-white;
+  color: $color-primary;
+  font-weight: 600;
+  box-shadow: $shadow-xs;
 }
 
 // Very narrow phones: drop the globe so everything fits at 320px.

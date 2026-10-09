@@ -6,12 +6,12 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  margin: 0 8px;
+  padding: 10px;
   border-radius: $radius-md;
-  color: $color-text-main;
   transition: background-color $transition-fast;
 
-  &:hover {
+  @include hover {
     background-color: $color-sand-light;
   }
 
@@ -23,12 +23,12 @@
 
 .active,
 .active:hover {
-  background-color: $color-primary-soft;
+  background-color: $color-sage-light;
 
   &::before {
     content: '';
     position: absolute;
-    left: 0;
+    left: -8px;
     top: 14px;
     bottom: 14px;
     width: 3px;
@@ -40,60 +40,52 @@
 .media {
   position: relative;
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
 }
 
 .listingImage {
-  width: 52px;
-  height: 52px;
-  border-radius: $radius-md;
-  object-fit: cover;
-  background-color: #F1EFE9;
-}
-
-.avatar {
   position: absolute;
-  right: -5px;
-  bottom: -5px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  object-fit: cover;
+  right: -4px;
+  bottom: -4px;
+  width: 22px;
+  height: 22px;
   border: 2px solid $color-white;
-  background-color: $color-border-light;
+  border-radius: 6px;
+  object-fit: cover;
+  background-color: $color-cream;
 
   .active & {
-    border-color: $color-primary-soft;
+    border-color: $color-sage-light;
   }
 }
 
 .body {
-  flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
 }
 
 .topRow,
 .bottomRow {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
 }
 
 .name {
+  font-size: $text-base;
+  font-weight: 600;
+  color: $color-text-main;
   @include truncate;
-  flex: 1;
-  font-family: $font-heading;
-  font-size: 0.92rem;
-  font-weight: 700;
 }
 
 .time {
   flex-shrink: 0;
-  font-size: 0.75rem;
+  font-size: $text-2xs;
   color: $color-text-light;
+  font-variant-numeric: tabular-nums;
 
   .unread & {
     color: $color-primary;
@@ -102,28 +94,24 @@
 }
 
 .listing {
+  font-size: $text-xs;
+  color: $color-primary-light;
   @include truncate;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: $color-primary;
-  margin-bottom: 2px;
 }
 
 .preview {
-  @include truncate;
-  flex: 1;
-  font-size: 0.85rem;
+  font-size: $text-sm;
   color: $color-text-muted;
+  @include truncate;
 
   .unread & {
     color: $color-text-main;
-    font-weight: 600;
+    font-weight: 500;
   }
 }
 
 .you {
   color: $color-text-light;
-  font-weight: 500;
 }
 
 .draft {
@@ -133,13 +121,14 @@
 
 .badge {
   flex-shrink: 0;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   border-radius: $radius-pill;
   background-color: $color-primary;
   color: $color-white;
-  font-size: 0.7rem;
+  font-size: 10px;
   font-weight: 700;
   @include flex-center;
+  animation: scaleIn $duration-slow $ease-out both;
 }

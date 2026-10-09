@@ -1,6 +1,6 @@
 @use './variables' as *;
 
-// Mixins for Responsive Design
+// ── Responsive ──────────────────────────────────────────────
 @mixin mobile {
   @media (max-width: ($bp-md - 1px)) {
     @content;
@@ -9,6 +9,12 @@
 
 @mixin tablet {
   @media (min-width: $bp-md) and (max-width: ($bp-lg - 1px)) {
+    @content;
+  }
+}
+
+@mixin below-desktop {
+  @media (max-width: ($bp-lg - 1px)) {
     @content;
   }
 }
@@ -31,11 +37,25 @@
   }
 }
 
-// Layout Mixins
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// ── Layout ──────────────────────────────────────────────────
 // Figma artboards are 1920px with 60px side gutters; narrower screens shrink the gutter.
 @mixin container {
   width: 100%;
-  max-width: 1920px;
+  max-width: $container-max;
   margin-left: auto;
   margin-right: auto;
   padding-left: $page-gutter;
@@ -58,7 +78,7 @@
 }
 
 // Responsive card grid used by catalogs and home sections (4 → 3 → 2 → 1 columns).
-@mixin card-grid($min: 260px, $gap: 50px) {
+@mixin card-grid($gap: 50px) {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: $gap;
@@ -82,70 +102,189 @@
   }
 }
 
-// White rounded panel used throughout the Figma (cards, info blocks).
+// ── Surfaces ────────────────────────────────────────────────
 @mixin panel {
   background-color: $color-white;
-  border-radius: $radius-xl;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-lg;
 }
 
-// Outlined pill/button from the Figma (thin grey border, bold black text).
-@mixin outline-button {
+@mixin focus-ring {
+  outline: none;
+  box-shadow: $focus-ring;
+}
+
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+// ── Typography ──────────────────────────────────────────────
+@mixin display($size: $display-lg) {
+  font-family: $font-display;
+  font-size: $size;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: $color-text-main;
+}
+
+@mixin eyebrow {
+  font-size: $text-2xs;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+}
+
+// ── Buttons ─────────────────────────────────────────────────
+@mixin button-base($height: 40px) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1px solid $color-outline;
+  height: $height;
+  padding: 0 18px;
+  border: 1px solid transparent;
   border-radius: $radius-sm;
-  background-color: $color-white;
-  color: $color-text-main;
-  font-weight: 700;
+  font-family: $font-main;
+  font-size: $text-base;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
-  transition: all $transition-fast;
+  user-select: none;
+  text-decoration: none;
+  transition:
+    background-color $transition-fast,
+    border-color $transition-fast,
+    color $transition-fast,
+    box-shadow $transition-fast,
+    transform $transition-fast;
 
-  &:hover {
-    border-color: $color-primary;
-    color: $color-primary;
+  &:active:not(:disabled) {
+    transform: translateY(1px) scale(0.99);
   }
 
   &:focus-visible {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
-  }
-}
-
-// Solid navy button from the Figma.
-@mixin primary-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: none;
-  border-radius: $radius-md;
-  background-color: $color-primary;
-  color: $color-white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color $transition-fast, transform $transition-fast;
-
-  &:hover {
-    background-color: $color-primary-dark;
+    @include focus-ring;
   }
 
-  &:active {
-    transform: scale(0.98);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
-  }
-
-  &:disabled {
-    opacity: 0.55;
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
+@mixin primary-button($height: 40px) {
+  @include button-base($height);
+  background-color: $color-primary;
+  color: $color-white;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, $shadow-xs;
+
+  @include hover {
+    background-color: $color-primary-dark;
+  }
+}
+
+@mixin outline-button($height: 40px) {
+  @include button-base($height);
+  border-color: $color-border;
+  background-color: $color-white;
+  color: $color-text-main;
+
+  @include hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+}
+
+@mixin soft-button($height: 40px) {
+  @include button-base($height);
+  background-color: $color-primary-soft;
+  color: $color-primary;
+
+  @include hover {
+    background-color: #D6E2D8;
+  }
+}
+
+@mixin ghost-button($height: 36px) {
+  @include button-base($height);
+  padding: 0 12px;
+  background-color: transparent;
+  color: $color-text-body;
+
+  @include hover {
+    background-color: rgba($color-pine, 0.05);
+    color: $color-primary;
+  }
+}
+
+@mixin icon-button($size: 36px) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: $size;
+  height: $size;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color $transition-fast, color $transition-fast, transform $transition-fast;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// ── Form controls ───────────────────────────────────────────
+@mixin field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-body;
+}
+
+@mixin field($height: 42px) {
+  width: 100%;
+  height: $height;
+  padding: 0 12px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background-color: $color-white;
+  color: $color-text-main;
+  font-family: $font-main;
+  font-size: $text-md;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder {
+    color: $color-text-light;
+  }
+
+  @include hover {
+    border-color: #C4B9A7;
+  }
+
+  &:focus,
+  &:focus-within {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: $focus-ring;
+  }
+
+  &[aria-invalid='true'] {
+    border-color: $color-red;
+  }
+}
+
+// ── Utilities ───────────────────────────────────────────────
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -158,34 +297,27 @@
   justify-content: space-between;
 }
 
-// Card and Elevation Mixins
 @mixin card-base {
-  background: $color-sand-card;
-  border: none;
+  background: $color-white;
+  border: 1px solid $color-border-light;
   border-radius: $radius-lg;
-  transition: all $transition-normal;
-
-  &:hover {
-    box-shadow: $shadow-md;
-    border-color: rgba($color-primary, 0.2);
-  }
+  transition: box-shadow $transition-normal, transform $transition-normal, border-color $transition-normal;
 }
 
 @mixin card-interactive {
   @include card-base;
   cursor: pointer;
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: $shadow-lg;
-    border-color: rgba($color-primary, 0.35);
+  @include hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
   }
 }
 
 @mixin glass-panel {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
@@ -197,7 +329,6 @@
   font: inherit;
   color: inherit;
   cursor: pointer;
-  outline: none;
 }
 
 @mixin truncate {
@@ -211,4 +342,17 @@
   -webkit-line-clamp: $lines;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+// Placeholder tone behind photos while they load (keeps layout dimensions).
+@mixin image-placeholder {
+  background-color: $color-cream;
+  background-image: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.45) 50%, transparent 60%);
+  background-size: 220% 100%;
+}
+
+// Subtle shyrdak-inspired diamond ornament as a background layer.
+@mixin shyrdak-pattern($color: '%231F4A3D', $opacity: 0.06, $size: 56px) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='#{$color}' stroke-width='1.2' opacity='#{$opacity * 10}'%3E%3Cpath d='M28 6 L50 28 L28 50 L6 28 Z'/%3E%3Cpath d='M28 16 C33 21 33 23 28 28 C23 23 23 21 28 16 Z M28 40 C33 35 33 33 28 28 C23 33 23 35 28 40 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: $size $size;
 }

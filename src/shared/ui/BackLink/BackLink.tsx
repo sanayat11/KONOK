@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
+import { useT } from '@/shared/i18n';
 import styles from './BackLink.module.scss';
 
 export interface BackLinkProps {
@@ -11,13 +12,13 @@ export interface BackLinkProps {
   className?: string;
 }
 
-/** Figma "← Назад": 30px arrow + 20px label. */
-export const BackLink: React.FC<BackLinkProps> = ({ to, label = 'Назад', className }) => {
+export const BackLink: React.FC<BackLinkProps> = ({ to, label, className }) => {
   const navigate = useNavigate();
+  const { t } = useT();
   const content = (
     <>
-      <ArrowLeft size={30} strokeWidth={1.5} />
-      <span>{label}</span>
+      <ArrowLeft size={16} strokeWidth={1.8} className={styles.icon} />
+      <span>{label ?? t('common.back')}</span>
     </>
   );
 

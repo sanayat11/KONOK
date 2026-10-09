@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
-import { OrnamentPanel } from '@/shared/ui/OrnamentPanel';
 import type { UserProfile } from '@/entities/types';
 import { createId } from '@/shared/lib/date';
+import { IMAGES } from '@/shared/lib/images';
+import { useT } from '@/shared/i18n';
+import { OrnamentPanel } from '@/shared/ui/OrnamentPanel';
 import { LoginStep } from './steps/LoginStep';
 import { RoleStep } from './steps/RoleStep';
 import { GuestFormStep, GuestOtpStep, GuestPassportStep } from './steps/GuestSteps';
@@ -15,16 +17,15 @@ type Flow =
   | { kind: 'guest'; step: 1 | 2 | 3 }
   | { kind: 'host'; step: 1 | 2 | 3 | 4 };
 
-const HERO = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=85';
-const BANNER = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
-
-/** Figma "Регистрация" / "Регистрация хозяина" screens; login reuses the same card. */
+/** Login and the guest / host registration flows, in a split layout with photography. */
 export const AuthPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useT();
   const [params, setParams] = useSearchParams();
   const mode = params.get('mode') === 'login' ? 'login' : 'register';
   const { touristForm, hostForm, register, setSelectedRole } = useAuthStore();
-  const [flow, setFlow] = useState<Flow>({ kind: 'role' });
+  // `?role=host` (e.g. from "Become a host") opens the host flow directly.
+  const [flow, setFlow] = useState<Flow>(() => (params.get('role') === 'host' ? { kind: 'host', step: 1 } : { kind: 'role' }));
 
   const finish = (user: UserProfile) => {
     register(user);
@@ -33,7 +34,7 @@ export const AuthPage: React.FC = () => {
 
   // Built at submit time (event handler), not during render.
   const base = () => ({
-    bannerUrl: BANNER,
+    bannerUrl: IMAGES.defaultBanner,
     daysTravelled: 0,
     tripsCount: 0,
     memberSince: new Date().toLocaleDateString('ru-RU'),
@@ -44,22 +45,22 @@ export const AuthPage: React.FC = () => {
     finish({
       ...base(),
       id: createId('user'),
-      name: touristForm.fullName.split(' ')[0] || 'Гость',
-      fullName: touristForm.fullName || 'Гость',
+      name: touristForm.fullName.split(' ')[0] || t('auth.defaultGuestName'),
+      fullName: touristForm.fullName || t('auth.defaultGuestName'),
       email: touristForm.email,
       phone: touristForm.phone,
-      avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
+      avatarUrl: '',
       bio: '',
       role: 'tourist',
-      languages: [{ name: 'Русский', level: 'Fluent' }],
+      languages: [{ name: 'ru', level: 'Fluent' }],
     });
 
   const finishHost = () =>
     finish({
       ...base(),
       id: createId('host'),
-      name: hostForm.fullName.split(' ')[0] || 'Хозяин',
-      fullName: hostForm.fullName || 'Хозяин',
+      name: hostForm.fullName.split(' ')[0] || t('auth.defaultHostName'),
+      fullName: hostForm.fullName || t('auth.defaultHostName'),
       email: hostForm.email,
       phone: hostForm.phone,
       avatarUrl: hostForm.avatarUrl,
@@ -68,18 +69,13 @@ export const AuthPage: React.FC = () => {
       languages: hostForm.languages.map((name) => ({ name, level: 'Fluent' })),
     });
 
-  // Panel colour follows the Figma screens: beige for role/host, sky for the guest form, navy for verification.
-  const tone = flow.kind === 'guest' ? (flow.step === 1 ? 'sky' : 'navy') : 'beige';
-
   let content: React.ReactNode;
+  let stepKey: string;
   if (mode === 'login') {
-    content = (
-      <LoginStep
-        onDone={() => navigate('/cabinet?tab=profile')}
-        onRegister={() => setParams({ mode: 'register' })}
-      />
-    );
+    stepKey = 'login';
+    content = <LoginStep onDone={() => navigate('/cabinet?tab=profile')} onRegister={() => setParams({ mode: 'register' })} />;
   } else if (flow.kind === 'role') {
+    stepKey = 'role';
     content = (
       <RoleStep
         onSelect={(role) => {
@@ -89,6 +85,7 @@ export const AuthPage: React.FC = () => {
       />
     );
   } else if (flow.kind === 'guest') {
+    stepKey = `guest-${flow.step}`;
     content =
       flow.step === 1 ? (
         <GuestFormStep onBack={() => setFlow({ kind: 'role' })} onNext={() => setFlow({ kind: 'guest', step: 2 })} />
@@ -98,6 +95,7 @@ export const AuthPage: React.FC = () => {
         <GuestPassportStep onBack={() => setFlow({ kind: 'guest', step: 2 })} onDone={finishGuest} />
       );
   } else {
+    stepKey = `host-${flow.step}`;
     const back = () => setFlow(flow.step === 1 ? { kind: 'role' } : { kind: 'host', step: (flow.step - 1) as 1 | 2 | 3 });
     const next = () => setFlow({ kind: 'host', step: (flow.step + 1) as 2 | 3 | 4 });
     content =
@@ -112,12 +110,19 @@ export const AuthPage: React.FC = () => {
       );
   }
 
+  // Panel colour follows the Figma screens: light for role/host, sage for the guest form, forest for verification.
+  const tone = mode === 'login' ? 'beige' : flow.kind === 'guest' ? (flow.step === 1 ? 'sage' : 'forest') : 'beige';
+
   return (
     <div className={styles.page}>
-      <img src={HERO} alt="" className={styles.hero} />
+      <img src={IMAGES.authAside} alt="" className={styles.hero} />
       <div className={styles.container}>
-        <OrnamentPanel tone={mode === 'login' ? 'beige' : tone} className={styles.panel}>
-          <div className={styles.panelInner}>{content}</div>
+        <OrnamentPanel tone={tone} className={styles.panel}>
+          <div className={styles.panelInner}>
+            <div key={stepKey} className={styles.stepEnter}>
+              {content}
+            </div>
+          </div>
         </OrnamentPanel>
       </div>
     </div>

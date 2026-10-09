@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { BadgeCheck, Minus, Plus } from 'lucide-react';
+import { BadgeCheck, CalendarDays, Minus, Plus } from 'lucide-react';
 import { Modal } from '@/shared/ui/Modal';
 import { useBookingStore } from '@/shared/lib/store/useBookingStore';
-import { createId, DAY_MS, formatShortDate, toInputDate, useToday } from '@/shared/lib/date';
+import { createId, DAY_MS, toInputDate, useToday } from '@/shared/lib/date';
+import { useT } from '@/shared/i18n';
 import styles from './BookingModal.module.scss';
 
+const celebrate = () => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  confetti({ particleCount: 60, spread: 60, startVelocity: 32, origin: { y: 0.72 }, colors: ['#1F4A3D', '#C39A55', '#F7F3EC'] });
+};
 
 /** Body is keyed by the item so every opening starts with a fresh form. */
 const BookingForm: React.FC = () => {
   const navigate = useNavigate();
+  const { t, fmt } = useT();
   const { bookingModal, closeBookingModal, addBooking } = useBookingStore();
   const today = useToday();
   const [start, setStart] = useState(toInputDate(new Date(today.getTime() + 7 * DAY_MS)));
@@ -21,13 +27,16 @@ const BookingForm: React.FC = () => {
   const nights = Math.max(1, Math.round((new Date(end).getTime() - new Date(start).getTime()) / DAY_MS));
   const price = bookingModal.pricePerDay ?? 0;
   const total = nights * price;
+  const shortDate = (iso: string) => fmt.date(iso, { day: 'numeric', month: 'short' });
 
   if (done) {
     return (
-      <div className={styles.done}>
-        <BadgeCheck size={48} className={styles.doneIcon} />
-        <p className={styles.doneTitle}>Заявка отправлена!</p>
-        <p className={styles.doneText}>Хозяин подтвердит бронирование в ближайшее время.</p>
+      <div className={styles.done} role="status">
+        <span className={styles.doneIcon}>
+          <BadgeCheck size={28} />
+        </span>
+        <p className={styles.doneTitle}>{t('booking.doneTitle')}</p>
+        <p className={styles.doneText}>{t('booking.doneText')}</p>
         <button
           type="button"
           className={styles.submit}
@@ -36,7 +45,7 @@ const BookingForm: React.FC = () => {
             navigate('/cabinet?tab=trips');
           }}
         >
-          Мои бронирования
+          {t('booking.toBookings')}
         </button>
       </div>
     );
@@ -51,76 +60,92 @@ const BookingForm: React.FC = () => {
           id: createId('b'),
           title: bookingModal.itemTitle,
           category: bookingModal.type === 'car' ? 'car' : bookingModal.type === 'place' ? 'place' : 'guide',
-          dateRange: `${formatShortDate(start)} – ${formatShortDate(end)} (${guests} ${guests === 1 ? 'гость' : guests < 5 ? 'гостя' : 'гостей'})`,
+          dateRange: `${shortDate(start)} – ${shortDate(end)} · ${t('common.guests', { count: guests })}`,
           location: '',
           price: total,
           photoUrl: bookingModal.photoUrl,
           status: 'pending',
         });
         setDone(true);
-        confetti({ particleCount: 90, spread: 70, origin: { y: 0.7 }, colors: ['#165389', '#FFE200', '#FFFFFF'] });
+        celebrate();
       }}
     >
       <div className={styles.item}>
         <img src={bookingModal.photoUrl} alt="" className={styles.itemPhoto} />
         <div>
           <p className={styles.itemTitle}>{bookingModal.itemTitle}</p>
-          {price > 0 && <p className={styles.itemPrice}>{price} сом / день</p>}
+          {price > 0 && <p className={styles.itemPrice}>{fmt.pricePerDay(price)}</p>}
         </div>
       </div>
 
       <div className={styles.row}>
         <label className={styles.field}>
-          <span>Заезд</span>
-          <input
-            type="date"
-            value={start}
-            min={toInputDate(today)}
-            onChange={(e) => {
-              setStart(e.target.value);
-              if (e.target.value >= end) setEnd(toInputDate(new Date(new Date(e.target.value).getTime() + DAY_MS)));
-            }}
-            required
-          />
+          <span>{t('booking.checkIn')}</span>
+          <span className={styles.inputBox}>
+            <CalendarDays size={15} />
+            <input
+              type="date"
+              value={start}
+              min={toInputDate(today)}
+              onChange={(e) => {
+                setStart(e.target.value);
+                if (e.target.value >= end) setEnd(toInputDate(new Date(new Date(e.target.value).getTime() + DAY_MS)));
+              }}
+              required
+            />
+          </span>
         </label>
         <label className={styles.field}>
-          <span>Выезд</span>
-          <input type="date" value={end} min={start} onChange={(e) => setEnd(e.target.value)} required />
+          <span>{t('booking.checkOut')}</span>
+          <span className={styles.inputBox}>
+            <CalendarDays size={15} />
+            <input type="date" value={end} min={start} onChange={(e) => setEnd(e.target.value)} required />
+          </span>
         </label>
       </div>
 
       <div className={styles.field}>
-        <span>Сколько гостей?</span>
+        <span>{t('booking.guests')}</span>
         <div className={styles.stepper}>
-          <button type="button" onClick={() => setGuests((g) => Math.max(1, g - 1))} aria-label="Меньше гостей">
-            <Minus size={22} />
+          <button type="button" onClick={() => setGuests((g) => Math.max(1, g - 1))} aria-label={t('booking.fewerGuests')} disabled={guests <= 1}>
+            <Minus size={16} />
           </button>
-          <span aria-live="polite">{guests}</span>
-          <button type="button" onClick={() => setGuests((g) => Math.min(12, g + 1))} aria-label="Больше гостей">
-            <Plus size={22} />
+          <span aria-live="polite">{t('common.guests', { count: guests })}</span>
+          <button type="button" onClick={() => setGuests((g) => Math.min(12, g + 1))} aria-label={t('booking.moreGuests')} disabled={guests >= 12}>
+            <Plus size={16} />
           </button>
         </div>
       </div>
 
       {price > 0 && (
-        <p className={styles.total}>
-          <span>Итого</span>
-          <span>{total} сом</span>
-        </p>
+        <div className={styles.summary}>
+          <p className={styles.calc}>
+            <span>
+              {fmt.price(price)} × {t('booking.nights', { count: nights })}
+            </span>
+            <span>{fmt.price(total)}</span>
+          </p>
+          <p className={styles.total}>
+            <span>{t('booking.total')}</span>
+            <span>{fmt.price(total)}</span>
+          </p>
+        </div>
       )}
 
       <button type="submit" className={styles.submit}>
-        Забронировать
+        {t('booking.submit')}
       </button>
+      <p className={styles.note}>{t('booking.note')}</p>
     </form>
   );
 };
 
 export const BookingModal: React.FC = () => {
+  const { t } = useT();
   const { bookingModal, closeBookingModal } = useBookingStore();
 
   return (
-    <Modal isOpen={bookingModal.isOpen} onClose={closeBookingModal} title="Бронирование" maxWidth="sm">
+    <Modal isOpen={bookingModal.isOpen} onClose={closeBookingModal} title={t('booking.title')} maxWidth="sm">
       <BookingForm key={bookingModal.itemId} />
     </Modal>
   );

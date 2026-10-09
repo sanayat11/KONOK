@@ -12,53 +12,51 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 20px 20px 14px;
-  border-bottom: 1px solid $color-border-light;
+  gap: 12px;
+  padding: 18px 16px 12px;
 }
 
 .titleRow {
-  @include flex-between;
-  gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .title {
-  font-size: 1.35rem;
-  font-weight: 800;
+  font-family: $font-display;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  color: $color-pine;
 }
 
 .counter {
-  padding: 3px 10px;
+  padding: 4px 9px;
   border-radius: $radius-pill;
   background-color: $color-primary-soft;
   color: $color-primary;
-  font-size: 0.78rem;
+  font-size: $text-xs;
   font-weight: 600;
-  white-space: nowrap;
 }
 
 .list {
-  flex: 1;
-  overflow-y: auto;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 2px;
-  padding: 8px;
+  min-height: 0;
+  padding-bottom: 8px;
+  overflow-y: auto;
 }
 
 .cta {
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: $radius-pill;
-  background-color: $color-primary;
-  color: $color-white;
-  font-family: $font-heading;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(15, 82, 186, 0.25);
-  transition: all $transition-normal;
+  @include primary-button(38px);
+}
 
-  &:hover {
-    background-color: $color-primary-dark;
-  }
+.footnote {
+  padding: 10px 16px 12px;
+  border-top: 1px solid $color-border-light;
+  font-size: 10px;
+  color: $color-text-light;
 }

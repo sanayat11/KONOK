@@ -3,10 +3,10 @@
 
 .card {
   background-color: $color-white;
-  border: 1px solid $color-sand-border;
+  border: 1px solid $color-border-light;
   border-radius: $radius-lg;
   overflow: hidden;
-  transition: all $transition-normal;
+  transition: box-shadow $transition-normal, transform $transition-normal;
 }
 
 .padding-none {
@@ -26,31 +26,28 @@
 }
 
 .default {
-  box-shadow: $shadow-xs;
+  box-shadow: none;
 }
 
 .elevated {
-  box-shadow: $shadow-md;
+  box-shadow: $shadow-sm;
 }
 
 .flat {
-  background-color: #F8F7F2;
-  border-color: #ECE9DF;
+  background-color: $color-sand-light;
   box-shadow: none;
 }
 
 .ornament {
   background-color: $color-white;
-  box-shadow: $shadow-sm;
   position: relative;
 }
 
 .interactive {
   cursor: pointer;
 
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: $shadow-lg;
-    border-color: rgba($color-primary, 0.3);
+  @include hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
   }
 }

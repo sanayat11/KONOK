@@ -2,41 +2,30 @@
 @use '@/app/styles/mixins' as *;
 
 .page {
-  @include container;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  padding-top: 0;
-  padding-bottom: 110px;
   background-color: $color-sand-light;
-  max-width: none;
+  padding-bottom: 88px;
 
   @include mobile {
-    gap: 40px;
     padding-bottom: 48px;
   }
 }
 
 .section {
+  @include container;
   display: flex;
   flex-direction: column;
-  gap: 50px;
-  width: 100%;
-  max-width: 1800px;
-  margin: 0 auto;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    gap: 32px;
-  }
+  gap: 32px;
+  padding-top: 56px;
 
   @include mobile {
     gap: 20px;
+    padding-top: 40px;
   }
 }
 
-// Figma: section titles are indented 47px from the cards.
+// Figma: section titles are indented from the cards.
 .heading {
-  margin-left: min(2.4vw, 47px);
+  margin-left: min(2.4vw, 46px);
 
   @include mobile {
     margin-left: 0;

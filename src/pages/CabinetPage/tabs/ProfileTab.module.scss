@@ -1,103 +1,86 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-.profile {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+.hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-xl;
+  background-color: $color-white;
 }
 
-// Figma: 1400×470 banner, 15px radius.
 .banner {
+  height: 150px;
   overflow: hidden;
-  border-radius: $radius-lg;
-  aspect-ratio: 1400 / 470;
-  background-color: $color-border-light;
+  @include image-placeholder;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 60%;
   }
 
   @include mobile {
-    aspect-ratio: 16 / 9;
+    height: 110px;
   }
 }
 
 .head {
-  position: relative;
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
-  gap: 24px;
-  margin-top: -130px;
-  padding-left: 100px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    grid-template-columns: 190px minmax(0, 1fr) auto;
-    margin-top: -100px;
-    padding-left: 40px;
-  }
+  gap: 16px 20px;
+  padding: 0 24px 22px;
 
   @include mobile {
     grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
-    margin-top: -70px;
-    padding-left: 0;
-    text-align: center;
+    padding: 0 16px 18px;
   }
 }
 
 .avatarWrap {
   position: relative;
-  width: 210px;
-  height: 210px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    width: 170px;
-    height: 170px;
-  }
-
-  @include mobile {
-    width: 130px;
-    height: 130px;
-  }
+  width: 96px;
+  margin-top: -48px;
 }
 
 .avatar {
-  width: 100%;
-  height: 100%;
-  border: 5px solid $color-white;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: $color-border-light;
+  border: 4px solid $color-white;
+  box-shadow: $shadow-sm;
+  box-sizing: content-box;
 }
 
 .cameraBtn {
   position: absolute;
-  right: 18px;
-  bottom: 18px;
+  right: -2px;
+  bottom: 2px;
+  @include flex-center;
   width: 30px;
   height: 30px;
-  border: 2px solid $color-white;
+  border: 3px solid $color-white;
   border-radius: 50%;
-  background-color: $color-text-main;
+  background-color: $color-primary;
   color: $color-white;
   cursor: pointer;
-  @include flex-center;
+  transition: background-color $transition-fast, transform $transition-fast;
+
+  @include hover {
+    background-color: $color-primary-dark;
+    transform: scale(1.06);
+  }
 
   &:focus-within {
-    outline: 2px solid $color-primary;
+    @include focus-ring;
   }
 }
 
 .identity {
-  padding-top: 145px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    padding-top: 110px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 14px;
+  min-width: 0;
 
   @include mobile {
     padding-top: 0;
@@ -105,98 +88,176 @@
 }
 
 .name {
-  font-size: 28px;
-  font-weight: 700;
-  margin-left: 30px;
+  @include display(28px);
+}
 
-  @include mobile {
-    margin-left: 0;
-    font-size: 24px;
-  }
+.memberSince {
+  font-size: $text-xs;
+  color: $color-text-light;
 }
 
 .bio {
-  max-width: 640px;
-  margin-top: 6px;
-  font-size: 20px;
-  line-height: 1.2;
+  max-width: 62ch;
+  margin-top: 8px;
+  font-size: $text-sm;
+  line-height: 1.6;
+  color: $color-text-body;
+}
 
-  @include mobile {
-    font-size: 16px;
-  }
+.bioEmpty {
+  font-size: $text-sm;
+  font-style: italic;
+  color: $color-text-light;
 }
 
 .editBtn {
-  margin-top: 145px;
-  gap: 8px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    margin-top: 110px;
-  }
+  margin-top: 14px;
 
   @include mobile {
     margin-top: 0;
+    justify-self: start;
   }
 }
 
 .editForm {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-top: 140px;
-  width: 100%;
-  max-width: 640px;
-
-  input,
-  textarea {
-    padding: 8px 12px;
-    border: 1px solid $color-text-main;
-    border-radius: $radius-sm;
-    font-size: 18px;
-    outline: none;
-
-    &:focus {
-      border-color: $color-primary;
-    }
-  }
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    padding-top: 108px;
-  }
+  gap: 12px;
+  padding-top: 14px;
+  grid-column: 2 / 4;
+  animation: fadeIn $duration-base $ease-out both;
 
   @include mobile {
-    padding-top: 0;
+    grid-column: auto;
   }
+}
+
+.editLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  > span {
+    font-size: $text-sm;
+    font-weight: 500;
+    color: $color-text-body;
+  }
+
+  input {
+    @include field(40px);
+  }
+
+  textarea {
+    @include field(auto);
+    min-height: 84px;
+    padding: 10px 12px;
+    line-height: 1.55;
+    resize: vertical;
+  }
+}
+
+.invalid {
+  border-color: $color-red !important;
+}
+
+.error {
+  font-size: $text-xs;
+  color: $color-red;
 }
 
 .editActions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
-.cancelBtn {
-  @include button-reset;
-  padding: 8px 18px;
-  border: 1px solid $color-outline;
-  border-radius: $radius-sm;
-  font-size: 15px;
+.toast {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: $radius-pill;
+  background-color: $color-pine;
+  color: $color-white;
+  font-size: $text-sm;
+  font-weight: 500;
+  box-shadow: $shadow-lg;
+  animation: toastIn $duration-slow $ease-out both;
+
+  svg {
+    color: #A9D3B8;
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 18px;
+
+    & + div {
+      border-left: 1px solid $color-border-light;
+    }
+  }
+
+  strong {
+    font-family: $font-display;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1;
+    color: $color-pine;
+  }
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $text-xs;
+    color: $color-text-muted;
+  }
 }
 
 .infoList {
+  display: flex;
+  flex-direction: column;
+
   > div {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 4px 10px;
-    border-bottom: 1px solid $color-border;
-    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+
+    & + div {
+      border-top: 1px solid $color-border-light;
+    }
   }
 
   dt {
-    color: $color-text-light;
+    font-size: $text-sm;
+    color: $color-text-muted;
   }
 
   dd {
-    text-align: center;
+    font-size: $text-sm;
+    font-weight: 500;
+    text-align: right;
   }
 }
 
@@ -204,55 +265,59 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 
   li {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 4px 12px;
-    border: 1px solid $color-text-main;
-    border-radius: $radius-sm;
+    gap: 10px;
+    padding: 9px 0;
+
+    & + li {
+      border-top: 1px solid $color-border-light;
+    }
   }
 }
 
 .flag {
-  font-size: 20px;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .langName {
   flex: 1;
-  font-size: 18px;
+  font-size: $text-sm;
+  font-weight: 500;
 }
 
 .langLevel {
-  padding: 0 10px;
-  border-radius: $radius-sm;
-  background-color: $color-primary-soft;
-  color: $color-primary-light;
-  font-size: 13px;
+  padding: 3px 8px;
+  border-radius: $radius-pill;
+  background-color: $color-sage-light;
+  font-size: $text-2xs;
+  font-weight: 600;
+  color: $color-primary;
 }
 
 .interests {
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 
   li {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 3px;
-    border-radius: $radius-sm;
-    background-color: $color-sand-bg;
-    font-size: 18px;
+    gap: 6px;
+    padding: 3px 10px 3px 3px;
+    border: 1px solid $color-border-light;
+    border-radius: $radius-pill;
+    font-size: $text-sm;
   }
 
   img {
-    width: 52px;
-    height: 32px;
-    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     object-fit: cover;
   }
 }

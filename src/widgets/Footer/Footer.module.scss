@@ -1,57 +1,91 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Figma: 100px navy band, links start at x=104 and are 60px apart.
+// Figma: brand band with three links on the left and the copyright on the right.
 .footer {
+  position: relative;
   margin-top: auto;
   background-color: $color-footer-bg;
   color: $color-white;
 }
 
+// Narrow kochkor-muiuz border (see ornaments.scss).
+.ornament {
+  height: 12px;
+  background-color: $color-primary-dark;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 12'%3E%3Cpath d='M0 6h8M40 6h8' stroke='%23E3EBE4' stroke-opacity='.35'/%3E%3Cpath d='M24 6c-3-4-8-4-9-1s3 4 4 1M24 6c3-4 8-4 9-1s-3 4-4 1M24 6c-3 4-8 4-9 1M24 6c3 4 8 4 9 1' fill='none' stroke='%23E3EBE4' stroke-opacity='.45' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 48px 12px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
 .container {
   @include container;
-  min-height: 100px;
+  min-height: 84px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px 40px;
+  gap: 12px 40px;
   flex-wrap: wrap;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 60px;
+  gap: 10px 48px;
   margin-left: min(2.3vw, 44px);
 
   @include mobile {
     margin-left: 0;
-    gap: 10px 24px;
+    gap: 8px 24px;
   }
 }
 
 .footerLink {
+  position: relative;
+  font-size: $text-lg;
   color: $color-white;
-  font-size: 20px;
-  transition: opacity $transition-fast;
 
-  &:hover {
-    opacity: 0.75;
-    text-decoration: underline;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform $transition-normal;
   }
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 17px;
+  @include hover {
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  &:focus-visible {
+    outline-color: $color-white;
   }
 
   @include mobile {
-    font-size: 15px;
+    font-size: $text-md;
   }
 }
 
 .copyright {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: $text-xs;
+  color: rgba(255, 255, 255, 0.62);
+
+  a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    @include hover {
+      color: $color-white;
+    }
+  }
 }

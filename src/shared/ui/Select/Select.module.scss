@@ -1,4 +1,5 @@
 @use '@/app/styles/variables' as *;
+@use '@/app/styles/mixins' as *;
 
 .container {
   display: flex;
@@ -12,24 +13,17 @@
 }
 
 .label {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: $color-text-main;
+  font-size: $text-sm;
+  font-weight: 500;
+  color: $color-text-body;
 }
 
 .selectWrapper {
+  @include field(40px);
   position: relative;
   display: flex;
   align-items: center;
-  background-color: $color-white;
-  border: 1.5px solid $color-border;
-  border-radius: $radius-md;
-  transition: all $transition-fast;
-
-  &:focus-within {
-    border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba(15, 82, 186, 0.12);
-  }
+  padding: 0;
 
   &.hasError {
     border-color: $color-red;
@@ -38,8 +32,9 @@
 
 .select {
   width: 100%;
-  padding: 10px 36px 10px 14px;
-  font-size: 0.95rem;
+  height: 100%;
+  padding: 0 34px 0 12px;
+  font-size: $text-base;
   color: $color-text-main;
   background: transparent;
   border: none;
@@ -48,7 +43,7 @@
   cursor: pointer;
 
   &.withLeftIcon {
-    padding-left: 40px;
+    padding-left: 36px;
   }
 }
 
@@ -57,13 +52,13 @@
   left: 12px;
   display: flex;
   align-items: center;
-  color: $color-text-muted;
+  color: $color-text-light;
   pointer-events: none;
 }
 
 .chevron {
   position: absolute;
-  right: 12px;
+  right: 10px;
   display: flex;
   align-items: center;
   color: $color-text-muted;
@@ -71,7 +66,7 @@
 }
 
 .errorMessage {
-  font-size: 0.8rem;
+  font-size: $text-xs;
   color: $color-red;
   font-weight: 500;
 }

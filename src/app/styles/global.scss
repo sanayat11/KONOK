@@ -2,6 +2,18 @@
 @use './mixins' as *;
 @use './ornaments' as *;
 
+:root {
+  --color-primary: #{$color-primary};
+  --color-pine: #{$color-pine};
+  --color-bg: #{$color-sand-bg};
+  --ease-out: #{$ease-out};
+  --header-height: #{$header-height};
+
+  @include mobile {
+    --header-height: #{$header-height-mobile};
+  }
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -13,14 +25,18 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   font-family: $font-main;
+  font-size: $text-md;
+  font-feature-settings: 'cv11', 'ss01';
   background-color: $color-sand-bg;
   color: $color-text-main;
   min-height: 100vh;
-  line-height: 1.5;
+  line-height: 1.55;
   overflow-x: hidden;
 }
 
@@ -31,24 +47,36 @@ a {
 
 button {
   font-family: inherit;
+  color: inherit;
 }
 
 input, select, textarea {
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: $text-md;
+  color: inherit;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-heading;
-  font-weight: 700;
+  font-weight: 600;
   color: $color-text-main;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+::selection {
+  background-color: rgba($color-primary, 0.16);
+}
+
+:focus-visible {
+  outline: 2px solid $color-primary;
+  outline-offset: 2px;
 }
 
 // App Layout Wrapper
@@ -64,7 +92,26 @@ img {
   flex-direction: column;
 }
 
-// Global utility animations
+// ── Motion system ───────────────────────────────────────────
+// Page transition: each route section fades in with a short rise.
+.page-transition {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  animation: pageEnter 420ms $ease-out both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -76,27 +123,107 @@ img {
   }
 }
 
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -120% 0;
+  }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn $duration-slow $ease-out both;
+}
+
+// Scroll reveal (see shared/ui/Reveal). Children with [data-reveal-item] stagger via --i.
+[data-reveal] {
+  --reveal-distance: 18px;
+}
+
+.js-reveal [data-reveal]:not([data-revealed='true']),
+.js-reveal [data-reveal]:not([data-revealed='true']) [data-reveal-item] {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+}
+
+.js-reveal [data-reveal][data-revealed='true'] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity $duration-reveal $ease-out,
+    transform $duration-reveal $ease-out;
+}
+
+.js-reveal [data-reveal][data-revealed='true'] [data-reveal-item] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity $duration-reveal $ease-out,
+    transform $duration-reveal $ease-out;
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+// The container itself shouldn't move when it only orchestrates its items.
+.js-reveal [data-reveal='stagger'] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+// Skeleton placeholder
+.skeleton {
+  @include image-placeholder;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: $radius-sm;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .js-reveal [data-reveal],
+  .js-reveal [data-reveal] [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 // Scrollbar styling
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1EFE9;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+  background: #D3CBBD;
+  border: 3px solid $color-sand-bg;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #B7AD9C;
 }
 
 // Screen-reader-only text
@@ -110,4 +237,47 @@ img {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 8px 14px;
+  border-radius: $radius-sm;
+  background: $color-pine;
+  color: $color-white;
+  font-size: $text-sm;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform $transition-fast;
+
+  &:focus {
+    transform: none;
+  }
+}
+main:focus { outline: none; }
+
+// Thin progress line while a route chunk loads.
+.route-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, $color-primary, transparent);
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  animation: routeLoading 1s $ease-in-out infinite;
+}
+
+@keyframes routeLoading {
+  from {
+    background-position: -50% 0;
+  }
+  to {
+    background-position: 150% 0;
+  }
 }

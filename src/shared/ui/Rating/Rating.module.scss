@@ -1,21 +1,22 @@
 @use '@/app/styles/variables' as *;
 
-// Figma: 30px yellow star, bold score, regular "/ (count)" — 20px text.
+// Figma: yellow-gold star, bold score, regular "/ (count)".
 .ratingContainer {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 6px;
   color: $color-text-main;
-  font-size: 20px;
+  font-size: $text-lg;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .starIcon {
   flex-shrink: 0;
-  width: 1.5em;
-  height: 1.5em;
-  color: $color-gold;
-  fill: $color-gold;
+  width: 1.3em;
+  height: 1.3em;
+  color: $color-star;
+  fill: $color-star;
   stroke-width: 1.2;
 }
 
@@ -24,21 +25,19 @@
 }
 
 .count {
-  margin-left: -4px;
+  margin-left: -2px;
   font-weight: 400;
 }
 
 .sm {
-  font-size: 16px;
-  gap: 6px;
+  font-size: $text-sm;
+  gap: 4px;
 }
 
 .md {
-  @media (max-width: 1439px) {
-    font-size: 17px;
-  }
+  font-size: $text-lg;
 }
 
 .lg {
-  font-size: 24px;
+  font-size: $text-xl;
 }

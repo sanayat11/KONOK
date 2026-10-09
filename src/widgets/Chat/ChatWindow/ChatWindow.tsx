@@ -1,25 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MessageCircleMore } from 'lucide-react';
-import {
-  groupMessages,
-  LISTING_TYPE_LABEL,
-  MessageBubble,
-  type ChatMessage,
-  type Conversation,
-} from '@/entities/chat';
+import { ArrowLeft, ArrowUpRight, MessageCircleMore } from 'lucide-react';
+import { groupMessages, MessageBubble, type ChatMessage, type Conversation } from '@/entities/chat';
+import { useT, type TranslationKey } from '@/shared/i18n';
+import { Avatar } from '@/shared/ui/Avatar';
 import { MessageComposer } from '../MessageComposer';
 import { ChatEmptyState } from '../ChatEmptyState';
 import styles from './ChatWindow.module.scss';
 
-const QUICK_REPLIES: Record<Conversation['role'], string[]> = {
-  tourist: [
-    'Здравствуйте! Свободны ли вы на мои даты?',
-    'Какая итоговая стоимость?',
-    'Можно ли договориться о встрече в аэропорту?',
-  ],
-  owner: ['Здравствуйте! Да, даты свободны.', 'Спасибо за интерес! Уточните, пожалуйста, даты.'],
+const QUICK_REPLIES: Record<Conversation['role'], TranslationKey[]> = {
+  tourist: ['chat.quickReplies.tourist1', 'chat.quickReplies.tourist2', 'chat.quickReplies.tourist3'],
+  owner: ['chat.quickReplies.owner1', 'chat.quickReplies.owner2'],
 };
+
+const LISTING_PATH = { car: '/cars', guide: '/guides' } as const;
 
 export interface ChatWindowProps {
   conversation: Conversation;
@@ -28,58 +22,83 @@ export interface ChatWindowProps {
   onSend: (text: string) => void;
 }
 
+/** One open thread. Keyed by conversation id, so state resets when switching threads. */
 export const ChatWindow: React.FC<ChatWindowProps> = ({ conversation, messages, currentUserId, onSend }) => {
+  const { t, locale } = useT();
   const { participant, listing, role } = conversation;
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [draft, setDraft] = useState('');
-  const days = useMemo(() => groupMessages(messages), [messages]);
+  // Messages present when the thread opened don't animate; new ones do.
+  const initialIds = useRef(new Set(messages.map((m) => m.id)));
+  const lastCount = useRef(messages.length);
+  // `locale` is a dependency because day labels ("Today", "5 October") are localized.
+  const days = useMemo(() => groupMessages(messages), [messages, locale]);
 
-  // Stick to the newest message when the thread opens or grows.
-  useEffect(() => {
+  // Open at the newest message.
+  useLayoutEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [conversation.id, messages.length]);
+  }, []);
+
+  // Follow new messages when the reader is near the bottom (or just sent one).
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || messages.length <= lastCount.current) {
+      lastCount.current = messages.length;
+      return;
+    }
+    lastCount.current = messages.length;
+    const own = messages[messages.length - 1]?.senderId === currentUserId;
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 160;
+    if (own || nearBottom) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  }, [messages, currentUserId]);
 
   return (
-    <section className={styles.window} aria-label={`Диалог с ${participant.name}`}>
+    <section className={styles.window} aria-label={t('chat.dialogWith', { name: participant.name })}>
       <header className={styles.header}>
-        <Link to="/messages" className={styles.back} aria-label="Назад к диалогам">
-          <ArrowLeft size={20} />
+        <Link to="/messages" className={styles.back} aria-label={t('chat.backToList')}>
+          <ArrowLeft size={18} />
         </Link>
-        <img src={participant.avatarUrl} alt="" className={styles.avatar} />
+        <Avatar src={participant.avatarUrl} name={participant.name} size={38} />
         <div className={styles.headerText}>
           <h2 className={styles.name}>{participant.name}</h2>
-          <span className={styles.role}>{role === 'tourist' ? 'Хозяин' : 'Гость'}</span>
+          <span className={styles.role}>{role === 'tourist' ? t('chat.roleHost') : t('chat.roleGuest')}</span>
         </div>
+
+        <Link to={`${LISTING_PATH[listing.type]}/${listing.id}`} className={styles.listing} title={t('chat.openListing')}>
+          <img src={listing.photoUrl} alt="" className={styles.listingImage} />
+          <span className={styles.listingText}>
+            <span className={styles.listingType}>{t(`chat.listingType.${listing.type}`)}</span>
+            <span className={styles.listingTitle}>{listing.title}</span>
+          </span>
+          <ArrowUpRight size={14} className={styles.listingArrow} />
+        </Link>
       </header>
 
-      <div className={styles.listingBar}>
-        <img src={listing.photoUrl} alt="" className={styles.listingImage} />
-        <div className={styles.listingText}>
-          <span className={styles.listingType}>{LISTING_TYPE_LABEL[listing.type]}</span>
-          <span className={styles.listingTitle}>{listing.title}</span>
-        </div>
-      </div>
-
-      <div className={styles.messages} ref={scrollRef} role="log" aria-live="polite">
+      <div className={styles.messages} ref={scrollRef} role="log" aria-live="polite" aria-relevant="additions">
         {messages.length === 0 ? (
           <ChatEmptyState
-            icon={<MessageCircleMore size={28} />}
-            title="Начните диалог"
+            icon={<MessageCircleMore size={24} />}
+            title={t('chat.startConversation')}
             text={
               role === 'tourist'
-                ? `Задайте вопрос — ${participant.name} обычно отвечает в течение часа.`
-                : 'Ответьте туристу, чтобы договориться о деталях.'
+                ? t('chat.emptyThreadTouristText', { name: participant.name })
+                : t('chat.emptyThreadOwnerText')
             }
             action={
               <div className={styles.quickReplies}>
-                {QUICK_REPLIES[role].map((text) => (
-                  <button key={text} type="button" className={styles.quickReply} onClick={() => {
-                      setDraft(text);
+                {QUICK_REPLIES[role].map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className={styles.quickReply}
+                    onClick={() => {
+                      setDraft(t(key));
                       inputRef.current?.focus();
-                    }}>
-                    {text}
+                    }}
+                  >
+                    {t(key)}
                   </button>
                 ))}
               </div>
@@ -95,7 +114,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversation, messages, 
                 const isOwn = group.senderId === currentUserId;
                 return (
                   <div key={group.key} className={isOwn ? styles.groupOwn : styles.group}>
-                    {!isOwn && <img src={participant.avatarUrl} alt="" className={styles.groupAvatar} />}
+                    {!isOwn && <Avatar src={participant.avatarUrl} name={participant.name} size={28} className={styles.groupAvatar} />}
                     <div className={styles.groupBubbles}>
                       {group.messages.map((message, index) => (
                         <MessageBubble
@@ -103,6 +122,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversation, messages, 
                           message={message}
                           isOwn={isOwn}
                           isFirstInGroup={index === 0}
+                          isNew={!initialIds.current.has(message.id)}
                         />
                       ))}
                     </div>

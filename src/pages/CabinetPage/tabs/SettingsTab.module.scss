@@ -22,7 +22,7 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 18px;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
 
   svg {
@@ -45,7 +45,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 12px 0;
-  font-size: 18px;
+  font-size: 16px;
 
   & + & {
     border-top: 1px solid $color-border-light;
@@ -81,7 +81,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
 
   & + & {
@@ -99,7 +99,7 @@
   border-radius: $radius-pill;
   background-color: #C9C4BD;
   cursor: pointer;
-  transition: background-color $transition-fast;
+  transition: background-color $transition-normal;
 
   &::after {
     content: '';
@@ -111,7 +111,7 @@
     border-radius: 50%;
     background-color: $color-white;
     box-shadow: $shadow-xs;
-    transition: transform $transition-fast;
+    transition: transform $transition-normal;
   }
 
   &:checked {
@@ -130,13 +130,13 @@
 
 .channelsTitle {
   margin: 14px 0 8px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .channels {
   display: flex;
   gap: 28px;
-  font-size: 18px;
+  font-size: 16px;
 
   label {
     display: flex;
@@ -178,7 +178,7 @@
   padding: 10px 18px;
   border: 1px solid $color-outline;
   border-radius: $radius-sm;
-  font-size: 17px;
+  font-size: 15px;
   transition: all $transition-fast;
 
   &:hover {
@@ -214,4 +214,27 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+}
+
+.saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: $radius-pill;
+  background-color: $color-primary-soft;
+  color: $color-primary;
+  font-size: $text-sm;
+  font-weight: 500;
+  animation: fadeIn $duration-base $ease-out both;
+}
+
+.notice {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: $radius-sm;
+  background-color: $color-sand-light;
+  font-size: $text-sm;
+  color: $color-text-muted;
+  animation: fadeIn $duration-base $ease-out both;
 }

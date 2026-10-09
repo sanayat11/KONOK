@@ -1,0 +1,18 @@
+@use '@/app/styles/variables' as *;
+
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: $color-cream;
+}
+
+.fallback {
+  align-items: center;
+  justify-content: center;
+  background-color: $color-primary-soft;
+  color: $color-primary;
+  font-weight: 600;
+  line-height: 1;
+}

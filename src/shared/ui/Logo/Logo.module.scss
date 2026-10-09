@@ -1,22 +1,23 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Figma: 48px heavy letters, 50px ornament, white on the navy header.
+// Figma: heavy white letters with the tunduk ornament as the "О".
 .logo {
   display: inline-flex;
   align-items: center;
   gap: 1px;
   color: $color-white;
-  font-family: $font-heading;
-  font-size: 48px;
+  font-family: $font-main;
+  font-size: 34px;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.01em;
   text-decoration: none;
-  transition: opacity $transition-fast;
 
-  &:hover {
-    opacity: 0.9;
+  @include hover {
+    .mark {
+      transform: rotate(90deg);
+    }
   }
 
   &:focus-visible {
@@ -25,12 +26,8 @@
     border-radius: 4px;
   }
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 40px;
-  }
-
   @include mobile {
-    font-size: 28px;
+    font-size: 25px;
   }
 }
 
@@ -38,4 +35,25 @@
   width: 1.04em;
   height: 1.04em;
   flex-shrink: 0;
+  transition: transform 900ms $ease-out;
+  animation: tundukIn 1200ms $ease-out 200ms both;
+}
+
+@keyframes tundukIn {
+  from {
+    transform: rotate(-90deg) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.disc {
+  fill: $color-white;
+}
+
+.lines {
+  stroke: $color-primary;
+}
+
+.dots {
+  fill: $color-primary;
 }

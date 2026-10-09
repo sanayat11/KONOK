@@ -1,34 +1,34 @@
 import type { ChatMessage } from '../model/types';
+import { localeTag, t, useLocaleStore } from '@/shared/i18n';
 
-const LOCALE = 'ru-RU';
 const GROUP_WINDOW_MS = 5 * 60 * 1000;
 
-const startOfDay = (date: Date) =>
-  new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+const tag = () => localeTag(useLocaleStore.getState().locale);
 
-const daysAgo = (date: Date, now = new Date()) =>
-  Math.round((startOfDay(now) - startOfDay(date)) / 86_400_000);
+const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+
+const daysAgo = (date: Date, now = new Date()) => Math.round((startOfDay(now) - startOfDay(date)) / 86_400_000);
 
 export const formatMessageTime = (iso: string) =>
-  new Date(iso).toLocaleTimeString(LOCALE, { hour: '2-digit', minute: '2-digit' });
+  new Date(iso).toLocaleTimeString(tag(), { hour: '2-digit', minute: '2-digit' });
 
-/** Time shown in the conversation list: "14:05", "Вчера", "пн", "12.09.26". */
+/** Time shown in the conversation list: "14:05", "Yesterday", "Mon", "12.09.26". */
 export const formatConversationTime = (iso: string, now = new Date()) => {
   const date = new Date(iso);
   const diff = daysAgo(date, now);
   if (diff <= 0) return formatMessageTime(iso);
-  if (diff === 1) return 'Вчера';
-  if (diff < 7) return date.toLocaleDateString(LOCALE, { weekday: 'short' });
-  return date.toLocaleDateString(LOCALE, { day: '2-digit', month: '2-digit', year: '2-digit' });
+  if (diff === 1) return t('chat.yesterday');
+  if (diff < 7) return date.toLocaleDateString(tag(), { weekday: 'short' });
+  return date.toLocaleDateString(tag(), { day: '2-digit', month: '2-digit', year: '2-digit' });
 };
 
-/** Day separator label inside a conversation: "Сегодня", "Вчера", "5 октября". */
+/** Day separator inside a conversation: "Today", "Yesterday", "5 October". */
 export const formatDayLabel = (iso: string, now = new Date()) => {
   const date = new Date(iso);
   const diff = daysAgo(date, now);
-  if (diff <= 0) return 'Сегодня';
-  if (diff === 1) return 'Вчера';
-  return date.toLocaleDateString(LOCALE, {
+  if (diff <= 0) return t('chat.today');
+  if (diff === 1) return t('chat.yesterday');
+  return date.toLocaleDateString(tag(), {
     day: 'numeric',
     month: 'long',
     ...(date.getFullYear() !== now.getFullYear() && { year: 'numeric' }),
@@ -79,9 +79,4 @@ export const groupMessages = (messages: ChatMessage[], now = new Date()): Messag
   }
 
   return days;
-};
-
-export const LISTING_TYPE_LABEL: Record<string, string> = {
-  car: 'Аренда авто',
-  guide: 'Услуги гида',
 };

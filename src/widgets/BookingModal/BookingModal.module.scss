@@ -10,92 +10,135 @@
 .item {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  padding: 10px;
+  border-radius: $radius-md;
+  background-color: $color-sand-light;
 }
 
 .itemPhoto {
-  width: 64px;
-  height: 64px;
-  border-radius: $radius-md;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
   object-fit: cover;
-  background-color: $color-border-light;
+  background-color: $color-cream;
 }
 
 .itemTitle {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: $text-md;
+  font-weight: 600;
 }
 
 .itemPrice {
+  font-size: $text-sm;
   color: $color-text-muted;
 }
 
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 16px;
 
-  input {
-    height: 48px;
-    padding: 0 12px;
-    border: 1px solid $color-text-main;
-    border-radius: $radius-md;
-    font-size: 16px;
-    outline: none;
-
-    &:focus {
-      border-color: $color-primary;
-      box-shadow: 0 0 0 3px rgba(22, 83, 137, 0.15);
-    }
+  > span:first-child {
+    font-size: $text-sm;
+    font-weight: 500;
+    color: $color-text-body;
   }
 }
 
-// Figma host-registration stepper: "— 2 гостя +".
+.inputBox {
+  @include field(40px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+
+  svg {
+    flex-shrink: 0;
+    color: $color-text-light;
+  }
+
+  input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: $text-base;
+  }
+}
+
 .stepper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  padding: 4px;
-  border: 1px solid $color-text-main;
-  border-radius: $radius-md;
-  font-size: 18px;
+  height: 44px;
+  padding: 0 4px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+
+  span {
+    font-size: $text-md;
+    font-weight: 600;
+  }
 
   button {
-    @include button-reset;
-    @include flex-center;
-    width: 44px;
-    height: 42px;
-    border: 1px solid $color-text-main;
+    @include icon-button(34px);
     border-radius: $radius-sm;
+    color: $color-primary;
 
-    &:hover {
-      border-color: $color-primary;
-      color: $color-primary;
+    @include hover {
+      background-color: $color-sage-light;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
     }
   }
 }
 
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid $color-border-light;
+}
+
+.calc,
 .total {
   display: flex;
   justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid $color-divider;
-  font-size: 24px;
-  font-weight: 700;
+  gap: 12px;
+  font-size: $text-sm;
+  color: $color-text-muted;
+}
+
+.total {
+  font-size: $text-md;
+  font-weight: 600;
+  color: $color-text-main;
 }
 
 .submit {
-  @include primary-button;
-  height: 52px;
-  font-size: 18px;
+  @include primary-button(46px);
+  width: 100%;
+  font-size: $text-md;
+}
+
+.note {
+  font-size: $text-xs;
+  color: $color-text-light;
+  text-align: center;
 }
 
 .done {
@@ -103,24 +146,32 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 12px 0;
+  padding: 12px 0 4px;
   text-align: center;
-
-  .submit {
-    align-self: stretch;
-    margin-top: 12px;
-  }
+  animation: scaleIn $duration-slow $ease-out both;
 }
 
 .doneIcon {
+  @include flex-center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  background-color: $color-green-light;
   color: $color-green;
 }
 
 .doneTitle {
-  font-size: 22px;
-  font-weight: 700;
+  font-family: $font-display;
+  font-size: 26px;
+  font-weight: 600;
+  color: $color-pine;
 }
 
 .doneText {
+  max-width: 320px;
+  margin-bottom: 12px;
+  font-size: $text-sm;
+  line-height: 1.6;
   color: $color-text-muted;
 }

@@ -4,32 +4,23 @@
 .page {
   @include container;
   padding-top: 16px;
-  padding-bottom: 110px;
+  padding-bottom: 88px;
 
   @include mobile {
     padding-bottom: 48px;
   }
 }
 
-.back {
-  margin-left: -20px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    margin-left: 0;
-  }
-}
-
-// Figma: 410px info column + map filling the rest (to x=1860).
+// Figma: info column + map filling the rest.
 .layout {
   display: grid;
-  grid-template-columns: 410px minmax(0, 1fr);
-  gap: 30px;
-  margin: 8px 0 0 5px;
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 28px;
+  margin-top: 10px;
 
   @media (max-width: ($bp-2xl - 1px)) {
     grid-template-columns: 340px minmax(0, 1fr);
     gap: 24px;
-    margin-left: 0;
   }
 
   @media (max-width: 900px) {
@@ -40,24 +31,35 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .card {
   overflow: hidden;
   border-radius: $radius-xl;
   background-color: $color-white;
+  animation: fadeIn $duration-slow $ease-out both;
 }
 
 .slider {
   position: relative;
+  aspect-ratio: 410 / 310;
+  overflow: hidden;
+  @include image-placeholder;
 }
 
 .photo {
   width: 100%;
-  aspect-ratio: 410 / 310;
+  height: 100%;
   object-fit: cover;
-  background-color: $color-border-light;
+  animation: photoIn 600ms $ease-out both;
+}
+
+@keyframes photoIn {
+  from {
+    opacity: 0.2;
+    transform: scale(1.03);
+  }
 }
 
 .sliderBtn {
@@ -65,15 +67,22 @@
   @include flex-center;
   position: absolute;
   top: 50%;
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.88);
   color: $color-text-main;
   transform: translateY(-50%);
+  box-shadow: $shadow-sm;
+  transition: background-color $transition-fast, transform $transition-fast;
 
-  &:hover {
+  @include hover {
     background-color: $color-white;
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
   }
 }
 
@@ -85,157 +94,131 @@
   right: 12px;
 }
 
+.dots {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  display: flex;
+  gap: 5px;
+  transform: translateX(-50%);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  transition: width $transition-normal, background-color $transition-normal;
+}
+
+.dotActive {
+  width: 16px;
+  border-radius: 3px;
+  background-color: $color-white;
+}
+
 .caption {
-  padding: 10px 12px 0;
-  font-size: 20px;
-  font-weight: 400;
+  padding: 12px 14px 0;
+  font-size: $text-lg;
+  font-weight: 600;
   text-align: center;
 }
 
 .description {
-  padding: 8px 25px 20px;
-  font-size: 20px;
-  line-height: 1.2;
+  padding: 8px 22px 20px;
+  font-size: $text-md;
+  line-height: 1.5;
+  color: $color-text-body;
+}
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 17px;
+// Figma: full-width brand buttons with an outline icon.
+.actionBtn {
+  @include primary-button(54px);
+  justify-content: flex-start;
+  gap: 18px;
+  padding: 0 24px;
+  border-radius: $radius-lg;
+  font-size: $text-lg;
+  font-weight: 500;
+
+  svg {
+    transition: transform $transition-normal;
+  }
+
+  @include hover {
+    svg {
+      transform: translateX(3px);
+    }
+  }
+
+  @include mobile {
+    height: 50px;
+    font-size: $text-md;
   }
 }
 
-// Figma: 410×65 navy buttons with an outline icon.
-.actionBtn {
-  @include primary-button;
-  height: 65px;
-  border-radius: $radius-lg;
-  font-size: 20px;
-  gap: 30px;
-
-  @include mobile {
-    height: 54px;
-    font-size: 17px;
-    gap: 16px;
-  }
+.actionSaved {
+  background-color: $color-primary-dark;
 }
 
 .map {
-  position: relative;
   min-height: 560px;
-  overflow: hidden;
   border-radius: $radius-xl;
-  background-color: #E8F1EC;
 
   @include mobile {
     min-height: 380px;
   }
 }
 
-.mapSvg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.pin {
-  position: absolute;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  color: #E53935;
-  transform: translate(-50%, -100%);
-  transition: transform $transition-fast;
-
-  svg {
-    fill: #E53935;
-    stroke: #8E1B1B;
-    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.3));
-
-    circle {
-      fill: #8E1B1B;
-    }
-  }
-
-  &:hover {
-    transform: translate(-50%, -100%) scale(1.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-primary;
-    border-radius: 4px;
-  }
-}
-
-.pinCurrent {
-  z-index: 2;
-}
-
-.pinLabel {
-  position: absolute;
-  left: calc(100% + 4px);
-  bottom: 4px;
-  padding: 4px 10px;
-  border-radius: 3px;
-  background-color: rgba(30, 30, 30, 0.85);
-  color: $color-white;
-  font-size: 20px;
-  white-space: nowrap;
-}
-
-// Figma: white popover in the upper part of the map.
 .popover {
   position: absolute;
-  top: 24%;
-  left: 18%;
-  z-index: 3;
-  padding: 14px 20px;
+  top: 16px;
+  left: 16px;
+  z-index: 500;
+  min-width: 200px;
+  padding: 12px 16px;
   border-radius: $radius-md;
-  background-color: $color-white;
-  box-shadow: $shadow-lg;
+  background-color: rgba($color-white, 0.97);
+  box-shadow: $shadow-md;
+  animation: popIn $duration-slow $ease-out 400ms both;
+}
 
-  @include mobile {
-    top: 12px;
-    left: 12px;
-    right: 12px;
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
   }
 }
 
 .popoverTitle {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: $text-lg;
+  font-weight: 700;
 }
 
 .popoverRating {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 22px;
-  color: $color-text-muted;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: $text-sm;
 }
 
 .star {
-  color: #F5A623;
-  fill: #F5A623;
+  color: $color-star;
+  fill: $color-star;
 }
 
 .popoverMeta {
-  font-size: 22px;
+  margin-top: 2px;
+  font-size: $text-sm;
   color: $color-text-muted;
-}
-
-.open {
-  color: #188038;
 }
 
 .hosts {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  margin-top: 70px;
-
-  @include mobile {
-    gap: 20px;
-    margin-top: 40px;
-  }
+  gap: 28px;
+  margin-top: 56px;
 }
 
 .hostsGrid {

@@ -6,145 +6,164 @@
   flex-direction: column;
   min-height: 0;
   height: 100%;
-  background-color: $color-sand-bg;
 }
 
+// ── Header ──────────────────────────────────────────────────
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 20px;
-  background-color: $color-white;
+  gap: 10px;
+  padding: 10px 16px;
   border-bottom: 1px solid $color-border-light;
+  background-color: rgba($color-white, 0.92);
+  backdrop-filter: blur(10px);
 
   @include mobile {
-    padding: 10px 12px;
+    padding: 8px 10px;
   }
 }
 
 .back {
-  @include flex-center;
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  margin-left: -6px;
-  border-radius: 50%;
-  color: $color-text-main;
-  transition: background-color $transition-fast;
+  @include icon-button(34px);
+  color: $color-text-body;
 
-  &:hover {
-    background-color: $color-primary-soft;
-    color: $color-primary;
+  @include hover {
+    background-color: $color-sage-light;
   }
 
-  // Both panes are visible from tablet up, so "back" is mobile-only.
-  @include custom-media($bp-md) {
+  @include tablet {
+    display: none;
+  }
+
+  @include desktop {
     display: none;
   }
 }
 
-.avatar {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  background-color: $color-border-light;
-}
-
 .headerText {
-  min-width: 0;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .name {
+  font-size: $text-md;
+  font-weight: 600;
   @include truncate;
-  font-size: 1.02rem;
-  font-weight: 700;
 }
 
 .role {
-  font-size: 0.8rem;
+  font-size: $text-xs;
   color: $color-text-muted;
 }
 
-.listingBar {
+.listing {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 20px;
-  background-color: $color-sand-light;
-  border-bottom: 1px solid $color-sand-border;
+  gap: 8px;
+  max-width: 260px;
+  margin-left: auto;
+  padding: 4px 10px 4px 4px;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-md;
+  background-color: $color-white;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  @include hover {
+    border-color: $color-primary-light;
+    box-shadow: $shadow-xs;
+
+    .listingArrow {
+      transform: translate(2px, -2px);
+      color: $color-primary;
+    }
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
 
   @include mobile {
-    padding: 8px 12px;
+    padding: 3px;
+
+    .listingText,
+    .listingArrow {
+      display: none;
+    }
   }
 }
 
 .listingImage {
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: $radius-sm;
+  border-radius: 7px;
   object-fit: cover;
+  background-color: $color-cream;
 }
 
 .listingText {
-  min-width: 0;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .listingType {
-  font-size: 0.72rem;
+  font-size: 10px;
   font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: $color-text-light;
 }
 
 .listingTitle {
+  font-size: $text-sm;
+  font-weight: 500;
   @include truncate;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: $color-text-main;
 }
 
+.listingArrow {
+  flex-shrink: 0;
+  color: $color-text-light;
+  transition: transform $transition-fast, color $transition-fast;
+}
+
+// ── Messages ────────────────────────────────────────────────
 .messages {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px 24px;
+  gap: 4px;
+  padding: 12px 20px 20px;
+  overflow-y: auto;
   overscroll-behavior: contain;
 
   @include mobile {
-    padding: 16px 12px;
+    padding: 8px 10px 16px;
   }
 }
 
 .day {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .dayLabel {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   justify-content: center;
-  position: sticky;
-  top: -8px;
-  z-index: 1;
+  padding: 8px 0 2px;
 
   span {
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: $radius-pill;
-    background-color: rgba(255, 255, 255, 0.92);
-    border: 1px solid $color-sand-border;
-    font-size: 0.75rem;
+    background-color: rgba($color-cream, 0.92);
+    backdrop-filter: blur(6px);
+    font-size: $text-2xs;
     font-weight: 600;
     color: $color-text-muted;
   }
@@ -153,7 +172,7 @@
 .group,
 .groupOwn {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 8px;
 }
 
@@ -162,52 +181,50 @@
 }
 
 .groupAvatar {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-
-  @include mobile {
-    display: none;
-  }
+  margin-bottom: 2px;
 }
 
 .groupBubbles {
-  flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
+  max-width: min(78%, 560px);
+  min-width: 0;
+
+  .groupOwn & {
+    align-items: flex-end;
+  }
+
+  @include mobile {
+    max-width: 86%;
+  }
 }
 
 .quickReplies {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  max-width: 420px;
+  gap: 6px;
+  max-width: 460px;
 }
 
 .quickReply {
   @include button-reset;
-  padding: 8px 14px;
-  border-radius: $radius-pill;
+  padding: 7px 12px;
   border: 1px solid $color-border;
+  border-radius: $radius-pill;
   background-color: $color-white;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: $text-sm;
   color: $color-text-body;
-  transition: all $transition-fast;
+  transition: border-color $transition-fast, color $transition-fast, background-color $transition-fast;
 
-  &:hover {
+  @include hover {
     border-color: $color-primary;
+    background-color: $color-sage-light;
     color: $color-primary;
-    background-color: $color-primary-soft;
   }
 
   &:focus-visible {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
+    @include focus-ring;
   }
 }

@@ -4,12 +4,14 @@ import clsx from 'clsx';
 import { Lock, MessagesSquare, SearchX } from 'lucide-react';
 import { useAuthStore } from '@/shared/lib/store/useAuthStore';
 import { useChatStore, useConversations, useThreadMessages } from '@/entities/chat';
+import { useT } from '@/shared/i18n';
 import { ChatWindow, ConversationList } from '@/widgets/Chat';
 import { ChatEmptyState } from '@/widgets/Chat/ChatEmptyState';
 import styles from './MessagesPage.module.scss';
 
 export const MessagesPage: React.FC = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
+  const { t } = useT();
   const user = useAuthStore((s) => s.user);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const markAsRead = useChatStore((s) => s.markAsRead);
@@ -34,12 +36,12 @@ export const MessagesPage: React.FC = () => {
       <div className={styles.page}>
         <div className={clsx(styles.shell, styles.single)}>
           <ChatEmptyState
-            icon={<Lock size={26} />}
-            title="Войдите, чтобы открыть сообщения"
-            text="Переписка с гидами и владельцами доступна только авторизованным пользователям."
+            icon={<Lock size={22} />}
+            title={t('chat.loginTitle')}
+            text={t('chat.loginText')}
             action={
               <Link to="/auth?mode=login" className={styles.cta}>
-                Войти
+                {t('nav.login')}
               </Link>
             }
           />
@@ -72,21 +74,17 @@ export const MessagesPage: React.FC = () => {
             />
           ) : conversationId ? (
             <ChatEmptyState
-              icon={<SearchX size={26} />}
-              title="Диалог не найден"
-              text="Возможно, он был удалён или принадлежит другому пользователю."
+              icon={<SearchX size={22} />}
+              title={t('chat.notFoundTitle')}
+              text={t('chat.notFoundText')}
               action={
                 <Link to="/messages" className={styles.cta}>
-                  К списку диалогов
+                  {t('chat.toList')}
                 </Link>
               }
             />
           ) : (
-            <ChatEmptyState
-              icon={<MessagesSquare size={28} />}
-              title="Выберите диалог"
-              text="Откройте переписку слева, чтобы продолжить общение."
-            />
+            <ChatEmptyState icon={<MessagesSquare size={24} />} title={t('chat.selectTitle')} text={t('chat.selectText')} />
           )}
         </div>
       </div>

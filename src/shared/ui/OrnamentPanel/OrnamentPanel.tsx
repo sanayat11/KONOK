@@ -25,7 +25,8 @@ const Horn: React.FC<{ className: string }> = ({ className }) => (
 );
 
 export interface OrnamentPanelProps {
-  tone?: 'beige' | 'sky' | 'navy';
+  /** Panel colour follows the Figma screens: light, sage (guest form) and forest (verification). */
+  tone?: 'beige' | 'sage' | 'forest';
   className?: string;
   children: React.ReactNode;
 }

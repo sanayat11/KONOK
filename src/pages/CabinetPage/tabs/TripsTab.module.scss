@@ -3,133 +3,174 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 470px;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: start;
+  gap: 24px;
 
   @media (max-width: ($bp-xl - 1px)) {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-.main {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  min-width: 0;
-}
-
-.dates {
-  margin-top: 6px;
-  margin-left: 40px;
-  font-size: 20px;
-
-  @include mobile {
-    margin-left: 0;
-    font-size: 16px;
-  }
-}
-
 .summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-radius: $radius-lg;
-  background-color: $color-white;
-  padding: 18px 0;
+  gap: 12px;
 
   @include mobile {
     grid-template-columns: minmax(0, 1fr);
-    padding: 0 16px;
+    gap: 8px;
   }
 }
 
 .summaryItem {
   display: flex;
   align-items: flex-start;
-  justify-content: center;
-  gap: 14px;
-  padding: 4px 20px;
-  font-size: 18px;
-
-  & + & {
-    border-left: 1px solid $color-border;
-  }
-
-  svg {
-    color: $color-primary;
-  }
-
-  @include mobile {
-    justify-content: flex-start;
-    padding: 14px 0;
-
-    & + & {
-      border-left: none;
-      border-top: 1px solid $color-border;
-    }
-  }
-}
-
-.summaryValue {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.summaryNote {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: $color-text-muted;
-}
-
-.summaryTotal .summaryValue {
-  color: $color-primary;
-}
-
-.bookings {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.booking {
-  overflow: hidden;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid $color-border-light;
   border-radius: $radius-lg;
   background-color: $color-white;
 }
 
+.summaryIcon {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: $color-sage-light;
+  color: $color-primary;
+}
+
+.summaryLabel {
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+.summaryValue {
+  margin: 2px 0;
+  font-size: $text-xl;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: $text-xs;
+  color: $color-text-light;
+}
+
+.summaryTotal {
+  border-color: $color-pine;
+  background-color: $color-pine;
+  color: $color-white;
+
+  .summaryIcon {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: $color-gold;
+  }
+
+  .summaryLabel,
+  .summaryNote {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.bookings {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.booking {
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid $color-border-light;
+  border-radius: $radius-lg;
+  background-color: $color-white;
+  animation: fadeIn $duration-slow $ease-out both;
+  transition: box-shadow $transition-normal;
+
+  @include hover {
+    box-shadow: $shadow-sm;
+  }
+}
+
 .bookingPhoto {
-  width: 100%;
-  height: 150px;
+  width: 96px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: $radius-md;
   object-fit: cover;
-  background-color: $color-border-light;
+  background-color: $color-cream;
+
+  @include mobile {
+    width: 72px;
+    height: 72px;
+  }
 }
 
 .bookingBody {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.bookingHead {
+  display: flex;
   align-items: flex-start;
-  gap: 2px;
-  padding: 12px 18px 16px;
-  font-size: 15px;
+  justify-content: space-between;
+  gap: 8px;
+
+  @include mobile {
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 
 .bookingTitle {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: $text-md;
+  font-weight: 600;
+  @include truncate;
+}
+
+.bookingMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: $text-sm;
+  color: $color-text-muted;
+}
+
+.bookingPrice {
+  margin-top: auto;
+  font-size: $text-sm;
+  font-weight: 600;
+
+  span {
+    font-weight: 400;
+    color: $color-text-muted;
+  }
 }
 
 .status {
-  margin-top: 8px;
-  padding: 2px 10px;
+  flex-shrink: 0;
+  padding: 3px 8px;
   border-radius: $radius-pill;
-  font-size: 12px;
+  font-size: $text-2xs;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-.confirmed,
-.completed {
+.confirmed {
   background-color: $color-green-light;
   color: $color-green-text;
 }
@@ -139,64 +180,89 @@
   color: $color-gold-text;
 }
 
+.completed {
+  background-color: $color-sage-light;
+  color: $color-text-muted;
+}
+
+// ── Route timeline ──────────────────────────────────────────
 .route {
-  align-self: start;
-  padding: 24px 30px;
+  position: sticky;
+  top: calc(#{$header-height} + 24px);
+
+  @media (max-width: ($bp-xl - 1px)) {
+    position: static;
+  }
 }
 
 .routeTitle {
-  margin-bottom: 20px;
-  font-size: 30px;
-  font-weight: 700;
+  margin-bottom: 14px;
+  font-family: $font-display;
+  font-size: 22px;
+  font-weight: 600;
+  color: $color-pine;
 }
 
 .timeline {
   list-style: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 5px;
+    width: 1px;
+    background: repeating-linear-gradient(180deg, $color-sage 0 4px, transparent 4px 8px);
+  }
 }
 
 .stop {
   position: relative;
-  display: grid;
-  grid-template-columns: 90px 24px minmax(0, 1fr);
-  gap: 10px;
-  padding-bottom: 28px;
-
-  // Vertical line between dots.
-  &:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 111px;
-    top: 18px;
-    bottom: -2px;
-    width: 2px;
-    background-color: $color-primary-soft;
-  }
-}
-
-.stopDay {
-  font-size: 13px;
-  line-height: 1.3;
-  color: $color-text-muted;
-  text-align: right;
+  display: flex;
+  gap: 14px;
 }
 
 .stopDot {
-  width: 16px;
-  height: 16px;
-  margin: 2px auto 0;
-  border: 3px solid $color-primary;
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  margin-top: 4px;
+  border: 2px solid $color-white;
   border-radius: 50%;
-  background-color: $color-white;
+  background-color: $color-primary;
+  box-shadow: 0 0 0 1px $color-primary;
+}
+
+.stop:first-child .stopDot,
+.stop:last-child .stopDot {
+  background-color: $color-gold;
+  box-shadow: 0 0 0 1px $color-gold;
 }
 
 .stopBody {
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  gap: 1px;
+  font-size: $text-sm;
   color: $color-text-muted;
 
   strong {
-    font-size: 20px;
+    font-weight: 600;
     color: $color-text-main;
   }
+}
+
+.stopDay {
+  font-size: $text-2xs;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $color-text-light;
 }

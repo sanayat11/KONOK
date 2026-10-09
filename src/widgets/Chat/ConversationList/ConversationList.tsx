@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MessagesSquare, Search } from 'lucide-react';
 import { ConversationItem, type Conversation } from '@/entities/chat';
+import { useT } from '@/shared/i18n';
 import { Input } from '@/shared/ui/Input';
 import { ChatEmptyState } from '../ChatEmptyState';
 import styles from './ConversationList.module.scss';
@@ -12,11 +13,8 @@ export interface ConversationListProps {
   activeId?: string;
 }
 
-export const ConversationList: React.FC<ConversationListProps> = ({
-  conversations,
-  currentUserId,
-  activeId,
-}) => {
+export const ConversationList: React.FC<ConversationListProps> = ({ conversations, currentUserId, activeId }) => {
+  const { t } = useT();
   const [query, setQuery] = useState('');
   const totalUnread = conversations.reduce((sum, c) => sum + c.unreadCount, 0);
 
@@ -32,39 +30,39 @@ export const ConversationList: React.FC<ConversationListProps> = ({
   }, [conversations, query]);
 
   return (
-    <aside className={styles.panel} aria-label="Список диалогов">
+    <aside className={styles.panel} aria-label={t('chat.listLabel')}>
       <div className={styles.header}>
         <div className={styles.titleRow}>
-          <h1 className={styles.title}>Сообщения</h1>
-          {totalUnread > 0 && <span className={styles.counter}>{totalUnread} новых</span>}
+          <h1 className={styles.title}>{t('chat.title')}</h1>
+          {totalUnread > 0 && <span className={styles.counter}>{t('chat.newCount', { count: totalUnread })}</span>}
         </div>
         {conversations.length > 0 && (
           <Input
             type="search"
-            placeholder="Поиск по диалогам"
-            aria-label="Поиск по диалогам"
+            placeholder={t('chat.searchPlaceholder')}
+            aria-label={t('chat.searchPlaceholder')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            leftIcon={<Search size={16} />}
+            leftIcon={<Search size={15} />}
           />
         )}
       </div>
 
       {conversations.length === 0 ? (
         <ChatEmptyState
-          icon={<MessagesSquare size={28} />}
-          title="Пока нет сообщений"
-          text="Напишите гиду или владельцу автомобиля, чтобы уточнить детали поездки."
+          icon={<MessagesSquare size={24} />}
+          title={t('chat.emptyTitle')}
+          text={t('chat.emptyText')}
           action={
-            <Link to="/" className={styles.cta}>
-              Найти гида или авто
+            <Link to="/catalog/guides" className={styles.cta}>
+              {t('chat.emptyCta')}
             </Link>
           }
         />
       ) : filtered.length === 0 ? (
-        <ChatEmptyState icon={<Search size={24} />} title="Ничего не найдено" text="Попробуйте другой запрос." />
+        <ChatEmptyState icon={<Search size={22} />} title={t('chat.noResultsTitle')} text={t('chat.noResultsText')} />
       ) : (
-        <nav className={styles.list}>
+        <nav className={styles.list} aria-label={t('chat.listLabel')}>
           {filtered.map((conversation) => (
             <ConversationItem
               key={conversation.id}
@@ -75,6 +73,8 @@ export const ConversationList: React.FC<ConversationListProps> = ({
           ))}
         </nav>
       )}
+
+      <p className={styles.footnote}>{t('chat.syncNote')}</p>
     </aside>
   );
 };

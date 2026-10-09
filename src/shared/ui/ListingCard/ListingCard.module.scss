@@ -1,7 +1,7 @@
 @use '@/app/styles/variables' as *;
 @use '@/app/styles/mixins' as *;
 
-// Figma: 410×500 white card, 15px radius, 310px photo, 20px inner padding.
+// Figma: 410×500 white card, 15px radius, 410:310 photo, 20px inner padding.
 .card {
   display: flex;
   flex-direction: column;
@@ -9,11 +9,22 @@
   overflow: hidden;
   border-radius: $radius-lg;
   background-color: $color-white;
+  box-shadow: 0 1px 2px rgba(21, 48, 42, 0.04);
   transition: transform $transition-normal, box-shadow $transition-normal;
 
-  &:hover {
+  @include hover {
     transform: translateY(-4px);
-    box-shadow: $shadow-md;
+    box-shadow: 0 14px 30px rgba(21, 48, 42, 0.12);
+
+    .image {
+      transform: scale(1.05);
+    }
+
+    .actionBtn {
+      border-color: $color-primary;
+      background-color: $color-primary;
+      color: $color-white;
+    }
   }
 }
 
@@ -21,25 +32,22 @@
   display: block;
   aspect-ratio: 410 / 310;
   overflow: hidden;
-  background-color: $color-border-light;
+  @include image-placeholder;
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
-
-  .card:hover & {
-    transform: scale(1.04);
-  }
+  object-position: center 30%;
+  transition: transform 900ms $ease-out;
 }
 
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px 20px 20px;
+  padding: 12px 18px 18px;
 }
 
 .titleRow {
@@ -54,84 +62,45 @@
 }
 
 .name {
-  font-size: 24px;
+  font-size: clamp(18px, 1.45vw, 22px);
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.35;
   @include truncate;
 
-  a:hover {
-    color: $color-primary;
-  }
+  a {
+    transition: color $transition-fast;
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 21px;
+    @include hover {
+      color: $color-primary;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+      border-radius: 4px;
+    }
   }
 }
 
 .region {
-  font-size: 16px;
+  font-size: $text-md;
   line-height: 1.4;
+  color: $color-text-body;
   @include truncate;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 15px;
-  }
-}
-
-.favBtn {
-  @include button-reset;
-  flex-shrink: 0;
-  margin-top: 5px;
-  color: $color-text-main;
-  transition: transform $transition-fast, color $transition-fast;
-
-  &:hover {
-    transform: scale(1.1);
-    color: $color-red;
-  }
-
-  &:focus-visible {
-    outline: 2px solid $color-primary;
-    border-radius: 4px;
-  }
-
-  &.isFav {
-    color: $color-red;
-
-    svg {
-      fill: $color-red;
-    }
-  }
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    svg {
-      width: 26px;
-      height: 26px;
-    }
-  }
 }
 
 .meta {
   margin-top: 8px;
-  margin-bottom: 20px;
-  font-size: 20px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 17px;
-  }
+  margin-bottom: 18px;
+  font-size: $text-lg;
 }
 
 // Figma: 290×34 outlined button, centred.
 .actionBtn {
-  @include outline-button;
+  @include outline-button(36px);
   align-self: center;
   width: min(290px, 100%);
-  height: 34px;
   margin-top: auto;
-  font-size: 20px;
-  white-space: nowrap;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 16px;
-  }
+  border-color: $color-text-main;
+  font-size: $text-md;
+  font-weight: 700;
 }

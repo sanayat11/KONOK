@@ -4,7 +4,7 @@
 .page {
   @include container;
   padding-top: 16px;
-  padding-bottom: 110px;
+  padding-bottom: 88px;
 
   @include mobile {
     padding-bottom: 48px;
@@ -12,334 +12,197 @@
 }
 
 .back {
-  margin-left: -20px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    margin-left: 0;
-  }
+  margin-bottom: 8px;
 }
 
 .titleRow {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin: 34px 0 20px 19px;
-  max-width: 1720px;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    margin: 20px 0 16px;
-  }
-
-  @include mobile {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 18px;
 }
 
 .title {
-  font-size: 40px;
+  font-size: clamp(26px, 2.6vw, 40px);
   font-weight: 700;
-
-  @include mobile {
-    font-size: 28px;
-  }
+  letter-spacing: -0.01em;
 }
 
 .titleMeta {
   display: flex;
   align-items: center;
-  gap: 80px;
-
-  @include mobile {
-    gap: 24px;
-  }
-}
-
-.favBtn {
-  @include button-reset;
-  display: flex;
-  color: $color-text-main;
-  transition: transform $transition-fast, color $transition-fast;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &.isFav {
-    color: $color-red;
-
-    svg {
-      fill: $color-red;
-    }
-  }
+  gap: 14px;
 }
 
 // Figma: 1127×620 main photo + two 663×300 photos, 20px gaps.
 .gallery {
-  display: grid;
-  grid-template-columns: 1127fr 663fr;
-  gap: 20px;
-  margin-left: -5px;
+  grid-template-columns: 1127fr 663fr !important;
+  gap: 16px !important;
+  height: clamp(300px, 32vw, 620px) !important;
+  margin-bottom: 36px;
 
-  @media (max-width: 900px) {
-    grid-template-columns: minmax(0, 1fr);
-    margin-left: 0;
-  }
-}
-
-.mainPhoto {
-  width: 100%;
-  aspect-ratio: 1127 / 620;
-  object-fit: cover;
-  border-radius: $radius-md;
-  background-color: $color-border-light;
-}
-
-.sidePhotos {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 20px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: none;
-    gap: 12px;
-  }
-}
-
-.sidePhoto {
-  position: relative;
-  overflow: hidden;
-
-  @media (max-width: 900px) {
-    aspect-ratio: 663 / 300;
+  > button {
+    border-radius: $radius-lg !important;
   }
 
-  border-radius: $radius-md;
-  background-color: $color-border-light;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr) !important;
+    height: 240px !important;
+    margin-bottom: 24px;
   }
-}
-
-.allPhotos {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 6px 12px;
-  border-radius: $radius-md;
-  background-color: rgba(64, 64, 64, 0.75);
-  color: $color-white;
-  font-size: 20px;
-}
-
-.allPhotosLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, 1080px) 548px;
-  justify-content: space-between;
-  gap: 40px;
-  margin: 40px 70px 0 18px;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  align-items: start;
+  gap: 48px;
 
   @media (max-width: ($bp-2xl - 1px)) {
-    grid-template-columns: minmax(0, 1fr) 440px;
-    margin: 32px 0 0;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 32px;
   }
 
-  @media (max-width: ($bp-lg - 1px)) {
+  @include below-desktop {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
+.info {
+  min-width: 0;
+}
+
 .sectionTitle {
-  font-size: 40px;
+  margin-bottom: 16px;
+  font-size: clamp(18px, 1.5vw, 22px);
   font-weight: 700;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 30px;
-  }
-
-  @include mobile {
-    font-size: 24px;
-  }
 }
 
 .specs {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 24px;
+  gap: 16px 48px;
 
   li {
     display: flex;
     align-items: center;
-    gap: 14px;
-    min-height: 62px;
-    padding: 0 16px;
-    font-size: 20px;
-    line-height: 1.2;
-    text-align: center;
+    gap: 12px;
+    font-size: $text-md;
 
-    & + li {
-      border-left: 1px solid $color-text-main;
-    }
-
-    &:last-child {
-      border-right: 1px solid $color-text-main;
-    }
-
-    @include mobile {
-      padding: 0 10px;
-      font-size: 15px;
-      gap: 8px;
+    svg {
+      flex-shrink: 0;
+      color: $color-primary;
     }
   }
 }
 
 .divider {
-  margin: 12px 0 28px;
+  margin: 24px 0;
   border: none;
-  border-top: 1px solid $color-divider;
+  border-top: 1px solid $color-border;
 }
 
 .description {
-  margin-top: 20px;
-  font-size: 20px;
-  line-height: 1.2;
-  max-width: 921px;
-
-  @include mobile {
-    font-size: 16px;
-  }
+  max-width: 72ch;
+  font-size: $text-md;
+  line-height: 1.6;
+  color: $color-text-body;
 }
 
-// Figma: 200×80 white chips with green outline icons.
+// Figma: white chips with green outline icons.
 .included {
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
 
   li {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 200px;
-    min-height: 80px;
-    padding: 8px 12px;
+    gap: 12px;
+    min-height: 68px;
+    padding: 10px 14px;
     border-radius: $radius-md;
     background-color: $color-white;
-    font-size: 20px;
-    line-height: 1.2;
+    font-size: $text-sm;
+    line-height: 1.35;
+    transition: transform $transition-normal, box-shadow $transition-normal;
 
-    @include mobile {
-      width: calc(50% - 8px);
-      font-size: 15px;
+    @include hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-sm;
     }
   }
 }
 
 .includedIcon {
   flex-shrink: 0;
-  color: $color-green;
+  color: $color-primary;
 }
 
-// Figma: 548×514 white booking card.
+// Figma: white booking card.
 .bookingCard {
-  align-self: start;
+  position: sticky;
+  top: calc(#{$header-height} + 20px);
   display: flex;
   flex-direction: column;
-  padding: 11px 26px 22px;
+  padding: 24px 28px 28px;
   border-radius: $radius-xl;
   background-color: $color-white;
+  box-shadow: $shadow-md;
+
+  @include below-desktop {
+    position: static;
+  }
 
   @include mobile {
-    padding: 16px;
+    padding: 18px;
   }
 }
 
 .price {
-  font-size: 40px;
+  margin-bottom: 16px;
+  font-size: clamp(22px, 1.9vw, 28px);
   font-weight: 700;
-
-  @include mobile {
-    font-size: 28px;
-  }
 }
 
 .fieldLabel {
-  margin: 10px 0 6px;
-  font-size: 20px;
+  margin: 12px 0 6px;
+  font-size: $text-sm;
+  font-weight: 600;
+}
 
-  @include mobile {
-    font-size: 16px;
-  }
+.dateRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 104px;
+  gap: 8px;
 }
 
 .inputBox {
-  flex: 1;
-  min-width: 0;
+  @include field(44px);
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 55px;
   padding: 0 12px;
-  border: 1px solid $color-text-main;
-  border-radius: $radius-md;
-  background-color: $color-white;
-  transition: border-color $transition-fast, box-shadow $transition-fast;
 
-  &:focus-within {
-    border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba(22, 83, 137, 0.15);
+  svg {
+    flex-shrink: 0;
+    color: $color-primary;
   }
 
   select,
   input {
-    flex: 1;
+    width: 100%;
     min-width: 0;
+    height: 100%;
     border: none;
     outline: none;
     background: transparent;
-    font-size: 20px;
-    color: $color-text-main;
-
-    @include mobile {
-      font-size: 16px;
-    }
-  }
-}
-
-.inputWide {
-  flex: none;
-  max-width: 400px;
-}
-
-.dateRow {
-  display: flex;
-  gap: 13px;
-}
-
-.timeBox {
-  flex: 0 0 194px;
-  padding-left: 18px;
-
-  @include mobile {
-    flex-basis: 110px;
+    font-size: $text-md;
+    cursor: pointer;
   }
 }
 
@@ -351,100 +214,96 @@
 }
 
 .calc {
-  margin-top: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid $color-divider;
-  font-size: 20px;
-
-  @include mobile {
-    font-size: 16px;
-  }
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid $color-border-light;
+  font-size: $text-sm;
+  color: $color-text-muted;
 }
 
 .total {
-  margin-top: 4px;
-  font-size: 40px;
+  margin: 8px 0 18px;
+  font-size: $text-lg;
   font-weight: 700;
-
-  @media (max-width: ($bp-2xl - 1px)) {
-    font-size: 30px;
-  }
 }
 
-// Figma: 400×40 navy button.
+.totalValue {
+  animation: fadeIn $duration-base $ease-out both;
+}
+
+// Figma: full-width brand button.
 .bookBtn {
-  @include primary-button;
-  align-self: center;
-  width: min(400px, 100%);
-  height: 40px;
-  margin-top: 16px;
-  border-radius: $radius-md;
-  font-size: 20px;
-  font-weight: 700;
+  @include primary-button(48px);
+  width: 100%;
+  font-size: $text-md;
 }
 
 .booked {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  padding: 10px 14px;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
   border-radius: $radius-md;
   background-color: $color-green-light;
   color: $color-green-text;
-  font-size: 16px;
+  font-size: $text-sm;
+  animation: scaleIn $duration-slow $ease-out both;
 
-  button {
-    @include button-reset;
-    color: $color-primary;
+  svg {
+    flex-shrink: 0;
+  }
+
+  a {
     font-weight: 600;
     text-decoration: underline;
+    text-underline-offset: 2px;
   }
 }
 
 .bottom {
   display: grid;
-  grid-template-columns: 450px minmax(0, 1fr);
-  gap: 30px;
-  margin: 40px 22px 0 18px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 32px;
+  margin-top: 48px;
 
-  @media (max-width: ($bp-2xl - 1px)) {
-    grid-template-columns: 380px minmax(0, 1fr);
-    margin: 32px 0 0;
-  }
-
-  @media (max-width: ($bp-lg - 1px)) {
+  @include below-desktop {
     grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
   }
 }
 
-// Figma: 450×250 owner card.
 .ownerCard {
-  align-self: start;
-  padding: 15px;
+  @include panel;
+  border: none;
   border-radius: $radius-xl;
-  background-color: $color-white;
+  padding: 22px 26px;
 }
 
 .ownerHeading {
-  font-size: 20px;
-  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: $text-lg;
+  font-weight: 600;
 }
 
 .ownerRow {
   display: flex;
-  gap: 25px;
-  margin-top: 15px;
+  align-items: flex-start;
+  gap: 18px;
 }
 
 .ownerAvatar {
+  width: 88px;
+  height: 88px;
   flex-shrink: 0;
-  width: 100px;
-  height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: $color-border-light;
+  background-color: $color-cream;
+
+  @include mobile {
+    width: 64px;
+    height: 64px;
+  }
 }
 
 .ownerInfo {
@@ -452,42 +311,27 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
+  min-width: 0;
 }
 
 .ownerName {
-  font-size: 20px;
+  font-size: $text-lg;
   font-weight: 700;
 }
 
-.verified {
-  display: flex;
+.response {
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 20px;
-
-  @include mobile {
-    font-size: 16px;
-  }
+  gap: 5px;
+  font-size: $text-sm;
+  color: $color-text-muted;
 }
 
-.verifiedIcon {
-  color: $color-white;
-  fill: $color-green;
-}
-
-// Figma: 250×40 navy "Написать владельцу ↗".
+// Figma: brand button.
 .writeBtn {
-  @include primary-button;
-  height: 40px;
+  @include primary-button(40px);
   margin-top: 6px;
-  padding: 0 16px;
-  border-radius: $radius-md;
-  font-size: 20px;
-  gap: 8px;
-
-  @include mobile {
-    font-size: 16px;
-  }
+  padding: 0 18px;
 }
 
 .reviews {

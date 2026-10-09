@@ -4,7 +4,7 @@ import { mockGuides } from './guides';
 import { mockCurrentUser } from './user';
 
 const baseProfile = {
-  bannerUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+  bannerUrl: '/images/son-kul-valley-1440.jpg',
   daysTravelled: 0,
   tripsCount: 0,
   languages: [
@@ -52,7 +52,7 @@ const otherTourist: UserProfile = {
   fullName: 'Артём В.',
   email: 'artem@example.com',
   phone: '',
-  avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
+  avatarUrl: '/images/people/1535713875002-d1d0cf377fde.jpg',
   bio: '',
   role: 'tourist',
   memberSince: '10.01.2024',
