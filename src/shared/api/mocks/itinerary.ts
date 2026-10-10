@@ -1,4 +1,5 @@
 import { BookingItem, ItineraryWaypoint } from '@/entities/types';
+import { STAY_PRICE_PER_NIGHT } from '@/shared/lib/pricing';
 
 export const mockItineraryWaypoints: ItineraryWaypoint[] = [
   {
@@ -58,7 +59,8 @@ export const mockUserBookings: BookingItem[] = [
     category: 'hotel',
     dateRange: '13 сен – 16 сен (3 ночи)',
     location: 'оз. Сон-Көл, Нарынская область',
-    price: 18000,
+    // Stays use the flat guest price: 500 KGS × 3 nights.
+    price: STAY_PRICE_PER_NIGHT * 3,
     photoUrl: '/images/son-kul-yurt-720.jpg',
     status: 'confirmed',
   },

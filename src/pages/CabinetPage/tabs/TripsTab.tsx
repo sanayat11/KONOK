@@ -13,6 +13,8 @@ import t$ from './tabs.module.scss';
 type Filter = 'all' | 'stay' | 'transport';
 
 const isTransport = (b: BookingItem) => b.category === 'car';
+/** Accommodation only — guide and place bookings count towards the total, not "Проживание". */
+const isStay = (b: BookingItem) => b.category === 'hotel';
 
 /** Guest bookings: totals, filters, booking cards and the route timeline. */
 export const TripsTab: React.FC = () => {
@@ -20,7 +22,7 @@ export const TripsTab: React.FC = () => {
   const bookings = useBookingStore((s) => s.bookings);
   const [filter, setFilter] = useState<Filter>('all');
 
-  const stays = bookings.filter((b) => !isTransport(b));
+  const stays = bookings.filter(isStay);
   const transport = bookings.filter(isTransport);
   const sum = (list: BookingItem[]) => list.reduce((acc, b) => acc + b.price, 0);
   const visible = filter === 'all' ? bookings : filter === 'stay' ? stays : transport;
